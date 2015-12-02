@@ -56,7 +56,7 @@ Needed to determine end of name."
   :type 'string :group 'whdl)
 
 (defun whdl-get-name (&optional dont-downcase)
-"This function extracts word at current position. To determine end of word, allowed-chars-in-signal is used."
+  "This function extracts word at current position. To determine end of word, allowed-chars-in-signal is used."
   (save-excursion
     (re-search-forward (concat " *[" allowed-chars-in-signal "]*"))
     (backward-char)
@@ -65,7 +65,7 @@ Needed to determine end of name."
       (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))))
 
 (defun whdl-get-name-plus (&optional dont-downcase)
-"This function extracts word at current position. To determine end of word, allowed-chars-in-signal is used."
+  "This function extracts word at current position. To determine end of word, allowed-chars-in-signal is used."
   (save-excursion
     (re-search-forward (concat " *[" allowed-chars-in-signal-plus "]*"))
     (backward-char)
@@ -74,7 +74,7 @@ Needed to determine end of name."
       (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))))
 
 (defun whdl-package-names ()
-"Gets all used packages of a vhdl file. Only use work.NAME.blabla is valid. Returns all NAME"
+  "Gets all used packages of a vhdl file. Only use work.NAME.blabla is valid. Returns all NAME"
   (save-excursion
     (let ((packages '()))
       (goto-char (point-min))
@@ -108,14 +108,14 @@ Needed to determine end of name."
       (while (and (nth counter current-buffer-list) (not found))
         (set-buffer (nth counter current-buffer-list))
         (if (equal entity-or-package-name (whdl-get-entity-or-package-name))
-              (setq found t)
+	    (setq found t)
           (setq counter (1+ counter))))
       (if found
           (nth counter current-buffer-list)
         nil))))
 
 (defun whdl-get-entity-or-package-name ()
-"Extracts name of a entity or of a package"
+  "Extracts name of a entity or of a package"
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "^ *\\(entity\\|package\\) +" nil t nil)
@@ -151,7 +151,7 @@ Needed to determine end of name."
 
 
 (defun whdl-process-file (name)
-"searches a package or a vhdl file for name and tests if it is a type definition or not"
+  "searches a package or a vhdl file for name and tests if it is a type definition or not"
   (let ((found nil) should-be-in-entity beginning-of-entity-port end-of-entity end-of-entity-port apoint (current-pos (point)))
     (save-excursion
       (goto-char (point-min))
@@ -183,7 +183,7 @@ Needed to determine end of name."
     (if found found nil)))
 
 (defun vhdl-goto-type-def ()
-"Main fuction. Reads word at cursor and tries to find a corresponding signal or type definition.
+  "Main fuction. Reads word at cursor and tries to find a corresponding signal or type definition.
 This function first tries to find a signal or type definition in the buffer from where the function have
 been called. It can only jump to signal, constant, type and subtype definitions. Works also for signals in
 an entity (in and out ports, function will then jump to the entity). To go back to the point where the function
@@ -201,9 +201,9 @@ vhdl file press `\C-x b RET'."
           (if (not package-buffer)
               (setq to-open-packages (append (list (nth counter package-list)) to-open-packages))
             (save-excursion
-               (set-buffer package-buffer)
-               (setq found (whdl-process-file to-search-for))))
-            (setq counter (1+ counter)))
+	      (set-buffer package-buffer)
+	      (setq found (whdl-process-file to-search-for))))
+	  (setq counter (1+ counter)))
         (setq counter 0)
         (if (not found)
             (save-excursion
@@ -214,9 +214,9 @@ vhdl file press `\C-x b RET'."
         (while (and (not found) (nth counter to-open-packages))
           (if (setq package-buffer (whdl-ask-for-package (nth counter to-open-packages)))
               (save-excursion
-                 (set-buffer package-buffer)
-                 (setq found (whdl-process-file to-search-for))))
-            (setq counter (1+ counter)))
+		(set-buffer package-buffer)
+		(setq found (whdl-process-file to-search-for))))
+	  (setq counter (1+ counter)))
         (if found
             (progn
               (switch-to-buffer package-buffer)
