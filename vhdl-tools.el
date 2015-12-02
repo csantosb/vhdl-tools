@@ -42,21 +42,23 @@
 (defgroup whdl nil "Some customizations of whdl packages" :group 'local)
 
 (defcustom use-ido-find-file t
-  "*If t, ido-find-file functions are used for asking for buffers. If nil, standard emacs functions are used."
+  "If t, `ido-find-file' functions are used for asking for buffers.
+If nil, standard Emacs functions are used."
   :type 'boolean :group 'whdl)
 
 (defcustom allowed-chars-in-signal "a-z0-9A-Z_"
-  "*This regexp determins what characters of a signal or constant or function name are allowed.
+  "Regexp with allowed characters in signal, constant or function.
 Needed to determine end of name."
   :type 'string :group 'whdl)
 
 (defcustom allowed-chars-in-signal-plus "a-z0-9A-Z_-"
-  "*This regexp determins what characters of a signal or constant or function name are allowed.
+  "Regexp with allowed characters in signal, constant or function.
 Needed to determine end of name."
   :type 'string :group 'whdl)
 
 (defun whdl-get-name (&optional dont-downcase)
-  "This function extracts word at current position. To determine end of word, allowed-chars-in-signal is used."
+  "This function extracts word at current position DONT-DOWNCASE.
+To determine end of word, allowed-chars-in-signal is used."
   (save-excursion
     (re-search-forward (concat " *[" allowed-chars-in-signal "]*"))
     (backward-char)
@@ -65,7 +67,8 @@ Needed to determine end of name."
       (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))))
 
 (defun whdl-get-name-plus (&optional dont-downcase)
-  "This function extracts word at current position. To determine end of word, allowed-chars-in-signal is used."
+  "This function extracts word at current position DONT-DOWNCASE.
+To determine end of word, allowed-chars-in-signal is used."
   (save-excursion
     (re-search-forward (concat " *[" allowed-chars-in-signal-plus "]*"))
     (backward-char)
@@ -74,7 +77,8 @@ Needed to determine end of name."
       (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))))
 
 (defun whdl-package-names ()
-  "Gets all used packages of a vhdl file. Only use work.NAME.blabla is valid. Returns all NAME"
+  "Gets all used packages of a vhdl file.
+Only use work.NAME.blabla is valid.  Return all NAME."
   (save-excursion
     (let ((packages '()))
       (goto-char (point-min))
@@ -88,6 +92,7 @@ Needed to determine end of name."
       packages)))
 
 (defun whdl-set-entity-of-arch ()
+  "."
   (let ((package-buffer))
     (if (equal (whdl-get-entity-or-package-name) "")
         (if (setq package-buffer (whdl-get-buffer (whdl-get-entity-name-of-architecture)))
@@ -102,7 +107,7 @@ Needed to determine end of name."
 
 
 (defun whdl-get-buffer (entity-or-package-name)
-  "Returns buffer where entity-or-package-name is found. Buffer must exist"
+  "Return buffer where ENTITY-OR-PACKAGE-NAME is found.  Buffer must exist."
   (save-excursion
     (let ((current-buffer-list (buffer-list)) (counter 0) found)
       (while (and (nth counter current-buffer-list) (not found))
@@ -115,7 +120,7 @@ Needed to determine end of name."
         nil))))
 
 (defun whdl-get-entity-or-package-name ()
-  "Extracts name of a entity or of a package"
+  "Extracts name of a entity or of a package."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "^ *\\(entity\\|package\\) +" nil t nil)
@@ -150,8 +155,8 @@ Needed to determine end of name."
     (read-file-name (concat "Where is '" package-name "? "))))
 
 
-(defun whdl-process-file (name)
-  "searches a package or a vhdl file for name and tests if it is a type definition or not"
+(defun vhdl-tools-process-file (name)
+  "Search a package or a vhdl file for NAME and test if it is a type definition or not."
   (let ((found nil) should-be-in-entity beginning-of-entity-port end-of-entity end-of-entity-port apoint (current-pos (point)))
     (save-excursion
       (goto-char (point-min))
@@ -193,7 +198,7 @@ in the vhdl file. If a definition has been found in a package, package will be d
 vhdl file press `\C-x b RET'."
   (interactive)
   (setq current-pos (point))
-  (if (not (setq found (whdl-process-file (whdl-get-name))))  ;no definition in calling file found
+  (if (not (setq found (vhdl-tools-process-file (whdl-get-name))))  ;no definition in calling file found
       (let ((to-search-for (whdl-get-name)) (package-list (whdl-package-names))
             (counter 0) found package-buffer (to-open-packages '()))
         (while (and (not found) (nth counter package-list))
@@ -202,20 +207,20 @@ vhdl file press `\C-x b RET'."
               (setq to-open-packages (append (list (nth counter package-list)) to-open-packages))
             (save-excursion
 	      (set-buffer package-buffer)
-	      (setq found (whdl-process-file to-search-for))))
+	      (setq found (vhdl-tools-process-file to-search-for))))
 	  (setq counter (1+ counter)))
         (setq counter 0)
         (if (not found)
             (save-excursion
               (if (whdl-set-entity-of-arch)
                   (progn
-                    (setq found (whdl-process-file to-search-for))
+                    (setq found (vhdl-tools-process-file to-search-for))
                     (setq package-buffer (current-buffer))))))
         (while (and (not found) (nth counter to-open-packages))
           (if (setq package-buffer (whdl-ask-for-package (nth counter to-open-packages)))
               (save-excursion
 		(set-buffer package-buffer)
-		(setq found (whdl-process-file to-search-for))))
+		(setq found (vhdl-tools-process-file to-search-for))))
 	  (setq counter (1+ counter)))
         (if found
             (progn
