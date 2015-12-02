@@ -51,26 +51,11 @@ If nil, standard Emacs functions are used."
 Needed to determine end of name."
   :type 'string :group 'whdl)
 
-(defcustom allowed-chars-in-signal-plus "a-z0-9A-Z_-"
-  "Regexp with allowed characters in signal, constant or function.
-Needed to determine end of name."
-  :type 'string :group 'whdl)
-
 (defun whdl-get-name (&optional dont-downcase)
   "This function extracts word at current position DONT-DOWNCASE.
 To determine end of word, allowed-chars-in-signal is used."
   (save-excursion
     (re-search-forward (concat " *[" allowed-chars-in-signal "]*"))
-    (backward-char)
-    (if (not dont-downcase)
-        (downcase (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))
-      (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))))
-
-(defun whdl-get-name-plus (&optional dont-downcase)
-  "This function extracts word at current position DONT-DOWNCASE.
-To determine end of word, allowed-chars-in-signal is used."
-  (save-excursion
-    (re-search-forward (concat " *[" allowed-chars-in-signal-plus "]*"))
     (backward-char)
     (if (not dont-downcase)
         (downcase (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))
@@ -124,7 +109,7 @@ Only use work.NAME.blabla is valid.  Return all NAME."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "^ *\\(entity\\|package\\) +" nil t nil)
-        (whdl-get-name-plus)
+        (whdl-get-name)
       "")))
 
 (defun whdl-get-entity-name-of-architecture()
