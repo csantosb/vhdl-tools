@@ -1,4 +1,4 @@
-;;; vhdl-goto-def.el --- Jumps to definition of signal, constant or function
+;; ;;; vhdl-tools.el --- Jumps to definition of signal, constant or function
 
 ;; Copyright (C) 2003  Free Software Foundation, Inc.
 
@@ -229,5 +229,5 @@ vhdl file press `\C-x b RET'."
       (beginning-of-line)
       (recenter))))
 
-(provide 'vhdl-goto-def)
-;;; vhdl-goto-def.el ends here
+(provide 'vhdl-tools)
+;;; vhdl-tools.el ends here
