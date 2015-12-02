@@ -90,7 +90,6 @@ Only use work.NAME.blabla is valid.  Return all NAME."
                 (goto-char (point-min))))))
     (if package-buffer t nil)))
 
-
 (defun whdl-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found.  Buffer must exist."
   (save-excursion
@@ -120,7 +119,6 @@ Only use work.NAME.blabla is valid.  Return all NAME."
         (whdl-get-name)
       "")))
 
-
 (defun whdl-ask-for-package (package-name)
   (if use-ido-find-file
       (let ((ido-current-directory (expand-file-name (file-name-directory (buffer-file-name))))
@@ -138,7 +136,6 @@ Only use work.NAME.blabla is valid.  Return all NAME."
         (setq filename (concat ido-current-directory filename))
         (find-file-noselect filename))
     (read-file-name (concat "Where is '" package-name "? "))))
-
 
 (defun vhdl-tools-process-file (name)
   "Search a package or a vhdl file for NAME and test if it is a type definition or not."
@@ -216,8 +213,8 @@ vhdl file press `\C-x b RET'."
     (progn
       (push-mark current-pos t nil)
       (goto-char found)
-      (beginning-of-line)
-      (recenter))))
+      (back-to-indentation)
+      (recenter-top-bottom))))
 
 (provide 'vhdl-tools)
 ;;; vhdl-tools.el ends here
