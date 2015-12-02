@@ -32,27 +32,27 @@
 ;; Functions works for signals, constants, types, subtypes, components and subprograms.
 ;; Works only well for vhdl files with more or less correct syntax. Finds also signals in entity definition.
 
-;; Also have a look at customization possibilities with \M-x customize-group whdl. Change option
+;; Also have a look at customization possibilities with \M-x customize-group vhdl-tools. Change option
 ;; use-ido-find-file to nil if ido-find-file is not installed on your system.
 
 ;; If you have any suggestions or found any bugs please mail me at <wandad.guscheh@fh-hagenberg.at>.
 
 ;;; Code:
 
-(defgroup whdl nil "Some customizations of whdl packages" :group 'local)
+(defgroup vhdl-tools nil "Some customizations of vhdl-tools packages" :group 'local)
 
 (defcustom use-ido-find-file t
   "If t, `ido-find-file' functions are used for asking for buffers.
 If nil, standard Emacs functions are used."
-  :type 'boolean :group 'whdl)
+  :type 'boolean :group 'vhdl-tools)
 
 (defcustom allowed-chars-in-signal "a-z0-9A-Z_"
   "Regexp with allowed characters in signal, constant or function.
 Needed to determine end of name."
-  :type 'string :group 'whdl)
+  :type 'string :group 'vhdl-tools)
 
-(defun whdl-get-name (&optional dont-downcase)
-  "This function extracts word at current position DONT-DOWNCASE.
+(defun vhdl-tools-get-name (&optional dont-downcase)
+  "Extract word at current position DONT-DOWNCASE.
 To determine end of word, allowed-chars-in-signal is used."
   (save-excursion
     (re-search-forward (concat " *[" allowed-chars-in-signal "]*"))
@@ -61,65 +61,65 @@ To determine end of word, allowed-chars-in-signal is used."
         (downcase (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))
       (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))))
 
-(defun whdl-package-names ()
-  "Gets all used packages of a vhdl file.
-Only use work.NAME.blabla is valid.  Return all NAME."
+(defun vhdl-tools-package-names ()
+  "Return a list of strings of all used packages or nil if nothing found.
+Only use the form work.NAME.something."
   (save-excursion
     (let ((packages '()))
       (goto-char (point-min))
       (while (re-search-forward "^ *use  *work\." nil t nil)
         (forward-char)
-        (push (whdl-get-name) packages))
-      (if (whdl-set-entity-of-arch)
+        (push (vhdl-tools-get-name) packages))
+      (if (vhdl-tools-set-entity-of-arch)
           (while (re-search-forward "^ *use  *work\." nil t nil)
             (forward-char)
-            (push (whdl-get-name) packages)))
+            (push (vhdl-tools-get-name) packages)))
       packages)))
 
-(defun whdl-set-entity-of-arch ()
+(defun vhdl-tools-set-entity-of-arch ()
   "."
   (let ((package-buffer))
-    (if (equal (whdl-get-entity-or-package-name) "")
-        (if (setq package-buffer (whdl-get-buffer (whdl-get-entity-name-of-architecture)))
+    (if (equal (vhdl-tools-get-entity-or-package-name) "")
+        (if (setq package-buffer (vhdl-tools-get-buffer (vhdl-tools-get-entity-name-of-architecture)))
             (progn
               (set-buffer package-buffer)
               (goto-char (point-min)))
-          (if (setq package-buffer (whdl-ask-for-package (concat (whdl-get-entity-name-of-architecture) " entity file")))
+          (if (setq package-buffer (vhdl-tools-ask-for-package (concat (vhdl-tools-get-entity-name-of-architecture) " entity file")))
               (progn
                 (set-buffer package-buffer)
                 (goto-char (point-min))))))
     (if package-buffer t nil)))
 
-(defun whdl-get-buffer (entity-or-package-name)
+(defun vhdl-tools-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found.  Buffer must exist."
   (save-excursion
     (let ((current-buffer-list (buffer-list)) (counter 0) found)
       (while (and (nth counter current-buffer-list) (not found))
         (set-buffer (nth counter current-buffer-list))
-        (if (equal entity-or-package-name (whdl-get-entity-or-package-name))
+        (if (equal entity-or-package-name (vhdl-tools-get-entity-or-package-name))
 	    (setq found t)
           (setq counter (1+ counter))))
       (if found
           (nth counter current-buffer-list)
         nil))))
 
-(defun whdl-get-entity-or-package-name ()
-  "Extracts name of a entity or of a package."
+(defun vhdl-tools-get-entity-or-package-name ()
+  "Return name of entity / package or empty string if nothing found."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "^ *\\(entity\\|package\\) +" nil t nil)
-        (whdl-get-name)
+        (vhdl-tools-get-name)
       "")))
 
-(defun whdl-get-entity-name-of-architecture()
-  "Extracts name of architecture if present, returns empty string if nothing found"
+(defun vhdl-tools-get-entity-name-of-architecture()
+  "Return name of architecture or empty string if nothing found."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
-        (whdl-get-name)
+        (vhdl-tools-get-name)
       "")))
 
-(defun whdl-ask-for-package (package-name)
+(defun vhdl-tools-ask-for-package (package-name)
   (if use-ido-find-file
       (let ((ido-current-directory (expand-file-name (file-name-directory (buffer-file-name))))
             filename)
@@ -157,15 +157,15 @@ Only use work.NAME.blabla is valid.  Return all NAME."
                 (setq found (point)))))
       (goto-char (point-min))
       (while (and (not found) (re-search-forward "^ *\\(component\\|function\\|procedure\\|constant\\|file\\|type\\|subtype\\)[ \n\t]+" nil t nil))
-        (if (equal name (whdl-get-name))
+        (if (equal name (vhdl-tools-get-name))
             (setq found (point))))
       (goto-char (point-min))
       (while (and (not found) (re-search-forward "^[ \t]*signal[ \n\t]+" nil t nil))
-        (if (equal name (whdl-get-name))
+        (if (equal name (vhdl-tools-get-name))
             (setq found (point))
           (while (> (save-excursion (search-forward ":" nil t nil)) (if (setq apoint (save-excursion (search-forward "," nil t nil))) apoint 0))
             (search-forward "," nil t nil)
-            (if (equal name (whdl-get-name))
+            (if (equal name (vhdl-tools-get-name))
                 (setq found (point)))))))
     (if found found nil)))
 
@@ -180,11 +180,11 @@ in the vhdl file. If a definition has been found in a package, package will be d
 vhdl file press `\C-x b RET'."
   (interactive)
   (setq current-pos (point))
-  (if (not (setq found (vhdl-tools-process-file (whdl-get-name))))  ;no definition in calling file found
-      (let ((to-search-for (whdl-get-name)) (package-list (whdl-package-names))
+  (if (not (setq found (vhdl-tools-process-file (vhdl-tools-get-name))))  ;no definition in calling file found
+      (let ((to-search-for (vhdl-tools-get-name)) (package-list (vhdl-tools-package-names))
             (counter 0) found package-buffer (to-open-packages '()))
         (while (and (not found) (nth counter package-list))
-          (setq package-buffer (whdl-get-buffer (nth counter package-list)))
+          (setq package-buffer (vhdl-tools-get-buffer (nth counter package-list)))
           (if (not package-buffer)
               (setq to-open-packages (append (list (nth counter package-list)) to-open-packages))
             (save-excursion
@@ -194,12 +194,12 @@ vhdl file press `\C-x b RET'."
         (setq counter 0)
         (if (not found)
             (save-excursion
-              (if (whdl-set-entity-of-arch)
+              (if (vhdl-tools-set-entity-of-arch)
                   (progn
                     (setq found (vhdl-tools-process-file to-search-for))
                     (setq package-buffer (current-buffer))))))
         (while (and (not found) (nth counter to-open-packages))
-          (if (setq package-buffer (whdl-ask-for-package (nth counter to-open-packages)))
+          (if (setq package-buffer (vhdl-tools-ask-for-package (nth counter to-open-packages)))
               (save-excursion
 		(set-buffer package-buffer)
 		(setq found (vhdl-tools-process-file to-search-for))))
