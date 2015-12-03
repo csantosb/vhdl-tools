@@ -98,36 +98,32 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   "Return a list of strings of all used packages or nil if nothing found.
 Only use the form work.NAME.something."
   (save-excursion
-    (let ((packages '()))
+    (let ((packages))
+      ;; search for packages in current buffer
       (goto-char (point-min))
       (while (re-search-forward "^ *use  *work\." nil t nil)
         (forward-char)
-        (push (vhdl-tools-get-name) packages))
-      ;; ;; REFACTOR: Remove ??
-      ;; (if (vhdl-tools-set-entity-of-arch)
-      ;; 	  (while (re-search-forward "^ *use  *work\." nil t nil)
-      ;; 	    (forward-char)
-      ;; 	    (push (vhdl-tools-get-name) packages)))
+	(when (not (member (vhdl-tools-get-name) packages))
+	  (push (vhdl-tools-get-name) packages)))
+      ;; search in all open buffers
+      (dolist (var (buffer-list))
+	(set-buffer var)
+	(goto-char (point-min))
+	(while (re-search-forward "^ *use  *work\." nil t nil)
+	  (forward-char)
+	  (when (not (member (vhdl-tools-get-name) packages))
+	    (push (vhdl-tools-get-name) packages))))
+      ;; search in all files in current dir
+      (dolist (var (file-expand-wildcards "*.vhd"))
+	(when (not (get-buffer var))
+	  (find-file-noselect var))
+	(set-buffer var)
+	(goto-char (point-min))
+	(while (re-search-forward "^ *use  *work\." nil t nil)
+	  (forward-char)
+	  (when (not (member (vhdl-tools-get-name) packages))
+	    (push (vhdl-tools-get-name) packages))))
       packages)))
-
-;; (defun vhdl-tools-set-entity-of-arch ()
-;;   "."
-;;   (let ((package-buffer))
-;;     (if (equal (vhdl-tools-get-entity-or-package-name) "")
-;; 	tototiti
-;;       ;; (if (setq package-buffer (vhdl-tools-get-buffer (vhdl-tools-get-entity-name-of-architecture)))
-;;       ;;     (progn
-;;       ;;       (set-buffer package-buffer)
-;;       ;;       (goto-char (point-min)))
-;;       ;;   (if (setq package-buffer
-;;       ;; 	    (vhdl-tools-ask-for-package (concat
-;;       ;; 					 (vhdl-tools-get-entity-name-of-architecture)
-;;       ;; 					 " entity file")))
-;;       ;;       (progn
-;;       ;;         (set-buffer package-buffer)
-;;       ;;         (goto-char (point-min)))))
-;;       )
-;;     (if package-buffer t nil)))
 
 (defun vhdl-tools-ask-for-package (package-name)
   "Given PACKAGE-NAME, return its buffer.
