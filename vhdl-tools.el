@@ -49,7 +49,35 @@ Needed to determine end of name."
 (defun vhdl-tools-get-name (&optional dont-downcase)
   "Extract word at current position DONT-DOWNCASE.
 To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
-  (thing-at-point 'symbol))
+  (thing-at-point 'symbol t))
+
+
+;; (defun vhdl-tools-get-buffer (entity-or-package-name)
+;;   "Return buffer where ENTITY-OR-PACKAGE-NAME is found."
+;;   (save-excursion
+;;     (let ((thisfile (format "%s.vhd" entity-or-package-name)))
+;;       ;; if open buffer exists, return it
+;;       (if (get-buffer thisfile)
+;; 	  (get-buffer thisfile)
+;; 	;; if file exist, open it and return buffer
+;; 	(if (file-exists-p thisfile)
+;; 	    (progn
+;; 	      (find-file-noselect thisfile)
+;; 	      (get-buffer thisfile))
+;; 	  ;; search over all existing buffers
+;; 	  (let ((current-buffer-list (buffer-list))
+;; 		(counter 0)
+;; 		found)
+;; 	    ;; loop over all buffers
+;; 	    (while (and (nth counter current-buffer-list)
+;; 			(not found))
+;; 	      (set-buffer (nth counter current-buffer-list))
+;; 	      (if (equal entity-or-package-name (vhdl-tools-get-entity-or-package-name))
+;; 		  (setq found t)
+;; 		(setq counter (1+ counter))))
+;; 	    (if found
+;; 		(nth counter current-buffer-list)
+;; 	      nil)))))))
 
 (defun vhdl-tools-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found."
@@ -102,27 +130,30 @@ Only use the form work.NAME.something."
       (while (re-search-forward "^ *use  *work\." nil t nil)
         (forward-char)
         (push (vhdl-tools-get-name) packages))
+      ;; REFACTOR: Remove ??
       (if (vhdl-tools-set-entity-of-arch)
-          (while (re-search-forward "^ *use  *work\." nil t nil)
-            (forward-char)
-            (push (vhdl-tools-get-name) packages)))
+	  (while (re-search-forward "^ *use  *work\." nil t nil)
+	    (forward-char)
+	    (push (vhdl-tools-get-name) packages)))
       packages)))
 
 (defun vhdl-tools-set-entity-of-arch ()
   "."
   (let ((package-buffer))
     (if (equal (vhdl-tools-get-entity-or-package-name) "")
-        (if (setq package-buffer (vhdl-tools-get-buffer (vhdl-tools-get-entity-name-of-architecture)))
-            (progn
-              (set-buffer package-buffer)
-              (goto-char (point-min)))
-          (if (setq package-buffer
-		    (vhdl-tools-ask-for-package (concat
-						 (vhdl-tools-get-entity-name-of-architecture)
-						 " entity file")))
-              (progn
-                (set-buffer package-buffer)
-                (goto-char (point-min))))))
+	tototiti
+      ;; (if (setq package-buffer (vhdl-tools-get-buffer (vhdl-tools-get-entity-name-of-architecture)))
+      ;;     (progn
+      ;;       (set-buffer package-buffer)
+      ;;       (goto-char (point-min)))
+      ;;   (if (setq package-buffer
+      ;; 	    (vhdl-tools-ask-for-package (concat
+      ;; 					 (vhdl-tools-get-entity-name-of-architecture)
+      ;; 					 " entity file")))
+      ;;       (progn
+      ;;         (set-buffer package-buffer)
+      ;;         (goto-char (point-min)))))
+      )
     (if package-buffer t nil)))
 
 (defun vhdl-tools-ask-for-package (package-name)
@@ -130,13 +161,16 @@ Only use the form work.NAME.something."
 Assumes package is contained in a file with same name; when no buffer exists,
 open corresponding file; when no file is found, ask user where to find it."
   ;; When file exists in current dir, open it so that its buffer is available
+  dskfljsfd
+  dfsklj
   (if (file-exists-p (format "%s.vhd" package-name))
       (find-file-noselect (format "%s.vhd" package-name))
     ;; otherwise, ask user for it and open, no selecting it
     (find-file-noselect (read-file-name (format "Where is %s ? " package-name)))))
 
 (defun vhdl-tools-process-file (name)
-  "Search a package or a vhdl file for NAME and test if it is a type definition or not."
+  "Search within a package or a vhdl file for NAME.
+Test if it is a type definition or not."
   (let ((found nil)
 	should-be-in-entity
 	beginning-of-entity-port
@@ -196,33 +230,42 @@ the vhdl file.  If a definition has been found in a package, package will be
 displayed.  To go back to original vhdl file press."
   (interactive)
   (setq current-pos (point))
-  ;; no definition in calling file found
+  ;; check if found definition in calling file
   (if (not (setq found (vhdl-tools-process-file (vhdl-tools-get-name))))
+      ;; no definition found in calling file found
       (let ((to-search-for (vhdl-tools-get-name))
 	    (package-list (vhdl-tools-package-names))
             (counter 0)
 	    found
 	    package-buffer
 	    (to-open-packages '()))
+	;; loop over all packages _____________________________________
         (while (and (not found)
 		    (nth counter package-list))
           (setq package-buffer (vhdl-tools-get-buffer (nth counter package-list)))
           (if (not package-buffer)
+	      ;; package not open: open it afterwards
               (setq to-open-packages (append (list (nth counter package-list)) to-open-packages))
-            (save-excursion
+	    ;; package open: search here
+	    (save-excursion
 	      (set-buffer package-buffer)
 	      (setq found (vhdl-tools-process-file to-search-for))))
 	  (setq counter (1+ counter)))
+	;; loop over ____________________________________________________
         (setq counter 0)
         (if (not found)
             (save-excursion
 	      ;; REFACTOR: Remove ??
               (if (vhdl-tools-set-entity-of-arch)
                   (progn
+		    ;; TODO: Never executed
+		    fdklsjsdfj
                     (setq found (vhdl-tools-process-file to-search-for))
                     (setq package-buffer (current-buffer))))))
+	;;
         (while (and (not found)
 		    (nth counter to-open-packages))
+	  dfskjsdlfkkfds
           (if (setq package-buffer (vhdl-tools-ask-for-package (nth counter to-open-packages)))
               (save-excursion
 		(set-buffer package-buffer)
@@ -235,6 +278,7 @@ displayed.  To go back to original vhdl file press."
 	      (back-to-indentation)
 	      (recenter-top-bottom))
           (message "sorry, no corresponding definition found")))
+    ;; found in current file
     (progn
       (push-mark current-pos t nil)
       (goto-char found)
