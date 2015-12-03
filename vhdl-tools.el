@@ -51,7 +51,7 @@ If nil, standard Emacs functions are used."
 Needed to determine end of name."
   :type 'string :group 'vhdl-tools)
 
-(defun vhdl-tools-get-name (&optional dont-downcase)
+(defun vhdl-tools-get-name-legacy (&optional dont-downcase)
   "Extract word at current position DONT-DOWNCASE.
 To determine end of word, allowed-chars-in-signal is used."
   (save-excursion
@@ -60,6 +60,11 @@ To determine end of word, allowed-chars-in-signal is used."
     (if (not dont-downcase)
         (downcase (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))
       (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))))
+
+(defun vhdl-tools-get-name (&optional dont-downcase)
+  "Extract word at current position DONT-DOWNCASE.
+To determine end of word, allowed-chars-in-signal is used."
+  (thing-at-point 'symbol))
 
 (defun vhdl-tools-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found.  Buffer must exist."
