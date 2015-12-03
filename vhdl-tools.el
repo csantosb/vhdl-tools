@@ -208,7 +208,8 @@ vhdl file press `\C-x b RET'."
             (progn
               (switch-to-buffer package-buffer)
               (goto-char found)
-              (recenter))
+	      (back-to-indentation)
+	      (recenter-top-bottom))
           (message "sorry, no corresponding definition found")))
     (progn
       (push-mark current-pos t nil)
