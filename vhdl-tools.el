@@ -41,14 +41,14 @@
 
 (defgroup vhdl-tools nil "Some customizations of vhdl-tools packages" :group 'local)
 
-(defcustom allowed-chars-in-signal "a-z0-9A-Z_"
+(defcustom vhdl-tools-allowed-chars-in-signal "a-z0-9A-Z_"
   "Regexp with allowed characters in signal, constant or function.
 Needed to determine end of name."
   :type 'string :group 'vhdl-tools)
 
 (defun vhdl-tools-get-name (&optional dont-downcase)
   "Extract word at current position DONT-DOWNCASE.
-To determine end of word, allowed-chars-in-signal is used."
+To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   (thing-at-point 'symbol))
 
 (defun vhdl-tools-get-buffer (entity-or-package-name)
@@ -137,10 +137,19 @@ open corresponding file; when no file is found, ask user where to find it."
 
 (defun vhdl-tools-process-file (name)
   "Search a package or a vhdl file for NAME and test if it is a type definition or not."
-  (let ((found nil) should-be-in-entity beginning-of-entity-port end-of-entity end-of-entity-port apoint (current-pos (point)))
+  (let ((found nil)
+	should-be-in-entity
+	beginning-of-entity-port
+	end-of-entity
+	end-of-entity-port
+	apoint
+	(current-pos (point)))
     (save-excursion
       (goto-char (point-min))
-      (setq beginning-of-entity-port (re-search-forward (concat "^[ \t]*entity[ \n\t]+[" allowed-chars-in-signal "]+[ \n\t]+is") nil t nil))
+      ;; search for entity ... is line
+      (setq beginning-of-entity-port
+	    (re-search-forward
+	     (concat "^[ \t]*entity[ \n\t]+[" vhdl-tools-allowed-chars-in-signal "]+[ \n\t]+is") nil t nil))
       (if beginning-of-entity-port
           (progn
             (setq end-of-entity (save-excursion (re-search-forward "^[ \t]*end")))
@@ -148,40 +157,55 @@ open corresponding file; when no file is found, ask user where to find it."
             (setq end-of-entity-port (progn (up-list) (point)))
             (goto-char (point-min))
             (setq should-be-in-entity (re-search-forward (concat " +" name "[ \n\t]+") nil t nil))
-            (if (and should-be-in-entity (< beginning-of-entity-port should-be-in-entity) (> end-of-entity-port should-be-in-entity)
-                     (< (save-excursion (re-search-forward ":" nil t nil)) (save-excursion (re-search-forward "\n" nil t nil)))
-                     (< (point) (save-excursion (re-search-forward ":" nil t nil)))
-                     (< end-of-entity-port end-of-entity))
+            (if (and should-be-in-entity
+		     (< beginning-of-entity-port should-be-in-entity)
+		     (> end-of-entity-port should-be-in-entity)
+                     (< (save-excursion (re-search-forward ":" nil t nil))
+			(save-excursion (re-search-forward "\n" nil t nil)))
+                     (< (point)
+			(save-excursion (re-search-forward ":" nil t nil)))
+                     (< end-of-entity-port
+			end-of-entity))
                 (setq found (point)))))
       (goto-char (point-min))
-      (while (and (not found) (re-search-forward "^ *\\(component\\|function\\|procedure\\|constant\\|file\\|type\\|subtype\\)[ \n\t]+" nil t nil))
+      (while (and (not found)
+		  (re-search-forward "^ *\\(component\\|function\\|procedure\\|constant\\|file\\|type\\|subtype\\)[ \n\t]+" nil t nil))
         (if (equal name (vhdl-tools-get-name))
             (setq found (point))))
       (goto-char (point-min))
-      (while (and (not found) (re-search-forward "^[ \t]*signal[ \n\t]+" nil t nil))
+      (while (and (not found)
+		  (re-search-forward "^[ \t]*signal[ \n\t]+" nil t nil))
         (if (equal name (vhdl-tools-get-name))
             (setq found (point))
-          (while (> (save-excursion (search-forward ":" nil t nil)) (if (setq apoint (save-excursion (search-forward "," nil t nil))) apoint 0))
+          (while (> (save-excursion (search-forward ":" nil t nil))
+		    (if (setq apoint (save-excursion (search-forward "," nil t nil))) apoint 0))
             (search-forward "," nil t nil)
             (if (equal name (vhdl-tools-get-name))
                 (setq found (point)))))))
     (if found found nil)))
 
 (defun vhdl-goto-type-def ()
-  "Main fuction. Reads word at cursor and tries to find a corresponding signal or type definition.
-This function first tries to find a signal or type definition in the buffer from where the function have
-been called. It can only jump to signal, constant, type and subtype definitions. Works also for signals in
-an entity (in and out ports, function will then jump to the entity). To go back to the point where the function
-has been called press `\C-x\C-x'.
-If there was nothing found, it reads the packages used, and works through all opened buffers to find packages used
-in the vhdl file. If a definition has been found in a package, package will be displayed. To go back to original
-vhdl file press `\C-x b RET'."
+  "Read word at point and try to find corresponding signal or type definition.
+This function first tries to find a signal or type definition in the buffer from
+where the function have been called.  It can only jump to signal, constant,
+type and subtype definitions.  Works also for signals in an entity (in and out
+ports, function will then jump to the entity).  To go back to the point where
+the function has been called press.  If there was nothing found, it reads the
+packages used, and works through all opened buffers to find packages used in
+the vhdl file.  If a definition has been found in a package, package will be
+displayed.  To go back to original vhdl file press."
   (interactive)
   (setq current-pos (point))
-  (if (not (setq found (vhdl-tools-process-file (vhdl-tools-get-name))))  ;no definition in calling file found
-      (let ((to-search-for (vhdl-tools-get-name)) (package-list (vhdl-tools-package-names))
-            (counter 0) found package-buffer (to-open-packages '()))
-        (while (and (not found) (nth counter package-list))
+  ;; no definition in calling file found
+  (if (not (setq found (vhdl-tools-process-file (vhdl-tools-get-name))))
+      (let ((to-search-for (vhdl-tools-get-name))
+	    (package-list (vhdl-tools-package-names))
+            (counter 0)
+	    found
+	    package-buffer
+	    (to-open-packages '()))
+        (while (and (not found)
+		    (nth counter package-list))
           (setq package-buffer (vhdl-tools-get-buffer (nth counter package-list)))
           (if (not package-buffer)
               (setq to-open-packages (append (list (nth counter package-list)) to-open-packages))
@@ -192,11 +216,13 @@ vhdl file press `\C-x b RET'."
         (setq counter 0)
         (if (not found)
             (save-excursion
+	      ;; REFACTOR: Remove ??
               (if (vhdl-tools-set-entity-of-arch)
                   (progn
                     (setq found (vhdl-tools-process-file to-search-for))
                     (setq package-buffer (current-buffer))))))
-        (while (and (not found) (nth counter to-open-packages))
+        (while (and (not found)
+		    (nth counter to-open-packages))
           (if (setq package-buffer (vhdl-tools-ask-for-package (nth counter to-open-packages)))
               (save-excursion
 		(set-buffer package-buffer)
