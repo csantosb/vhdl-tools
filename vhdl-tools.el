@@ -64,8 +64,12 @@ To determine end of word, allowed-chars-in-signal is used."
 (defun vhdl-tools-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found.  Buffer must exist."
   (save-excursion
-    (let ((current-buffer-list (buffer-list)) (counter 0) found)
-      (while (and (nth counter current-buffer-list) (not found))
+    (let ((current-buffer-list (buffer-list))
+	  (counter 0)
+	  found)
+      ;; loop over all buffers
+      (while (and (nth counter current-buffer-list)
+		  (not found))
         (set-buffer (nth counter current-buffer-list))
         (if (equal entity-or-package-name (vhdl-tools-get-entity-or-package-name))
 	    (setq found t)
@@ -83,7 +87,7 @@ To determine end of word, allowed-chars-in-signal is used."
       "")))
 
 (defun vhdl-tools-get-entity-name-of-architecture()
-  "Return name of architecture or empty string if nothing found."
+  "Search for architecture and return its entity or empty string if nothing found."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
@@ -113,7 +117,10 @@ Only use the form work.NAME.something."
             (progn
               (set-buffer package-buffer)
               (goto-char (point-min)))
-          (if (setq package-buffer (vhdl-tools-ask-for-package (concat (vhdl-tools-get-entity-name-of-architecture) " entity file")))
+          (if (setq package-buffer
+		    (vhdl-tools-ask-for-package (concat
+						 (vhdl-tools-get-entity-name-of-architecture)
+						 " entity file")))
               (progn
                 (set-buffer package-buffer)
                 (goto-char (point-min))))))
