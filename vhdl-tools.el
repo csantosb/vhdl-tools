@@ -61,35 +61,6 @@ To determine end of word, allowed-chars-in-signal is used."
         (downcase (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))
       (buffer-substring-no-properties (1+ (point)) (+ (re-search-backward (concat "[^"allowed-chars-in-signal "]")) 1)))))
 
-(defun vhdl-tools-package-names ()
-  "Return a list of strings of all used packages or nil if nothing found.
-Only use the form work.NAME.something."
-  (save-excursion
-    (let ((packages '()))
-      (goto-char (point-min))
-      (while (re-search-forward "^ *use  *work\." nil t nil)
-        (forward-char)
-        (push (vhdl-tools-get-name) packages))
-      (if (vhdl-tools-set-entity-of-arch)
-          (while (re-search-forward "^ *use  *work\." nil t nil)
-            (forward-char)
-            (push (vhdl-tools-get-name) packages)))
-      packages)))
-
-(defun vhdl-tools-set-entity-of-arch ()
-  "."
-  (let ((package-buffer))
-    (if (equal (vhdl-tools-get-entity-or-package-name) "")
-        (if (setq package-buffer (vhdl-tools-get-buffer (vhdl-tools-get-entity-name-of-architecture)))
-            (progn
-              (set-buffer package-buffer)
-              (goto-char (point-min)))
-          (if (setq package-buffer (vhdl-tools-ask-for-package (concat (vhdl-tools-get-entity-name-of-architecture) " entity file")))
-              (progn
-                (set-buffer package-buffer)
-                (goto-char (point-min))))))
-    (if package-buffer t nil)))
-
 (defun vhdl-tools-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found.  Buffer must exist."
   (save-excursion
@@ -118,6 +89,35 @@ Only use the form work.NAME.something."
     (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
         (vhdl-tools-get-name)
       "")))
+
+(defun vhdl-tools-package-names ()
+  "Return a list of strings of all used packages or nil if nothing found.
+Only use the form work.NAME.something."
+  (save-excursion
+    (let ((packages '()))
+      (goto-char (point-min))
+      (while (re-search-forward "^ *use  *work\." nil t nil)
+        (forward-char)
+        (push (vhdl-tools-get-name) packages))
+      (if (vhdl-tools-set-entity-of-arch)
+          (while (re-search-forward "^ *use  *work\." nil t nil)
+            (forward-char)
+            (push (vhdl-tools-get-name) packages)))
+      packages)))
+
+(defun vhdl-tools-set-entity-of-arch ()
+  "."
+  (let ((package-buffer))
+    (if (equal (vhdl-tools-get-entity-or-package-name) "")
+        (if (setq package-buffer (vhdl-tools-get-buffer (vhdl-tools-get-entity-name-of-architecture)))
+            (progn
+              (set-buffer package-buffer)
+              (goto-char (point-min)))
+          (if (setq package-buffer (vhdl-tools-ask-for-package (concat (vhdl-tools-get-entity-name-of-architecture) " entity file")))
+              (progn
+                (set-buffer package-buffer)
+                (goto-char (point-min))))))
+    (if package-buffer t nil)))
 
 (defun vhdl-tools-ask-for-package (package-name)
   (if use-ido-find-file
