@@ -51,59 +51,32 @@ Needed to determine end of name."
 To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   (thing-at-point 'symbol t))
 
-
-;; (defun vhdl-tools-get-buffer (entity-or-package-name)
-;;   "Return buffer where ENTITY-OR-PACKAGE-NAME is found."
-;;   (save-excursion
-;;     (let ((thisfile (format "%s.vhd" entity-or-package-name)))
-;;       ;; if open buffer exists, return it
-;;       (if (get-buffer thisfile)
-;; 	  (get-buffer thisfile)
-;; 	;; if file exist, open it and return buffer
-;; 	(if (file-exists-p thisfile)
-;; 	    (progn
-;; 	      (find-file-noselect thisfile)
-;; 	      (get-buffer thisfile))
-;; 	  ;; search over all existing buffers
-;; 	  (let ((current-buffer-list (buffer-list))
-;; 		(counter 0)
-;; 		found)
-;; 	    ;; loop over all buffers
-;; 	    (while (and (nth counter current-buffer-list)
-;; 			(not found))
-;; 	      (set-buffer (nth counter current-buffer-list))
-;; 	      (if (equal entity-or-package-name (vhdl-tools-get-entity-or-package-name))
-;; 		  (setq found t)
-;; 		(setq counter (1+ counter))))
-;; 	    (if found
-;; 		(nth counter current-buffer-list)
-;; 	      nil)))))))
-
 (defun vhdl-tools-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found."
   (save-excursion
-    ;; if buffer exists, return it
-    (if (get-buffer (format "%s.vhd" entity-or-package-name))
-	(get-buffer (format "%s.vhd" entity-or-package-name))
-      ;; if file exist, open it and return buffer
-      (if (file-exists-p (format "%s.vhd" entity-or-package-name))
-	  (progn
-	    (find-file-noselect (format "%s.vhd" entity-or-package-name))
-	    (get-buffer (format "%s.vhd" entity-or-package-name)))
-	;; search over all existing buffers
-	(let ((current-buffer-list (buffer-list))
-	      (counter 0)
-	      found)
-	  ;; loop over all buffers
-	  (while (and (nth counter current-buffer-list)
-		      (not found))
-	    (set-buffer (nth counter current-buffer-list))
-	    (if (equal entity-or-package-name (vhdl-tools-get-entity-or-package-name))
-		(setq found t)
-	      (setq counter (1+ counter))))
-	  (if found
-	      (nth counter current-buffer-list)
-	    nil))))))
+    (let ((thisfile (format "%s.vhd" entity-or-package-name)))
+      ;; if open buffer exists, return it
+      (if (get-buffer thisfile)
+	  (get-buffer thisfile)
+	;; if file exist, open it and return buffer
+	(if (file-exists-p thisfile)
+	    (progn
+	      (find-file-noselect thisfile)
+	      (get-buffer thisfile))
+	  ;; search over all existing buffers
+	  (let ((current-buffer-list (buffer-list))
+		(counter 0)
+		found)
+	    ;; loop over all buffers
+	    (while (and (nth counter current-buffer-list)
+			(not found))
+	      (set-buffer (nth counter current-buffer-list))
+	      (if (equal entity-or-package-name (vhdl-tools-get-entity-or-package-name))
+		  (setq found t)
+		(setq counter (1+ counter))))
+	    (if found
+		(nth counter current-buffer-list)
+	      nil)))))))
 
 (defun vhdl-tools-get-entity-or-package-name ()
   "Return name of entity / package or empty string if nothing found."
