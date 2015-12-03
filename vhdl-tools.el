@@ -187,7 +187,7 @@ Test if it is a type definition or not."
                 (setq found (point)))))))
     (if found found nil)))
 
-(defun vhdl-goto-type-def ()
+(defun vhdl-tools-goto-type-def ()
   "Read word at point and try to find corresponding signal or type definition.
 This function first tries to find a signal or type definition in the buffer from
 where the function have been called.  It can only jump to signal, constant,
@@ -198,58 +198,33 @@ packages used, and works through all opened buffers to find packages used in
 the vhdl file.  If a definition has been found in a package, package will be
 displayed.  To go back to original vhdl file press."
   (interactive)
-  (setq current-pos (point))
   ;; check if found definition in calling file
   (if (not (setq found (vhdl-tools-process-file (vhdl-tools-get-name))))
       ;; no definition found in calling file found
       (let ((to-search-for (vhdl-tools-get-name))
 	    (package-list (vhdl-tools-package-names))
-            (counter 0)
+	    (counter 0)
 	    found
 	    package-buffer
 	    (to-open-packages '()))
 	;; loop over all packages _____________________________________
-        (while (and (not found)
+	(while (and (not found)
 		    (nth counter package-list))
-          (setq package-buffer (vhdl-tools-get-buffer (nth counter package-list)))
-          (if (not package-buffer)
-	      ;; package not open: open it afterwards
-              (setq to-open-packages (append (list (nth counter package-list)) to-open-packages))
-	    ;; package open: search here
-	    (save-excursion
-	      (set-buffer package-buffer)
-	      (setq found (vhdl-tools-process-file to-search-for))))
+	  (setq package-buffer
+		(vhdl-tools-get-buffer (nth counter package-list)))
+	  (with-current-buffer package-buffer
+	    (setq found (vhdl-tools-process-file to-search-for)))
 	  (setq counter (1+ counter)))
 	;; loop over ____________________________________________________
-        (setq counter 0)
-        (if (not found)
-            (save-excursion
-	      ;; REFACTOR: Remove ??
-              (if (vhdl-tools-set-entity-of-arch)
-                  (progn
-		    ;; TODO: Never executed
-		    fdklsjsdfj
-                    (setq found (vhdl-tools-process-file to-search-for))
-                    (setq package-buffer (current-buffer))))))
-	;;
-        (while (and (not found)
-		    (nth counter to-open-packages))
-	  dfskjsdlfkkfds
-          (if (setq package-buffer (vhdl-tools-ask-for-package (nth counter to-open-packages)))
-              (save-excursion
-		(set-buffer package-buffer)
-		(setq found (vhdl-tools-process-file to-search-for))))
-	  (setq counter (1+ counter)))
-        (if found
-            (progn
-              (switch-to-buffer package-buffer)
-              (goto-char found)
+	(if found
+	    (progn
+	      (switch-to-buffer package-buffer)
+	      (goto-char found)
 	      (back-to-indentation)
 	      (recenter-top-bottom))
-          (message "sorry, no corresponding definition found")))
+	  (message "sorry, no corresponding definition found")))
     ;; found in current file
     (progn
-      (push-mark current-pos t nil)
       (goto-char found)
       (back-to-indentation)
       (recenter-top-bottom))))
