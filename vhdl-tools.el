@@ -41,11 +41,6 @@
 
 (defgroup vhdl-tools nil "Some customizations of vhdl-tools packages" :group 'local)
 
-(defcustom use-ido-find-file t
-  "If t, `ido-find-file' functions are used for asking for buffers.
-If nil, standard Emacs functions are used."
-  :type 'boolean :group 'vhdl-tools)
-
 (defcustom allowed-chars-in-signal "a-z0-9A-Z_"
   "Regexp with allowed characters in signal, constant or function.
 Needed to determine end of name."
@@ -122,22 +117,7 @@ Only use the form work.NAME.something."
     (if package-buffer t nil)))
 
 (defun vhdl-tools-ask-for-package (package-name)
-  (if use-ido-find-file
-      (let ((ido-current-directory (expand-file-name (file-name-directory (buffer-file-name))))
-            filename)
-        (let (ido-saved-vc-mt
-              (vc-master-templates (and (boundp 'vc-master-templates) vc-master-templates))
-              (ido-work-directory-index -1)
-              (ido-work-file-index -1)
-              (ido-find-literal nil))
-          (unless filename
-            (setq ido-saved-vc-mt vc-master-templates)
-            (setq filename (ido-read-internal 'file
-                                              (concat "Where is '" package-name "? ")
-                                              'ido-file-history nil nil nil))))
-        (setq filename (concat ido-current-directory filename))
-        (find-file-noselect filename))
-    (read-file-name (concat "Where is '" package-name "? "))))
+  (read-file-name (format "Where is %s ? " package-name)))
 
 (defun vhdl-tools-process-file (name)
   "Search a package or a vhdl file for NAME and test if it is a type definition or not."
