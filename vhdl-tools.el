@@ -125,18 +125,6 @@ Only use the form work.NAME.something."
 	    (push (vhdl-tools-get-name) packages))))
       packages)))
 
-(defun vhdl-tools-ask-for-package (package-name)
-  "Given PACKAGE-NAME, return its buffer.
-Assumes package is contained in a file with same name; when no buffer exists,
-open corresponding file; when no file is found, ask user where to find it."
-  ;; When file exists in current dir, open it so that its buffer is available
-  dskfljsfd
-  dfsklj
-  (if (file-exists-p (format "%s.vhd" package-name))
-      (find-file-noselect (format "%s.vhd" package-name))
-    ;; otherwise, ask user for it and open, no selecting it
-    (find-file-noselect (read-file-name (format "Where is %s ? " package-name)))))
-
 (defun vhdl-tools-process-file (name)
   "Search within a package or a vhdl file for NAME.
 Test if it is a type definition or not."
