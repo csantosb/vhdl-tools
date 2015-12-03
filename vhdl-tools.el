@@ -103,31 +103,31 @@ Only use the form work.NAME.something."
       (while (re-search-forward "^ *use  *work\." nil t nil)
         (forward-char)
         (push (vhdl-tools-get-name) packages))
-      ;; REFACTOR: Remove ??
-      (if (vhdl-tools-set-entity-of-arch)
-	  (while (re-search-forward "^ *use  *work\." nil t nil)
-	    (forward-char)
-	    (push (vhdl-tools-get-name) packages)))
+      ;; ;; REFACTOR: Remove ??
+      ;; (if (vhdl-tools-set-entity-of-arch)
+      ;; 	  (while (re-search-forward "^ *use  *work\." nil t nil)
+      ;; 	    (forward-char)
+      ;; 	    (push (vhdl-tools-get-name) packages)))
       packages)))
 
-(defun vhdl-tools-set-entity-of-arch ()
-  "."
-  (let ((package-buffer))
-    (if (equal (vhdl-tools-get-entity-or-package-name) "")
-	tototiti
-      ;; (if (setq package-buffer (vhdl-tools-get-buffer (vhdl-tools-get-entity-name-of-architecture)))
-      ;;     (progn
-      ;;       (set-buffer package-buffer)
-      ;;       (goto-char (point-min)))
-      ;;   (if (setq package-buffer
-      ;; 	    (vhdl-tools-ask-for-package (concat
-      ;; 					 (vhdl-tools-get-entity-name-of-architecture)
-      ;; 					 " entity file")))
-      ;;       (progn
-      ;;         (set-buffer package-buffer)
-      ;;         (goto-char (point-min)))))
-      )
-    (if package-buffer t nil)))
+;; (defun vhdl-tools-set-entity-of-arch ()
+;;   "."
+;;   (let ((package-buffer))
+;;     (if (equal (vhdl-tools-get-entity-or-package-name) "")
+;; 	tototiti
+;;       ;; (if (setq package-buffer (vhdl-tools-get-buffer (vhdl-tools-get-entity-name-of-architecture)))
+;;       ;;     (progn
+;;       ;;       (set-buffer package-buffer)
+;;       ;;       (goto-char (point-min)))
+;;       ;;   (if (setq package-buffer
+;;       ;; 	    (vhdl-tools-ask-for-package (concat
+;;       ;; 					 (vhdl-tools-get-entity-name-of-architecture)
+;;       ;; 					 " entity file")))
+;;       ;;       (progn
+;;       ;;         (set-buffer package-buffer)
+;;       ;;         (goto-char (point-min)))))
+;;       )
+;;     (if package-buffer t nil)))
 
 (defun vhdl-tools-ask-for-package (package-name)
   "Given PACKAGE-NAME, return its buffer.
