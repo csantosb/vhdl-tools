@@ -339,7 +339,7 @@ Declare a key-bind to get back to the original point."
 	  ;;  (beacon-blink))
 	  )
 	;; key to get back here
-	(define-key vhdl-mode-map (kbd "C-c M-,")
+	(define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
 	  #'(lambda() (interactive) (jump-to-register :csb/vhdl-get-upper-previous-buffer)))))))
 
 ;;
