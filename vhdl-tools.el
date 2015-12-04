@@ -1,9 +1,25 @@
-;; ;;; vhdl-tools.el --- Jumps to definition of signal, constant or function
+;; ;;; vhdl-tools.el --- Utilities to navigate vhdl sources
 
-;; Copyright (C) 2003  Free Software Foundation, Inc.
+;; Based on `vhdl-goto-def'
 
-;; Author:  wandad guscheh <wandad.guscheh@fh-hagenberg.at>
+;; Copyright (C) 2003 Free Software Foundation, Inc.
+;; Copyright (C) 2015 Cayetano Santos
+
+;; Original author:  wandad guscheh <wandad.guscheh@fh-hagenberg.at>
+;; Author:           Cayetano Santos
 ;; Keywords: vhdl
+
+;; Filename:
+;; Description:
+;; URL: httpCs://github.com/emacs-helm/helm-recoll
+;; Keywords: convenience
+;; Compatibility: GNU Emacs >= 24.3
+;; Version: 0.2
+;; Package-Requires: ((helm "1.7.7"))
+
+;; This file is NOT part of GNU Emacs.
+
+;;; License:
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -16,11 +32,10 @@
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-;; Boston, MA 02111-1307, USA.
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+;;  ===========
 
 ;; Usage: Open any vhdl file and invoke vhdl-goto-type-def with key sequence (\C-c\C-s by default).
 ;; Cursor will jump to corresponding definition if there is one. Functions searches packages
@@ -34,8 +49,6 @@
 
 ;; Also have a look at customization possibilities with \M-x customize-group vhdl-tools. Change option
 ;; use-ido-find-file to nil if ido-find-file is not installed on your system.
-
-;; If you have any suggestions or found any bugs please mail me at <wandad.guscheh@fh-hagenberg.at>.
 
 ;;; Code:
 
