@@ -217,5 +217,44 @@ displayed.  To go back to original vhdl file press."
       (back-to-indentation)
       (recenter-top-bottom))))
 
+;;
+;; Jump into module
+;;
+(defun vhdl-tools-jump-into-module()
+  "When point is at an instance, jump into the module.
+Additionally, move point to signal at point.
+Declare a key-bind to get back to the original point."
+  (interactive)
+  ;; when no symbol at point, move forward to next symbol
+  (when (not (thing-at-point 'symbol))
+    (back-to-indentation))
+  ;; store symbol to get back here later on
+  (point-to-register :csb/vhdl-get-into-instance-prev-buffer)
+  (save-excursion
+    (setq csb/ggtags-get-to-vhdl-block-symbol (thing-at-point 'symbol t))
+    (search-backward-regexp "port map")
+    (forward-line -1)
+    (end-of-line)
+    (backward-char 2)
+    (setq ggtags-find-tag-hook nil) ;; empty old content in hook
+    ;; when non nil, update hook to execute an action
+    (when csb/ggtags-get-to-vhdl-block-symbol
+      ;; declare action once jumped to new buffer
+      (add-hook 'ggtags-find-tag-hook
+		'(lambda()
+		   (when (search-forward csb/ggtags-get-to-vhdl-block-symbol nil t)
+		     (back-to-indentation)
+		     (recenter-top-bottom)
+		     (let ((beacon-blink-duration 1))
+		       (beacon-blink))
+		     ;; erase modified hook
+		     (setq csb/ggtags-get-to-vhdl-block-symbol nil)
+		     (setq ggtags-find-tag-hook nil))))
+      ;; key to get back here
+      (define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
+        #'(lambda() (interactive) (jump-to-register :csb/vhdl-get-into-instance-prev-buffer)))
+      ;; jump
+      (call-interactively 'ggtags-find-definition))))
+
 (provide 'vhdl-tools)
 ;;; vhdl-tools.el ends here
