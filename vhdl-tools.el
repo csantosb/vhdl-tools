@@ -253,7 +253,7 @@ Declare a key-bind to get back to the original point."
   ;; when no symbol at point, move forward to next symbol
   (when (not (thing-at-point 'symbol))
     (back-to-indentation))
-  ;; store symbol to get back here later on
+  ;; store point to get back here later on
   (point-to-register :csb/vhdl-get-into-instance-prev-buffer)
   (save-excursion
     (setq csb/ggtags-get-to-vhdl-block-symbol (thing-at-point 'symbol t))
@@ -290,7 +290,7 @@ Declare a key-bind to get back to the original point."
   ;; when no symbol at point, move forward to next symbol
   (when (not (thing-at-point 'symbol))
     (back-to-indentation))
-  ;; store symbol to get back here later on
+  ;; store point to get back here later on
   (point-to-register :csb/vhdl-get-first-point)
   (let ((csb/vhdl-get-first-tmp (thing-at-point 'symbol)))
     ;; key to get back here
@@ -299,6 +299,44 @@ Declare a key-bind to get back to the original point."
     (goto-char (point-min))
     (search-forward-regexp csb/vhdl-get-first-tmp nil t)
     (back-to-indentation)))
+
+;;
+;; Jump to upper block
+;;
+
+(defun vhdl-tools-with-initial-minibuffer (str)
+  (interactive)
+  (setq csb/vhdl-current-dir default-directory)
+  (funcall `(lambda ()
+	      (interactive)
+	      (minibuffer-with-setup-hook
+		  (lambda () (insert (format ".*:.*%s$" ,str)))
+		(helm-do-grep-1 '(,csb/vhdl-current-dir))))))
+
+(defun vhdl-tools-jump-upper ()
+  "Get to upper level module and move point to signal at point."
+  (interactive)
+  ;; store point to get back here later on
+  (point-to-register :csb/vhdl-get-upper-previous-buffer)
+  (save-excursion
+    (let ((csb/vhdl-get-upper-thing (thing-at-point 'symbol)))
+      ;; get back to entity
+      (search-backward-regexp "entity")
+      (forward-word)
+      (forward-char 2)
+      (let ((csb/vhdl-get-upper-word (thing-at-point 'symbol)))
+	(vhdl-tools-with-initial-minibuffer csb/vhdl-get-upper-word)
+	(when csb/vhdl-get-upper-thing
+	  (search-forward csb/vhdl-get-upper-thing nil t)
+	  (back-to-indentation)
+	  (recenter-top-bottom)
+	  ;; TODO: make point blink
+	  ;;(let ((beacon-blink-duration 1))
+	  ;;  (beacon-blink))
+	  )
+	;; key to get back here
+	(define-key vhdl-mode-map (kbd "C-c M-,")
+	  #'(lambda() (interactive) (jump-to-register :csb/vhdl-get-upper-previous-buffer)))))))
 
 (provide 'vhdl-tools)
 ;;; vhdl-tools.el ends here
