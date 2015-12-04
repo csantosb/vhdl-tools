@@ -1,4 +1,4 @@
-;; ;;; vhdl-tools.el --- Utilities to navigate vhdl sources
+;;; vhdl-tools.el --- Utilities to navigate vhdl sources
 
 ;; Based on `vhdl-goto-def'
 
@@ -213,7 +213,7 @@ displayed.  To go back to original vhdl file press."
   ;; store symbol to get back here later on
   (point-to-register :vhdl-tools-goto-type-def)
   ;; key to get back here
-  (define-key vhdl-mode-map vhdl-tools-get-back-key-bind
+  (define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
     #'(lambda() (interactive) (jump-to-register :vhdl-tools-goto-type-def)))
   ;; check if found definition in calling file
   (if (not (setq found (vhdl-tools-process-file (vhdl-tools-get-name))))
@@ -442,4 +442,5 @@ Declare a key-bind to get back to the original point."
   (ggtags-find-definition vhdl-tools-follow-links-tag))
 
 (provide 'vhdl-tools)
+
 ;;; vhdl-tools.el ends here
