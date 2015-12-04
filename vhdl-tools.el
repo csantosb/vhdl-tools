@@ -39,11 +39,18 @@
 
 ;;; Code:
 
+(require 'vhdl-mode)
+(require 'ggtags)
+
 (defgroup vhdl-tools nil "Some customizations of vhdl-tools packages" :group 'local)
 
 (defcustom vhdl-tools-allowed-chars-in-signal "a-z0-9A-Z_"
   "Regexp with allowed characters in signal, constant or function.
 Needed to determine end of name."
+  :type 'string :group 'vhdl-tools)
+
+(defcustom vhdl-tools-get-back-key-bind "C-c M-,"
+  "Key bind to get back to previous position in jumping functions."
   :type 'string :group 'vhdl-tools)
 
 (defun vhdl-tools-get-name (&optional dont-downcase)
