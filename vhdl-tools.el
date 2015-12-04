@@ -256,5 +256,24 @@ Declare a key-bind to get back to the original point."
       ;; jump
       (call-interactively 'ggtags-find-definition))))
 
+;;
+;; Jump to first
+;;
+
+(defun vhdl-tools-jump-first ()
+  (interactive)
+  ;; when no symbol at point, move forward to next symbol
+  (when (not (thing-at-point 'symbol))
+    (back-to-indentation))
+  ;; store symbol to get back here later on
+  (point-to-register :csb/vhdl-get-first-point)
+  (let ((csb/vhdl-get-first-tmp (thing-at-point 'symbol)))
+    ;; key to get back here
+    (define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
+      #'(lambda() (interactive) (jump-to-register :csb/vhdl-get-first-point)))
+    (goto-char (point-min))
+    (search-forward-regexp csb/vhdl-get-first-tmp nil t)
+    (back-to-indentation)))
+
 (provide 'vhdl-tools)
 ;;; vhdl-tools.el ends here
