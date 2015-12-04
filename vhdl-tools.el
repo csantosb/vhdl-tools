@@ -66,6 +66,10 @@ Needed to determine end of name."
   "Key bind to get back to previous position in jumping functions."
   :type 'string :group 'vhdl-tools)
 
+(defcustom vhdl-tools-links-tag "\`"
+  "Tag used to delimit links."
+  :type 'string :group 'vhdl-tools)
+
 (defun vhdl-tools-get-name (&optional dont-downcase)
   "Extract word at current position DONT-DOWNCASE.
 To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
@@ -337,6 +341,105 @@ Declare a key-bind to get back to the original point."
 	;; key to get back here
 	(define-key vhdl-mode-map (kbd "C-c M-,")
 	  #'(lambda() (interactive) (jump-to-register :csb/vhdl-get-upper-previous-buffer)))))))
+
+;;
+;; Links
+;;
+;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
+;; follow links in comments.
+;;
+;; For example, in the form of =tag@tosearch=
+;;
+;; "TM_IO_Sequencer@Pixel"
+;;
+;; will get to the definition of ~TM_IO_Sequencer~, and then forward search for
+;; ~Pixel~. To achieve this, I update a hook before switching buffers with
+;; ~find-tag~.
+
+(defun vhdl-tools-store-link()
+  "Store a link."
+  (interactive)
+  (let* ((myline (save-excursion
+		   (back-to-indentation)
+		   (set-mark-command nil)
+		   (end-of-line)
+		   (buffer-substring-no-properties (region-beginning) (region-end))))
+	 (myentity (save-excursion
+		     (search-backward-regexp "entity")
+		     (forward-word)
+		     (forward-char 2)
+		     (thing-at-point 'symbol)))
+	 (mylink (format "%s\@%s" myentity myline)))
+    (message mylink)
+    (setq vhdl-tools-store-link-link mylink)))
+
+(defun vhdl-tools-paste-link()
+  (interactive)
+  (insert (format "`%s`" vhdl-tools-store-link-link)))
+
+(defun vhdl-tools-follow-links(arg)
+  "Follow links in comments in the form of Tag:ToSearch'."
+  (interactive "P")
+  (require 'ggtags)
+  ;; store symbol to get back here later on
+  (point-to-register :csb/vhdl-follow-links-previous-buffer)
+  ;; get item in the form of tag@tosearch
+  (save-excursion
+    (let* (;; beginning of item
+	   (tmp-point-min (progn
+			    (search-backward-regexp vhdl-tools-links-tag )
+			    (+ 1 (point))))
+	   ;; end of item
+	   (tmp-point-max (progn
+			    (forward-char 1)
+			    (search-forward-regexp vhdl-tools-links-tag )
+			    (- (point) 1)))
+	   ;; item
+	   (csb/vhdl-follow-links-item
+	    (buffer-substring-no-properties
+	     tmp-point-min tmp-point-max)))
+      ;; tag
+      (setq vhdl-tools-follow-links-tag
+	    (substring csb/vhdl-follow-links-item 0
+		       (string-match "@" csb/vhdl-follow-links-item)))
+      ;; tosearch
+      (setq csb/vhdl-follow-links-tosearch
+	    ;; with a prefix argument, ignore tosearch
+	    (when (not (equal arg '(4)))
+	      nil
+	      (if (string-match "@" csb/vhdl-follow-links-item)
+		  (substring
+		   csb/vhdl-follow-links-item
+		   (+ 1 (string-match "@" csb/vhdl-follow-links-item)) nil)
+		nil)))
+      (message (format "1. FOUND tag %s, to search %s"
+		       vhdl-tools-follow-links-tag
+		       csb/vhdl-follow-links-tosearch))))
+  ;; empty old content in hook
+  (setq ggtags-find-tag-hook nil)
+  ;; when tosearch non nil, update hook to execute an action
+  (when csb/vhdl-follow-links-tosearch
+    ;; declare action after jumping to new buffer
+    (add-hook 'ggtags-find-tag-hook
+	      '(lambda()
+		 (message (format "3. SEARCHING %s" csb/vhdl-follow-links-tosearch))
+		 ;; action: forward search
+		 ;; if no tosearch is found, do nothing
+		 (when (search-forward csb/vhdl-follow-links-tosearch nil t)
+		   ;; otherwise, do this
+		   (back-to-indentation)
+		   (recenter-top-bottom)
+		   (let ((beacon-blink-duration 1))
+		     (beacon-blink)))
+		 ;; erase modified hook
+		 (setq csb/vhdl-follow-links-tosearch nil)
+		 (setq ggtags-find-tag-hook nil))))
+  (message (format "2. TAG %s" vhdl-tools-follow-links-tag))
+  ;; key to get back here
+  (define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
+    #'(lambda() (interactive) (jump-to-register :csb/vhdl-follow-links-previous-buffer)))
+  ;; jump !
+  (ggtags-find-definition vhdl-tools-follow-links-tag))
 
 (provide 'vhdl-tools)
 ;;; vhdl-tools.el ends here
