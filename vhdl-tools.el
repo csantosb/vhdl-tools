@@ -257,18 +257,25 @@ Declare a key-bind to get back to the original point."
   ;; when no symbol at point, move forward to next symbol
   (when (not (thing-at-point 'symbol))
     (back-to-indentation))
-  ;; store point to get back here later on
-  (point-to-register :csb/vhdl-get-into-instance-prev-buffer)
-  (save-excursion
+  ;; when nil, do nothing
+  (when (thing-at-point 'symbol t)
+    ;; necessary during hook (see later)
     (setq csb/ggtags-get-to-vhdl-block-symbol (thing-at-point 'symbol t))
-    (search-backward-regexp "port map")
-    (forward-line -1)
-    (end-of-line)
-    (backward-char 2)
-    (setq ggtags-find-tag-hook nil) ;; empty old content in hook
-    ;; when non nil, update hook to execute an action
-    (when csb/ggtags-get-to-vhdl-block-symbol
-      ;; declare action once jumped to new buffer
+    ;; push tag (stolen from elisp-slime-nav.el)
+    (if (fboundp 'xref-push-marker-stack)
+	(xref-push-marker-stack)
+      (with-no-warnings
+	(ring-insert find-tag-marker-ring (point-marker))))
+    (save-excursion
+      ;; locate component name to jump into
+      (search-backward-regexp "port map")
+      (forward-line -1)
+      (end-of-line)
+      (backward-char 2)
+      ;; empty old content in hook
+      (setq ggtags-find-tag-hook nil)
+      ;; update hook to execute an action
+      ;; once jumped to new buffer
       (add-hook 'ggtags-find-tag-hook
 		'(lambda()
 		   (when (search-forward csb/ggtags-get-to-vhdl-block-symbol nil t)
@@ -278,11 +285,12 @@ Declare a key-bind to get back to the original point."
 		       (beacon-blink))
 		     ;; erase modified hook
 		     (setq csb/ggtags-get-to-vhdl-block-symbol nil)
-		     (setq ggtags-find-tag-hook nil))))
-      ;; key to get back here
-      (define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
-        #'(lambda() (interactive) (jump-to-register :csb/vhdl-get-into-instance-prev-buffer)))
-      ;; jump
+		     ;; erase hook
+		     (setq ggtags-find-tag-hook nil))
+		   ;; remove last jump so that `pop-tag-mark' will get to
+		   ;; original position before jumping
+		   (ring-remove find-tag-marker-ring 0)))
+      ;; jump !
       (call-interactively 'ggtags-find-definition))))
 
 ;;
