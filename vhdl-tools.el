@@ -325,7 +325,7 @@ Declare a key-bind to get back to the original point."
   (save-excursion
     (let ((csb/vhdl-get-upper-thing (thing-at-point 'symbol)))
       ;; get back to entity
-      (search-backward-regexp "entity")
+      (search-backward-regexp "^entity")
       (forward-word)
       (forward-char 2)
       (let ((csb/vhdl-get-upper-word (thing-at-point 'symbol)))
