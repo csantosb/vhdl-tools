@@ -1,0 +1,22 @@
+* VHDL Tools
+
+Some utilities to navigate vhdl sources, based on [[http://www.emacswiki.org/emacs/vhdl-goto-def.el][vhdl-goto-def]].
+
+- Jumping into instances
+- Jump to upper level
+- Searching for references
+- Following links
+- Custom use of imenu
+
+* Install
+
+As usual, add to path and require.
+
+* Use
+
+Associate functions with keybinds.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'vhdl-mode
+    (define-key vhdl-mode-map (kbd "C-c M-.") #'vhdl-tools-jump-into-module))
+#+end_src

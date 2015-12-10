@@ -35,7 +35,6 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;  ===========
 
 ;; Usage: Open any vhdl file and invoke vhdl-goto-type-def with key sequence (\C-c\C-s by default).
 ;; Cursor will jump to corresponding definition if there is one. Functions searches packages
