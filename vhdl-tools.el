@@ -223,11 +223,10 @@ packages used, and works through all opened buffers to find packages used in
 the vhdl file.  If a definition has been found in a package, package will be
 displayed.  To go back to original vhdl file press."
   (interactive)
-  ;; store symbol to get back here later on
-  (point-to-register :vhdl-tools-goto-type-def)
-  ;; key to get back here
-  (define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
-    #'(lambda() (interactive) (jump-to-register :vhdl-tools-goto-type-def)))
+  ;; when no symbol at point, move forward to next symbol
+  (vhdl-tools-push-marker)
+  (when (not (vhdl-tools-get-name))
+    (back-to-indentation))
   ;; check if found definition in calling file
   (if (not (setq found (vhdl-tools-process-file (vhdl-tools-get-name))))
       ;; no definition found in calling file found
