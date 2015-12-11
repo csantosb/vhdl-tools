@@ -245,9 +245,18 @@ displayed.  To go back to original vhdl file press."
       (back-to-indentation)
       (recenter-top-bottom))))
 
-;;
-;; Jump into module
-;;
+
+(defun vhdl-tools-push-marker ()
+  ;; push tag (stolen from elisp-slime-nav.el)
+  (if (fboundp 'xref-push-marker-stack)
+      (xref-push-marker-stack)
+    (with-no-warnings
+      (ring-insert find-tag-marker-ring (point-marker)))))
+
+;;; Jumping
+
+;;;; Jump into module
+
 (defun vhdl-tools-jump-into-module()
   "When point is at an instance, jump into the module.
 Additionally, move point to signal at point.
@@ -260,11 +269,7 @@ Declare a key-bind to get back to the original point."
   (when (thing-at-point 'symbol t)
     ;; necessary during hook (see later)
     (setq csb/ggtags-get-to-vhdl-block-symbol (thing-at-point 'symbol t))
-    ;; push tag (stolen from elisp-slime-nav.el)
-    (if (fboundp 'xref-push-marker-stack)
-	(xref-push-marker-stack)
-      (with-no-warnings
-	(ring-insert find-tag-marker-ring (point-marker))))
+    (vhdl-tools-push-marker)
     (save-excursion
       ;; locate component name to jump into
       (search-backward-regexp "port map")
