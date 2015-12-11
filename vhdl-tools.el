@@ -387,7 +387,9 @@ When no symbol at point, move point to indentation."
     (message mylink)
     (setq vhdl-tools-store-link-link mylink)))
 
+;;;; Link Paste
 (defun vhdl-tools-paste-link()
+  "Paste previous stored link."
   (interactive)
   (insert (format "`%s`" vhdl-tools-store-link-link)))
 
