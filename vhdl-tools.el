@@ -84,7 +84,7 @@ Needed to determine end of name."
 (defun vhdl-tools-get-name (&optional dont-downcase)
   "Extract word at current position DONT-DOWNCASE.
 To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
-  (vhdl-tools-get-name))
+  (thing-at-point 'symbol t))
 
 (defun vhdl-tools-get-entity-or-package-name ()
   "Return name of entity / package or empty string if nothing found."
