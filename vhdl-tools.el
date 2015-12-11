@@ -54,6 +54,8 @@
 (require 'vhdl-mode)
 (require 'ggtags)
 
+;;; Variables
+
 (defgroup vhdl-tools nil "Some customizations of vhdl-tools packages" :group 'local)
 
 (defcustom vhdl-tools-allowed-chars-in-signal "a-z0-9A-Z_"
@@ -68,6 +70,8 @@ Needed to determine end of name."
 (defcustom vhdl-tools-links-tag "\`"
   "Tag used to delimit links."
   :type 'string :group 'vhdl-tools)
+
+;;; Definition
 
 (defun vhdl-tools-get-name (&optional dont-downcase)
   "Extract word at current position DONT-DOWNCASE.
@@ -245,6 +249,7 @@ displayed.  To go back to original vhdl file press."
       (back-to-indentation)
       (recenter-top-bottom))))
 
+;;; Helper
 
 (defun vhdl-tools-push-marker ()
   ;; push tag (stolen from elisp-slime-nav.el)
@@ -303,7 +308,7 @@ Declare a key-bind to get back to the original point."
 
 (defun vhdl-tools-jump-first ()
   "Jump to first occurrence of symbol at point.
-When no symbol at point, move to indentation."
+When no symbol at point, move point to indentation."
   (interactive)
   ;; when no symbol at point, move forward to next symbol
   (when (not (thing-at-point 'symbol))
@@ -316,9 +321,8 @@ When no symbol at point, move to indentation."
       (search-forward-regexp csb/vhdl-get-first-tmp nil t)
       (back-to-indentation))))
 
-;;
-;; Jump to upper block
-;;
+
+;;;; Jump Upper
 
 (defun vhdl-tools-with-initial-minibuffer (str)
   (interactive)
