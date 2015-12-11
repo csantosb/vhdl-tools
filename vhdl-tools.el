@@ -256,7 +256,9 @@ displayed.  To go back to original vhdl file press."
   (if (fboundp 'xref-push-marker-stack)
       (xref-push-marker-stack)
     (with-no-warnings
-      (ring-insert find-tag-marker-ring (point-marker)))))
+      (ring-insert find-tag-marker-ring (point-marker))))
+  (setq ggtags-tag-ring-index nil))
+
 
 ;;; Jumping
 
