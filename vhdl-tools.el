@@ -334,32 +334,28 @@ When no symbol at point, move point to indentation."
 		(helm-do-grep-1 '(,csb/vhdl-current-dir))))))
 
 (defun vhdl-tools-jump-upper ()
-  "Get to upper level module and move point to signal at point."
+  "Get to upper level module and move point to signal at point.
+When no symbol at point, move point to indentation."
   (interactive)
-  ;; store point to get back here later on
-  (point-to-register :csb/vhdl-get-upper-previous-buffer)
-  (save-excursion
-    (let ((csb/vhdl-get-upper-thing (thing-at-point 'symbol)))
+  ;; when no symbol at point, move forward to next symbol
+  (when (not (thing-at-point 'symbol))
+    (back-to-indentation))
+  (let ((vhdl-tools-thing (thing-at-point 'symbol))
+	(beacon-blink-duration 1))
+    (vhdl-tools-push-marker)
+    (save-excursion
       ;; get back to entity
       (search-backward-regexp "^entity")
       (forward-word)
       (forward-char 2)
-      (let ((csb/vhdl-get-upper-word (thing-at-point 'symbol)))
-	(vhdl-tools-with-initial-minibuffer csb/vhdl-get-upper-word)
-	(when csb/vhdl-get-upper-thing
-	  (search-forward csb/vhdl-get-upper-thing nil t)
-	  (back-to-indentation)
-	  (recenter-top-bottom)
-	  ;; TODO: make point blink
-	  ;;(let ((beacon-blink-duration 1))
-	  ;;  (beacon-blink))
-	  )
-	;; key to get back here
-	(define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
-	  #'(lambda() (interactive) (jump-to-register :csb/vhdl-get-upper-previous-buffer)))))))
+      (vhdl-tools-with-initial-minibuffer (thing-at-point 'symbol))
+      ;; search, when nil, do nothing
+      (when vhdl-tools-thing
+	(search-forward-regexp vhdl-tools-thing nil t)
+	(back-to-indentation)
+	(recenter-top-bottom)))))
 
-;;
-;; Links
+;;; Links
 ;;
 ;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
 ;; follow links in comments.
