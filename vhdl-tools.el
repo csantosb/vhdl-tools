@@ -297,24 +297,24 @@ Declare a key-bind to get back to the original point."
       ;; jump !
       (call-interactively 'ggtags-find-definition))))
 
-;;
-;; Jump to first
-;;
+
+;;;; Jump to first
+;; Utility to jump to first time a symbol appears on file
 
 (defun vhdl-tools-jump-first ()
+  "Jump to first occurrence of symbol at point.
+When no symbol at point, move to indentation."
   (interactive)
   ;; when no symbol at point, move forward to next symbol
   (when (not (thing-at-point 'symbol))
     (back-to-indentation))
-  ;; store point to get back here later on
-  (point-to-register :csb/vhdl-get-first-point)
-  (let ((csb/vhdl-get-first-tmp (thing-at-point 'symbol)))
-    ;; key to get back here
-    (define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
-      #'(lambda() (interactive) (jump-to-register :csb/vhdl-get-first-point)))
-    (goto-char (point-min))
-    (search-forward-regexp csb/vhdl-get-first-tmp nil t)
-    (back-to-indentation)))
+  ;; when nil, do nothing
+  (when (thing-at-point 'symbol)
+    (vhdl-tools-push-marker)
+    (let ((csb/vhdl-get-first-tmp (thing-at-point 'symbol)))
+      (goto-char (point-min))
+      (search-forward-regexp csb/vhdl-get-first-tmp nil t)
+      (back-to-indentation))))
 
 ;;
 ;; Jump to upper block
