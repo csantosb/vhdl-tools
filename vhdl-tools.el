@@ -370,8 +370,9 @@ When no symbol at point, move point to indentation."
 ;; ~Pixel~. To achieve this, I update a hook before switching buffers with
 ;; ~find-tag~.
 
+;;;; Link Store
 (defun vhdl-tools-store-link()
-  "Store a link."
+  "Store current line as a link."
   (interactive)
   (let* ((myline (save-excursion
 		   (back-to-indentation)
