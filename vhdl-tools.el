@@ -393,69 +393,57 @@ When no symbol at point, move point to indentation."
   (interactive)
   (insert (format "`%s`" vhdl-tools-store-link-link)))
 
+;;;; Link Follow
 (defun vhdl-tools-follow-links(arg)
-  "Follow links in comments in the form of Tag:ToSearch'."
+  "Follow links in the form of Tag:ToSearch'."
   (interactive "P")
-  (require 'ggtags)
-  ;; store symbol to get back here later on
-  (point-to-register :csb/vhdl-follow-links-previous-buffer)
   ;; get item in the form of tag@tosearch
   (save-excursion
-    (let* (;; beginning of item
-	   (tmp-point-min (progn
+    (let* ((tmp-point-min (progn  ;; beginning of item
 			    (search-backward-regexp vhdl-tools-links-tag )
 			    (+ 1 (point))))
-	   ;; end of item
-	   (tmp-point-max (progn
+	   (tmp-point-max (progn ;; end of item
 			    (forward-char 1)
 			    (search-forward-regexp vhdl-tools-links-tag )
 			    (- (point) 1)))
-	   ;; item
-	   (csb/vhdl-follow-links-item
+	   (vhdl-tools-follow-links-item ;; item
 	    (buffer-substring-no-properties
 	     tmp-point-min tmp-point-max)))
       ;; tag
       (setq vhdl-tools-follow-links-tag
-	    (substring csb/vhdl-follow-links-item 0
-		       (string-match "@" csb/vhdl-follow-links-item)))
+	    (substring vhdl-tools-follow-links-item 0
+		       (string-match "@" vhdl-tools-follow-links-item)))
       ;; tosearch
-      (setq csb/vhdl-follow-links-tosearch
+      (setq vhdl-tools-follow-links-tosearch
 	    ;; with a prefix argument, ignore tosearch
 	    (when (not (equal arg '(4)))
 	      nil
-	      (if (string-match "@" csb/vhdl-follow-links-item)
+	      (if (string-match "@" vhdl-tools-follow-links-item)
 		  (substring
-		   csb/vhdl-follow-links-item
-		   (+ 1 (string-match "@" csb/vhdl-follow-links-item)) nil)
-		nil)))
-      (message (format "1. FOUND tag %s, to search %s"
-		       vhdl-tools-follow-links-tag
-		       csb/vhdl-follow-links-tosearch))))
-  ;; empty old content in hook
-  (setq ggtags-find-tag-hook nil)
+		   vhdl-tools-follow-links-item
+		   (+ 1 (string-match "@" vhdl-tools-follow-links-item)) nil)
+		nil)))))
   ;; when tosearch non nil, update hook to execute an action
-  (when csb/vhdl-follow-links-tosearch
+  (when vhdl-tools-follow-links-tosearch
+    ;; empty old content in hook
+    (setq ggtags-find-tag-hook nil)
+    (vhdl-tools-push-marker)
     ;; declare action after jumping to new buffer
     (add-hook 'ggtags-find-tag-hook
 	      '(lambda()
-		 (message (format "3. SEARCHING %s" csb/vhdl-follow-links-tosearch))
 		 ;; action: forward search
 		 ;; if no tosearch is found, do nothing
-		 (when (search-forward csb/vhdl-follow-links-tosearch nil t)
+		 (when (search-forward vhdl-tools-follow-links-tosearch nil t)
 		   ;; otherwise, do this
 		   (back-to-indentation)
 		   (recenter-top-bottom)
 		   (let ((beacon-blink-duration 1))
 		     (beacon-blink)))
 		 ;; erase modified hook
-		 (setq csb/vhdl-follow-links-tosearch nil)
-		 (setq ggtags-find-tag-hook nil))))
-  (message (format "2. TAG %s" vhdl-tools-follow-links-tag))
-  ;; key to get back here
-  (define-key vhdl-mode-map (kbd vhdl-tools-get-back-key-bind)
-    #'(lambda() (interactive) (jump-to-register :csb/vhdl-follow-links-previous-buffer)))
-  ;; jump !
-  (ggtags-find-definition vhdl-tools-follow-links-tag))
+		 (setq vhdl-tools-follow-links-tosearch nil)
+		 (setq ggtags-find-tag-hook nil)))
+    ;; jump !
+    (ggtags-find-definition vhdl-tools-follow-links-tag)))
 
 (provide 'vhdl-tools)
 
