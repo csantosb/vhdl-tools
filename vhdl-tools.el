@@ -71,12 +71,38 @@ Needed to determine end of name."
   "Tag used to delimit links."
   :type 'string :group 'vhdl-tools)
 
-;;; Definition
+;;; Helper
+
+(defun vhdl-tools-push-marker ()
+  ;; push tag (stolen from elisp-slime-nav.el)
+  (if (fboundp 'xref-push-marker-stack)
+      (xref-push-marker-stack)
+    (with-no-warnings
+      (ring-insert find-tag-marker-ring (point-marker))))
+  (setq ggtags-tag-ring-index nil))
 
 (defun vhdl-tools-get-name (&optional dont-downcase)
   "Extract word at current position DONT-DOWNCASE.
 To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
-  (thing-at-point 'symbol t))
+  (vhdl-tools-get-name))
+
+(defun vhdl-tools-get-entity-or-package-name ()
+  "Return name of entity / package or empty string if nothing found."
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "^ *\\(entity\\|package\\) +" nil t nil)
+        (vhdl-tools-get-name)
+      "")))
+
+(defun vhdl-tools-get-entity-name-of-architecture()
+  "Search for architecture and return its entity or empty string if nothing found."
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
+        (vhdl-tools-get-name)
+      "")))
+
+;;; Get definition
 
 (defun vhdl-tools-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found."
@@ -104,22 +130,6 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
 	    (if found
 		(nth counter current-buffer-list)
 	      nil)))))))
-
-(defun vhdl-tools-get-entity-or-package-name ()
-  "Return name of entity / package or empty string if nothing found."
-  (save-excursion
-    (goto-char (point-min))
-    (if (re-search-forward "^ *\\(entity\\|package\\) +" nil t nil)
-        (vhdl-tools-get-name)
-      "")))
-
-(defun vhdl-tools-get-entity-name-of-architecture()
-  "Search for architecture and return its entity or empty string if nothing found."
-  (save-excursion
-    (goto-char (point-min))
-    (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
-        (vhdl-tools-get-name)
-      "")))
 
 (defun vhdl-tools-package-names ()
   "Return a list of strings of all used packages or nil if nothing found.
@@ -249,16 +259,6 @@ displayed.  To go back to original vhdl file press."
       (back-to-indentation)
       (recenter-top-bottom))))
 
-;;; Helper
-
-(defun vhdl-tools-push-marker ()
-  ;; push tag (stolen from elisp-slime-nav.el)
-  (if (fboundp 'xref-push-marker-stack)
-      (xref-push-marker-stack)
-    (with-no-warnings
-      (ring-insert find-tag-marker-ring (point-marker))))
-  (setq ggtags-tag-ring-index nil))
-
 
 ;;; Jumping
 
@@ -270,12 +270,12 @@ Additionally, move point to signal at point.
 Declare a key-bind to get back to the original point."
   (interactive)
   ;; when no symbol at point, move forward to next symbol
-  (when (not (thing-at-point 'symbol))
+  (when (not (vhdl-tools-get-name))
     (back-to-indentation))
   ;; when nil, do nothing
-  (when (thing-at-point 'symbol t)
+  (when (vhdl-tools-get-name)
     ;; necessary during hook (see later)
-    (setq csb/ggtags-get-to-vhdl-block-symbol (thing-at-point 'symbol t))
+    (setq csb/ggtags-get-to-vhdl-block-symbol (vhdl-tools-get-name))
     (vhdl-tools-push-marker)
     (save-excursion
       ;; locate component name to jump into
@@ -313,12 +313,12 @@ Declare a key-bind to get back to the original point."
 When no symbol at point, move point to indentation."
   (interactive)
   ;; when no symbol at point, move forward to next symbol
-  (when (not (thing-at-point 'symbol))
+  (when (not (vhdl-tools-get-name))
     (back-to-indentation))
   ;; when nil, do nothing
-  (when (thing-at-point 'symbol)
+  (when (vhdl-tools-get-name)
     (vhdl-tools-push-marker)
-    (let ((csb/vhdl-get-first-tmp (thing-at-point 'symbol)))
+    (let ((csb/vhdl-get-first-tmp (vhdl-tools-get-name)))
       (goto-char (point-min))
       (search-forward-regexp csb/vhdl-get-first-tmp nil t)
       (back-to-indentation))))
@@ -340,9 +340,9 @@ When no symbol at point, move point to indentation."
 When no symbol at point, move point to indentation."
   (interactive)
   ;; when no symbol at point, move forward to next symbol
-  (when (not (thing-at-point 'symbol))
+  (when (not (vhdl-tools-get-name))
     (back-to-indentation))
-  (let ((vhdl-tools-thing (thing-at-point 'symbol))
+  (let ((vhdl-tools-thing (vhdl-tools-get-name))
 	(beacon-blink-duration 1))
     (vhdl-tools-push-marker)
     (save-excursion
@@ -350,7 +350,7 @@ When no symbol at point, move point to indentation."
       (search-backward-regexp "^entity")
       (forward-word)
       (forward-char 2)
-      (vhdl-tools-with-initial-minibuffer (thing-at-point 'symbol))
+      (vhdl-tools-with-initial-minibuffer (vhdl-tools-get-name))
       ;; search, when nil, do nothing
       (when vhdl-tools-thing
 	(search-forward-regexp vhdl-tools-thing nil t)
@@ -383,7 +383,7 @@ When no symbol at point, move point to indentation."
 		     (search-backward-regexp "entity")
 		     (forward-word)
 		     (forward-char 2)
-		     (thing-at-point 'symbol)))
+		     (vhdl-tools-get-name)))
 	 (mylink (format "%s\@%s" myentity myline)))
     (message mylink)
     (setq vhdl-tools-store-link-link mylink)))
