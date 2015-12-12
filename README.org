@@ -30,12 +30,10 @@ Activate the minor mode by completing the vhdl mode hook.
 
 This will make available a set of keys:
 
-#+begin_src sh
-  + =C-c M-D= jumps to the definition of symbol at point
-  + =C-c M-j= follows the link at point
-  + =C-c M-w= stores a link
-  + =C-c M-y= pastes a link
-  + =C-c M-.= jumps into the instance at point
-  + =C-c M-a= moves point to first appearance of symbol at point
-  + =C-c M-u= jumps to uppers hierarchy level
-#+end_src
+  + =C-c M-D=, jumps to the definition of symbol at point
+  + =C-c M-j=, follows the link at point
+  + =C-c M-w=, stores a link
+  + =C-c M-y=, pastes a link
+  + =C-c M-.=, jumps into the instance at point
+  + =C-c M-a=, moves point to first appearance of symbol at point
+  + =C-c M-u=, jumps to uppers hierarchy level
