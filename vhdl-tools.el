@@ -63,9 +63,6 @@
 Needed to determine end of name."
   :type 'string :group 'vhdl-tools)
 
-(defcustom vhdl-tools-links-tag "\`"
-  "Tag used to delimit links."
-  :type 'string :group 'vhdl-tools)
 
 ;;; Helper
 
@@ -403,11 +400,11 @@ When no symbol at point, move point to indentation."
   ;; get item in the form of tag@tosearch
   (save-excursion
     (let* ((tmp-point-min (progn  ;; beginning of item
-			    (search-backward-regexp vhdl-tools-links-tag )
+			    (search-backward-regexp "\`" )
 			    (+ 1 (point))))
 	   (tmp-point-max (progn ;; end of item
 			    (forward-char 1)
-			    (search-forward-regexp vhdl-tools-links-tag )
+			    (search-forward-regexp "\`" )
 			    (- (point) 1)))
 	   (vhdl-tools-follow-links-item ;; item
 	    (buffer-substring-no-properties
