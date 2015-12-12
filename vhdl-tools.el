@@ -450,6 +450,27 @@ When no symbol at point, move point to indentation."
     (ggtags-find-definition vhdl-tools-follow-links-tag)))
 
 
+;;; Headings
+
+;;;; Get to next
+
+;;;###autoload
+(defun vhdl-tools-headings-next()
+  "Get to next heading."
+  (interactive)
+  (re-search-forward outline-regexp)
+  (beginning-of-line))
+
+;;;; Get to previous
+
+;;;###autoload
+(defun vhdl-tools-headings-prev()
+  "Get to previous heading."
+  (interactive)
+  (re-search-backward outline-regexp)
+  (beginning-of-line))
+
+
 ;;; Minor Mode
 
 ;;;; Keybindings
@@ -463,6 +484,8 @@ When no symbol at point, move point to indentation."
     (define-key m (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
     (define-key m (kbd "C-c M-a") #'vhdl-tools-jump-first)
     (define-key m (kbd "C-c M-u") #'vhdl-tools-jump-upper)
+    (define-key m (kbd "C-c C-n") #'vhdl-tools-headings-next)
+    (define-key m (kbd "C-c C-h") #'vhdl-tools-headings-prev)
     m)
   "Keymap for `vhdl-tools'.")
 
@@ -483,6 +506,8 @@ Key bindings:
 	;; try to keep things as they were
 	(setq vhdl-tools-outline-active outline-minor-mode)
 	(outline-minor-mode 1)
+	(setq vhdl-tools-ggtags-active ggtags-mode)
+	(ggtags-mode 1)
 	;; custom outline regexp
 	(setq-local vhdl-tools-outline-regexp-old outline-regexp)
 	(setq-local outline-regexp vhdl-tools-outline-regexp)
@@ -492,6 +517,8 @@ Key bindings:
       ;; try to keep things as they were
       (when (not vhdl-tools-outline-active)
 	(outline-minor-mode -1))
+      (when (not vhdl-tools-ggtags-active)
+	(ggtags-mode -1))
       ;; custom outline regexp
       (setq-local outline-regexp vhdl-tools-outline-regexp-old)
       ;; notify
