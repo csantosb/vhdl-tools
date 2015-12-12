@@ -63,10 +63,6 @@
 Needed to determine end of name."
   :type 'string :group 'vhdl-tools)
 
-(defcustom vhdl-tools-get-back-key-bind "C-c M-,"
-  "Key bind to get back to previous position in jumping functions."
-  :type 'string :group 'vhdl-tools)
-
 (defcustom vhdl-tools-links-tag "\`"
   "Tag used to delimit links."
   :type 'string :group 'vhdl-tools)
