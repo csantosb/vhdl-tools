@@ -276,7 +276,7 @@ Declare a key-bind to get back to the original point."
   ;; when nil, do nothing
   (when (vhdl-tools-get-name)
     ;; necessary during hook (see later)
-    (setq csb/ggtags-get-to-vhdl-block-symbol (vhdl-tools-get-name))
+    (setq vhdl-tools-jump-into-module-name (vhdl-tools-get-name))
     (vhdl-tools-push-marker)
     (save-excursion
       ;; locate component name to jump into
@@ -290,13 +290,13 @@ Declare a key-bind to get back to the original point."
       ;; once jumped to new buffer
       (add-hook 'ggtags-find-tag-hook
 		'(lambda()
-		   (when (search-forward csb/ggtags-get-to-vhdl-block-symbol nil t)
+		   (when (search-forward vhdl-tools-jump-into-module-name nil t)
 		     (back-to-indentation)
 		     (recenter-top-bottom)
 		     (let ((beacon-blink-duration 1))
 		       (beacon-blink))
 		     ;; erase modified hook
-		     (setq csb/ggtags-get-to-vhdl-block-symbol nil)
+		     (setq vhdl-tools-jump-into-module-name nil)
 		     ;; erase hook
 		     (setq ggtags-find-tag-hook nil))
 		   ;; remove last jump so that `pop-tag-mark' will get to
@@ -320,9 +320,9 @@ When no symbol at point, move point to indentation."
   ;; when nil, do nothing
   (when (vhdl-tools-get-name)
     (vhdl-tools-push-marker)
-    (let ((csb/vhdl-get-first-tmp (vhdl-tools-get-name)))
+    (let ((vhdl-tools-jump-first-name (vhdl-tools-get-name)))
       (goto-char (point-min))
-      (search-forward-regexp csb/vhdl-get-first-tmp nil t)
+      (search-forward-regexp vhdl-tools-jump-first-name nil t)
       (back-to-indentation))))
 
 
