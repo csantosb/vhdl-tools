@@ -11,7 +11,7 @@
 
 ;; Filename:
 ;; Description:
-;; URL: httpCs://github.com/emacs-helm/helm-recoll
+;; URL: https://github.com/emacs-helm/helm-recoll
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs >= 24.3
 ;; Version: 0.2
@@ -49,10 +49,12 @@
 ;; Also have a look at customization possibilities with \M-x customize-group vhdl-tools. Change option
 ;; use-ido-find-file to nil if ido-find-file is not installed on your system.
 
+
 ;;; Code:
 
 (require 'vhdl-mode)
 (require 'ggtags)
+
 
 ;;; Variables
 
@@ -94,6 +96,7 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
     (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
         (vhdl-tools-get-name)
       "")))
+
 
 ;;; Get definition
 
@@ -298,7 +301,6 @@ Declare a key-bind to get back to the original point."
       ;; jump !
       (call-interactively 'ggtags-find-definition))))
 
-
 ;;;; Jump to first
 ;; Utility to jump to first time a symbol appears on file
 
@@ -318,8 +320,8 @@ When no symbol at point, move point to indentation."
       (search-forward-regexp vhdl-tools-jump-first-name nil t)
       (back-to-indentation))))
 
-
 ;;;; Jump Upper
+;; Utility to jump to upper level
 
 ;;;###autoload
 (defun vhdl-tools-jump-upper ()
