@@ -328,13 +328,6 @@ When no symbol at point, move point to indentation."
 
 ;;;; Jump Upper
 
-(defun vhdl-tools-with-initial-minibuffer (str)
-  (setq csb/vhdl-current-dir default-directory)
-  (funcall `(lambda ()
-	      (minibuffer-with-setup-hook
-		  (lambda () (insert (format ".*:.*%s$" ,str)))
-		(helm-do-grep-1 '(,csb/vhdl-current-dir))))))
-
 ;;;###autoload
 (defun vhdl-tools-jump-upper ()
   "Get to upper level module and move point to signal at point.
@@ -351,12 +344,18 @@ When no symbol at point, move point to indentation."
       (search-backward-regexp "^entity")
       (forward-word)
       (forward-char 2)
-      (vhdl-tools-with-initial-minibuffer (vhdl-tools-get-name))
+      ;; Jump by searching with prefilling minubuffer
+      (funcall `(lambda ()
+		  (minibuffer-with-setup-hook
+		      (lambda ()
+			(insert (format ".*:.*%s$" ,(vhdl-tools-get-name))))
+		    (helm-do-grep-1 '(,default-directory)))))
       ;; search, when nil, do nothing
       (when vhdl-tools-thing
 	(search-forward-regexp vhdl-tools-thing nil t)
 	(back-to-indentation)
 	(recenter-top-bottom)))))
+
 
 ;;; Links
 ;;
