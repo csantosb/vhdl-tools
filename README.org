@@ -1,22 +1,41 @@
 * VHDL Tools
 
-Some utilities to navigate vhdl sources, based on [[http://www.emacswiki.org/emacs/vhdl-goto-def.el][vhdl-goto-def]].
+Utilities to ease navigating vhdl sources, based on [[http://www.emacswiki.org/emacs/vhdl-goto-def.el][vhdl-goto-def]].
 
 - Jumping into instances
 - Jump to upper level
 - Searching for references
-- Following links
+- Link management
 - Custom use of imenu
 
 * Install
 
 As usual, add to path and require.
 
-* Use
-
-Associate functions with keybinds.
-
 #+begin_src emacs-lisp
   (with-eval-after-load 'vhdl-mode
-    (define-key vhdl-mode-map (kbd "C-c M-.") #'vhdl-tools-jump-into-module))
+    (add-to-list 'load-path "...")
+    (require 'vhdl-tools))
+#+end_src
+
+* Use
+
+Activate the minor mode by completing the vhdl mode hook.
+
+#+begin_src emacs-lisp
+  (add-hook 'vhdl-mode-hook
+            (lambda ()
+              (vhdl-tools-mode 1))
+#+end_src
+
+This will make available a set of keys:
+
+#+begin_src sh
+  + =C-c M-D= jumps to the definition of symbol at point
+  + =C-c M-j= follows the link at point
+  + =C-c M-w= stores a link
+  + =C-c M-y= pastes a link
+  + =C-c M-.= jumps into the instance at point
+  + =C-c M-a= moves point to first appearance of symbol at point
+  + =C-c M-u= jumps to uppers hierarchy level
 #+end_src
