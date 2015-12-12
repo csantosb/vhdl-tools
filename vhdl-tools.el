@@ -54,7 +54,7 @@
 
 (require 'vhdl-mode)
 (require 'ggtags)
-
+(require 'outline)
 
 ;;; Variables
 
@@ -65,6 +65,8 @@
 Needed to determine end of name."
   :type 'string :group 'vhdl-tools)
 
+(defcustom vhdl-tools-outline-regexp "^\\s-*-- [*]\\{1,8\\} "
+  "Regexp ...")
 
 ;;; Helper
 
@@ -477,8 +479,23 @@ Key bindings:
   :group 'vhdl-tools
   :global nil
   (if vhdl-tools-mode
-      (message "VHDL Tools enabled.")
-    (message "VHDL Tools disabled.")))
+      (progn
+	;; try to keep things as they were
+	(setq vhdl-tools-outline-active outline-minor-mode)
+	(outline-minor-mode 1)
+	;; custom outline regexp
+	(setq-local vhdl-tools-outline-regexp-old outline-regexp)
+	(setq-local outline-regexp vhdl-tools-outline-regexp)
+	;; notify
+	(message "VHDL Tools enabled."))
+    (progn
+      ;; try to keep things as they were
+      (when (not vhdl-tools-outline-active)
+	(outline-minor-mode -1))
+      ;; custom outline regexp
+      (setq-local outline-regexp vhdl-tools-outline-regexp-old)
+      ;; notify
+      (message "VHDL Tools disabled."))))
 
 (provide 'vhdl-tools)
 
