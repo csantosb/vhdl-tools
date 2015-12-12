@@ -329,10 +329,8 @@ When no symbol at point, move point to indentation."
 ;;;; Jump Upper
 
 (defun vhdl-tools-with-initial-minibuffer (str)
-  (interactive)
   (setq csb/vhdl-current-dir default-directory)
   (funcall `(lambda ()
-	      (interactive)
 	      (minibuffer-with-setup-hook
 		  (lambda () (insert (format ".*:.*%s$" ,str)))
 		(helm-do-grep-1 '(,csb/vhdl-current-dir))))))
