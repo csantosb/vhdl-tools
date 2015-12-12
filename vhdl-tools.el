@@ -104,6 +104,7 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
 
 ;;; Get definition
 
+;;;###autoload
 (defun vhdl-tools-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found."
   (save-excursion
@@ -263,6 +264,7 @@ displayed.  To go back to original vhdl file press."
 
 ;;;; Jump into module
 
+;;;###autoload
 (defun vhdl-tools-jump-into-module()
   "When point is at an instance, jump into the module.
 Additionally, move point to signal at point.
@@ -307,6 +309,7 @@ Declare a key-bind to get back to the original point."
 ;;;; Jump to first
 ;; Utility to jump to first time a symbol appears on file
 
+;;;###autoload
 (defun vhdl-tools-jump-first ()
   "Jump to first occurrence of symbol at point.
 When no symbol at point, move point to indentation."
@@ -334,6 +337,7 @@ When no symbol at point, move point to indentation."
 		  (lambda () (insert (format ".*:.*%s$" ,str)))
 		(helm-do-grep-1 '(,csb/vhdl-current-dir))))))
 
+;;;###autoload
 (defun vhdl-tools-jump-upper ()
   "Get to upper level module and move point to signal at point.
 When no symbol at point, move point to indentation."
@@ -370,6 +374,8 @@ When no symbol at point, move point to indentation."
 ;; ~find-tag~.
 
 ;;;; Link Store
+
+;;;###autoload
 (defun vhdl-tools-store-link()
   "Store current line as a link."
   (interactive)
@@ -388,12 +394,16 @@ When no symbol at point, move point to indentation."
     (setq vhdl-tools-store-link-link mylink)))
 
 ;;;; Link Paste
+
+;;;###autoload
 (defun vhdl-tools-paste-link()
   "Paste previous stored link."
   (interactive)
   (insert (format "`%s`" vhdl-tools-store-link-link)))
 
 ;;;; Link Follow
+
+;;;###autoload
 (defun vhdl-tools-follow-links(arg)
   "Follow links in the form of Tag:ToSearch'."
   (interactive "P")
