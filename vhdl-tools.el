@@ -445,6 +445,39 @@ When no symbol at point, move point to indentation."
     ;; jump !
     (ggtags-find-definition vhdl-tools-follow-links-tag)))
 
+
+;;; Minor Mode
+
+;;;; Keybindings
+
+(defvar vhdl-tools-map
+  (let ((m (make-sparse-keymap)))
+    (define-key m (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
+    (define-key m (kbd "C-c M-j") #'vhdl-tools-follow-links)
+    (define-key m (kbd "C-c M-w") #'vhdl-tools-store-link)
+    (define-key m (kbd "C-c M-y") #'vhdl-tools-paste-link)
+    (define-key m (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
+    (define-key m (kbd "C-c M-a") #'vhdl-tools-jump-first)
+    (define-key m (kbd "C-c M-u") #'vhdl-tools-jump-upper)
+    m)
+  "Keymap for `vhdl-tools'.")
+
+;;;; Mode
+
+;;;###autoload
+(define-minor-mode vhdl-tools-mode
+  "Utilities for navigating vhdl sources.
+
+Key bindings:
+\\{vhdl-tools-map}"
+  :lighter " vhdl-t"
+  :keymap vhdl-tools-map
+  :group 'vhdl-tools
+  :global nil
+  (if vhdl-tools-mode
+      (message "VHDL Tools enabled.")
+    (message "VHDL Tools disabled.")))
+
 (provide 'vhdl-tools)
 
 ;;; vhdl-tools.el ends here
