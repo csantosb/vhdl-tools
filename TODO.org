@@ -1,9 +1,3 @@
 * TODO
 
-** Check functions based on ’vhdl-tools-jump-into-module’
-
-** Check variable names and use the `vhdl-tools` prefix in them all
-
-** Minor mode
-
 ** Include here imenu related functions
