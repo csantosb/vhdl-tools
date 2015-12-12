@@ -68,6 +68,9 @@ Needed to determine end of name."
 (defcustom vhdl-tools-outline-regexp "^\\s-*-- [*]\\{1,8\\} "
   "Regexp ...")
 
+(defcustom vhdl-tools-imenu-regexp "^\\s-*--\\s-\\([*]\\{1,8\\}\\s-.+\\)"
+  "Regexp ...")
+
 ;;; Helper
 
 (defun vhdl-tools-push-marker ()
@@ -471,6 +474,100 @@ When no symbol at point, move point to indentation."
   (beginning-of-line))
 
 
+;;; Helm-imenu navigation
+
+;;;; Helper
+
+;;;###autoload
+(defun vhdl-tools-imenu-with-initial-minibuffer (str)
+  (interactive)
+  (funcall `(lambda ()
+	      (interactive)
+	      (minibuffer-with-setup-hook
+		  (lambda () (insert (format "%s " ,str)))
+		(call-interactively 'helm-semantic-or-imenu)))))
+
+;;;; Standard Imenu
+
+;;;###autoload
+(defun vhdl-tools-imenu()
+  (interactive)
+  (let ((imenu-generic-expression vhdl-imenu-generic-expression))
+    (set-buffer-modified-p t)
+    (save-buffer)
+    (call-interactively 'imenu)))
+
+;;;; Instances
+
+;;;###autoload
+(defun vhdl-tools-imenu-instance()
+  (interactive)
+  (let ((imenu-generic-expression vhdl-imenu-generic-expression)
+	(helm-imenu-delimiter " ")
+	(helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
+    (set-buffer-modified-p t)
+    (save-buffer)
+    (vhdl-tools-imenu-with-initial-minibuffer "^Instance")))
+
+;;;; Processes
+
+;;;###autoload
+(defun vhdl-tools-imenu-processes()
+  (interactive)
+  (let ((imenu-generic-expression vhdl-imenu-generic-expression)
+	(helm-imenu-delimiter " ")
+	(helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
+    (set-buffer-modified-p t)
+    (save-buffer)
+    (vhdl-tools-imenu-with-initial-minibuffer "^Process")))
+
+;;;; Headers
+
+;;;###autoload
+(defun vhdl-tools-imenu-headers()
+  (interactive)
+  (let ((imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1)))
+	(helm-imenu-delimiter " ")
+	(helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
+    (set-buffer-modified-p t)
+    (save-buffer)
+    (call-interactively 'helm-semantic-or-imenu)))
+
+;;;; All
+
+;;;###autoload
+(defun vhdl-tools-imenu-all()
+  "In a vhdl buffer, call `helm-semantic-or-imenu', show all items.
+  Processes, instances and doc headers are shown in order of appearance."
+  (interactive)
+  (let ((imenu-generic-expression
+	 `(;; process
+	   ("" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(\\(postponed\\s-+\\|\\)process\\)" 1)
+	   ;; instance
+	   ("" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\s-*:\\(\\s-\\|\n\\)*\\(entity\\s-+\\(\\w\\|\\s_\\)+\\.\\)?\\(\\w\\|\\s_\\)+\\)\\(\\s-\\|\n\\)+\\(generic\\|port\\)\\s-+map\\>" 1)
+	   ("" ,vhdl-tools-imenu-regexp 1)
+	   ("Subprogram" "^\\s-*\\(\\(\\(impure\\|pure\\)\\s-+\\|\\)function\\|procedure\\)\\s-+\\(\"?\\(\\w\\|\\s_\\)+\"?\\)" 4)
+	   ;; ("Instance" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\s-*:\\(\\s-\\|\n\\)*\\(entity\\s-+\\(\\w\\|\\s_\\)+\\.\\)?\\(\\w\\|\\s_\\)+\\)\\(\\s-\\|\n\\)+\\(generic\\|port\\)\\s-+map\\>" 1)
+	   ("Component" "^\\s-*\\(component\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)
+	   ("Procedural" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(procedural\\)" 1)
+	   ;; ("Process" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(\\(postponed\\s-+\\|\\)process\\)" 1)
+	   ("Block" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(block\\)" 1)
+	   ("Package" "^\\s-*\\(package\\( body\\|\\)\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 3)
+	   ("Configuration" "^\\s-*\\(configuration\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\s-+of\\s-+\\(\\w\\|\\s_\\)+\\)" 2)
+	   ("" "^\\s-*\\(architecture\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\s-+of\\s-+\\(\\w\\|\\s_\\)+\\)" 2)
+	   ("Entity" "^\\s-*\\(entity\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)
+	   ("Context" "^\\s-*\\(context\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)))
+	(helm-imenu-delimiter " ")
+	(helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
+    (set-buffer-modified-p t)
+    (save-buffer)
+    (call-interactively 'helm-semantic-or-imenu)))
+
+
 ;;; Minor Mode
 
 ;;;; Keybindings
@@ -486,6 +583,14 @@ When no symbol at point, move point to indentation."
     (define-key m (kbd "C-c M-u") #'vhdl-tools-jump-upper)
     (define-key m (kbd "C-c C-n") #'vhdl-tools-headings-next)
     (define-key m (kbd "C-c C-h") #'vhdl-tools-headings-prev)
+    ;;
+    (define-prefix-command 'vhdl-tools-imenu-map)
+    (define-key m (kbd "C-x c i") 'vhdl-tools-imenu-map)
+    (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
+    (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
+    (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
+    (define-key vhdl-tools-imenu-map (kbd "*") #'vhdl-tools-imenu-headers)
+    (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all)
     m)
   "Keymap for `vhdl-tools'.")
 
