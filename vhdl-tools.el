@@ -288,13 +288,20 @@ Declare a key-bind to get back to the original point."
     (setq vhdl-tools-jump-into-module-name (vhdl-tools-get-name))
     (vhdl-tools-push-marker)
     (save-excursion
+      ;; case of component instantiation
       ;; locate component name to jump into
-      (search-backward-regexp "port map")
-      ;; take into account generics when searching backward
-      (search-backward-regexp "generic map" nil t)
-      (forward-line -1)
-      (end-of-line)
-      (backward-char 2)
+      (if (search-backward-regexp "port map" nil t)
+	  (progn
+	    ;; take into account generics when searching backward
+	    (search-backward-regexp "generic map" nil t)
+	    (forward-line -1)
+	    (end-of-line)
+	    (backward-char 2))
+	;; case of component declaration
+	(progn
+	  (search-backward-regexp "component")
+	  (end-of-line)
+	  (backward-char 2)))
       ;; empty old content in hook
       (setq ggtags-find-tag-hook nil)
       ;; update hook to execute an action
