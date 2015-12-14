@@ -103,6 +103,13 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
         (vhdl-tools-get-name)
       "")))
 
+(defun vhdl-tools-imenu-with-initial-minibuffer (str)
+  (funcall `(lambda ()
+	      (interactive)
+	      (minibuffer-with-setup-hook
+		  (lambda () (insert (format "%s " ,str)))
+		(call-interactively 'helm-semantic-or-imenu)))))
+
 
 ;;; Get definition
 
@@ -478,17 +485,6 @@ When no symbol at point, move point to indentation."
 
 
 ;;; Helm-imenu navigation
-
-;;;; Helper
-
-;;;###autoload
-(defun vhdl-tools-imenu-with-initial-minibuffer (str)
-  (interactive)
-  (funcall `(lambda ()
-	      (interactive)
-	      (minibuffer-with-setup-hook
-		  (lambda () (insert (format "%s " ,str)))
-		(call-interactively 'helm-semantic-or-imenu)))))
 
 ;;;; Standard Imenu
 
