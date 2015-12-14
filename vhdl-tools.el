@@ -55,6 +55,7 @@
 (require 'vhdl-mode)
 (require 'ggtags)
 (require 'outline)
+(require 'beacon)
 
 ;;; Variables
 
