@@ -282,6 +282,8 @@ Declare a key-bind to get back to the original point."
     (save-excursion
       ;; locate component name to jump into
       (search-backward-regexp "port map")
+      ;; take into account generics when searching backward
+      (search-backward-regexp "generic map" nil t)
       (forward-line -1)
       (end-of-line)
       (backward-char 2)
