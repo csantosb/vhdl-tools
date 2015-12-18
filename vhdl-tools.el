@@ -15,7 +15,7 @@
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs >= 24.3
 ;; Version: 0.2
-;; Package-Requires: ((vhdl-mode "3.37.1") (ggtags "0.8.11"))
+;; Package-Requires: ((ggtags "0.8.11"))
 
 ;;; License:
 
