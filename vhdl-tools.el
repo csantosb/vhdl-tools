@@ -1,6 +1,6 @@
-;;; vhdl-tools.el --- Utilities to navigate vhdl sources
+;;; vhdl-tools.el --- Utilities for navigating vhdl sources. -*- lexical-binding: t; -*-
 
-;; Based on `vhdl-goto-def'
+;; Based on `vhdl-goto-def' at `http://www.emacswiki.org/emacs/vhdl-goto-def.el'
 
 ;; Copyright (C) 2003 Free Software Foundation, Inc.
 ;; Copyright (C) 2015 Cayetano Santos
@@ -9,17 +9,17 @@
 ;; Author:           Cayetano Santos
 ;; Keywords: vhdl
 
-;; Filename:
-;; Description:
-;; URL: https://github.com/emacs-helm/helm-recoll
+;; Filename: vhdl-tools.el
+;; Description: Utilities for navigating vhdl sources.
+;; URL: https://github.com/csantosb/vhdl-tools
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs >= 24.3
-;; Version: 0.2
-;; Package-Requires: ((helm "1.7.7"))
-
-;; This file is NOT part of GNU Emacs.
+;; Version: 0.1
+;; Package-Requires: ((vhdl-mode "3.38.1") (ggtags "0.8.11"))
 
 ;;; License:
+
+;; This file is NOT part of GNU Emacs.
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -30,31 +30,71 @@
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-
+;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+;;
+;; Vhdl-tools provide a minor mode intended to be used under `vhdl-mode',
+;; It adds functionality on top of `ggtags', `imenu' and `outline' specific
+;; to ease navigating vhdl sources. It expects a working setup of `ggtags'.
+;;
+;;;; Install:
+;;
+;; To install, proceed as usual: add to path and require after loading `vhdl-mode'
+;;
+;; (with-eval-after-load 'vhdl-mode
+;;   (add-to-list 'load-path "...")
+;;   (require 'vhdl-tools))
+;;
+;; Then, activate the minor mode by completing the `vhdl-mode' hook.
+;;
+;; (add-hook 'vhdl-mode-hook
+;; 	  (lambda ()
+;; 	    (vhdl-tools-mode 1)))
+;;
+;;;; Use:
+;;
+;; The minor mode provide utilities to ease navigating vhdl sources beyond what
+;; is available with plain `ggtags'.
+;;
+;;   - Jumping into instances
+;;   - Jump to upper level
+;;   - Searching for references
+;;   - Link management
+;;   - Custom use of imenu
+;;
+;; Open any vhdl file and invoke the following keybinds
+;;
+;;   C-c M-D     jumps to the definition of symbol at point
+;;   C-c M-j     follows the link at point
+;;   C-c M-w     stores a link
+;;   C-c M-y     pastes a link
+;;   C-c M-.     jumps into the instance at point
+;;   C-c M-a     moves point to first appearance of symbol at point
+;;   C-c M-u     jumps to upper hierarchy level
+;;
+;; Cursor will jump to the target if there is one, searching packages
+;; too. The ring mark is push after jumping, so to get back, press \C-c\C-p
+;; or \M-, (default binds under `ggtags') if corresponding definition has been
+;; found. Works better for files with correct syntax: think
+;; `vhdl-beautify-buffer' before using `vhdl-tools'.
+;;
+;; Also have a look at customization possibilities with \M-x customize-group `vhdl-tools'.
+;;
+;; See README for details
 
-;; Usage: Open any vhdl file and invoke vhdl-goto-type-def with key sequence (\C-c\C-s by default).
-;; Cursor will jump to corresponding definition if there is one. Functions searches packages
-;; too. If no buffer with package is open, functions asks for location of package.
+;;; NEWS 0.1 (2015-12-15):
 
-;; To get back to the start of the search, press \C-x\C-x if corresponding definition has been found
-;; in the same file, \C-x b RET if the search has jumped to another buffer.
-
-;; Functions works for signals, constants, types, subtypes, components and subprograms.
-;; Works only well for vhdl files with more or less correct syntax. Finds also signals in entity definition.
-
-;; Also have a look at customization possibilities with \M-x customize-group vhdl-tools. Change option
-;; use-ido-find-file to nil if ido-find-file is not installed on your system.
-
+;;; Todo:
 
 ;;; Code:
 
 (require 'vhdl-mode)
 (require 'ggtags)
 (require 'outline)
+(require 'imenu)
 
 ;;; Variables
 
