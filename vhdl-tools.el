@@ -82,7 +82,7 @@ Needed to determine end of name."
       (ring-insert find-tag-marker-ring (point-marker))))
   (setq ggtags-tag-ring-index nil))
 
-(defun vhdl-tools-get-name (&optional dont-downcase)
+(defun vhdl-tools-get-name ()
   "Extract word at current position DONT-DOWNCASE.
 To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   (thing-at-point 'symbol t))
@@ -180,8 +180,7 @@ Test if it is a type definition or not."
 	beginning-of-entity-port
 	end-of-entity
 	end-of-entity-port
-	apoint
-	(current-pos (point)))
+	apoint)
     (save-excursion
       (goto-char (point-min))
       ;; search for entity ... is line
@@ -244,8 +243,7 @@ displayed.  To go back to original vhdl file press."
 	    (package-list (vhdl-tools-package-names))
 	    (counter 0)
 	    found
-	    package-buffer
-	    (to-open-packages '()))
+	    package-buffer)
 	;; loop over all packages _____________________________________
 	(while (and (not found)
 		    (nth counter package-list))
