@@ -1,6 +1,8 @@
 * VHDL Tools
 
-Utilities to ease navigating vhdl sources, based on [[http://www.emacswiki.org/emacs/vhdl-goto-def.el][vhdl-goto-def]].
+Vhdl-tools provide a minor mode intended to be used under `vhdl-mode',
+It adds functionality on top of `ggtags', `imenu' and `outline' specific
+to ease navigating vhdl sources. It expects a working setup of `ggtags'.
 
 - Jumping into instances
 - Jump to upper level
@@ -10,7 +12,7 @@ Utilities to ease navigating vhdl sources, based on [[http://www.emacswiki.org/e
 
 * Install
 
-As usual, add to path and require.
+As usual: add to path and require after loading `vhdl-mode'
 
 #+begin_src emacs-lisp
   (with-eval-after-load 'vhdl-mode
@@ -18,17 +20,17 @@ As usual, add to path and require.
     (require 'vhdl-tools))
 #+end_src
 
-* Use
-
-Activate the minor mode by completing the vhdl mode hook.
+Then, activate the minor mode by completing the `vhdl-mode’ hook.
 
 #+begin_src emacs-lisp
   (add-hook 'vhdl-mode-hook
             (lambda ()
-              (vhdl-tools-mode 1))
+              (vhdl-tools-mode 1)))
 #+end_src
 
-This will make available a set of keys:
+* Use
+
+The following keybinds are available
 
   + =C-c M-D=, jumps to the definition of symbol at point
   + =C-c M-j=, follows the link at point
@@ -36,4 +38,13 @@ This will make available a set of keys:
   + =C-c M-y=, pastes a link
   + =C-c M-.=, jumps into the instance at point
   + =C-c M-a=, moves point to first appearance of symbol at point
-  + =C-c M-u=, jumps to uppers hierarchy level
+  + =C-c M-u=, jumps to upper hierarchy level
+
+Cursor will jump to the target if there is one, searching packages too. The ring
+mark is push after jumping, so to get back, press \C-c\C-p or \M-, (default
+binds under `ggtags') if corresponding definition has been found. Works better
+for files with correct syntax: think `vhdl-beautify-buffer' before using
+`vhdl-tools'.
+
+Also have a look at customization possibilities with \M-x customize-group
+`vhdl-tools'.
