@@ -1,18 +1,19 @@
 * VHDL Tools
 
-Vhdl-tools provide a minor mode intended to be used under `vhdl-mode',
-It adds functionality on top of `ggtags', `imenu' and `outline' specific
-to ease navigating vhdl sources. It expects a working setup of `ggtags'.
+Vhdl-tools provide a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
+It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], =imenu= and =outline=
+to ease navigating vhdl sources. It expects a working setup of =ggtags=,
+completing it with
 
-- Jumping into instances
-- Jump to upper level
-- Searching for references
-- Link management
-- Custom use of imenu
+  - Jumping into instances
+  - Jump to upper level
+  - Searching for references
+  - Link management
+  - Custom use of imenu
 
 * Install
 
-As usual: add to path and require after loading `vhdl-mode'
+As usual: add to path and require after loading =vhdl-mode=
 
 #+begin_src emacs-lisp
   (with-eval-after-load 'vhdl-mode
@@ -20,7 +21,7 @@ As usual: add to path and require after loading `vhdl-mode'
     (require 'vhdl-tools))
 #+end_src
 
-Then, activate the minor mode by completing the `vhdl-mode’ hook.
+Then, activate the minor mode by completing the =vhdl-mode= hook.
 
 #+begin_src emacs-lisp
   (add-hook 'vhdl-mode-hook
@@ -41,10 +42,9 @@ The following keybinds are available
   + =C-c M-u=, jumps to upper hierarchy level
 
 Cursor will jump to the target if there is one, searching packages too. The ring
-mark is push after jumping, so to get back, press \C-c\C-p or \M-, (default
-binds under `ggtags') if corresponding definition has been found. Works better
-for files with correct syntax: think `vhdl-beautify-buffer' before using
-`vhdl-tools'.
+mark is push after jumping, so to get back, press =C-c C-p= or M-, (default
+binds under =ggtags=) if corresponding definition has been found. Works better
+for files with correct syntax: think =vhdl-beautify-buffer= before using
+=vhdl-tools=.
 
-Also have a look at customization possibilities with \M-x customize-group
-`vhdl-tools'.
+Also have a look at customization possibilities with =M-x customize-group vhdl-tools=.
