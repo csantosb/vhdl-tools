@@ -55,7 +55,6 @@
 (require 'vhdl-mode)
 (require 'ggtags)
 (require 'outline)
-(require 'beacon)
 
 ;;; Variables
 
@@ -309,8 +308,6 @@ Declare a key-bind to get back to the original point."
 		   (when (search-forward vhdl-tools-jump-into-module-name nil t)
 		     (back-to-indentation)
 		     (recenter-top-bottom)
-		     (let ((beacon-blink-duration 1))
-		       (beacon-blink))
 		     ;; erase modified hook
 		     (setq vhdl-tools-jump-into-module-name nil)
 		     ;; erase hook
@@ -351,8 +348,7 @@ When no symbol at point, move point to indentation."
   ;; when no symbol at point, move forward to next symbol
   (when (not (vhdl-tools-get-name))
     (back-to-indentation))
-  (let ((vhdl-tools-thing (vhdl-tools-get-name))
-	(beacon-blink-duration 1))
+  (let ((vhdl-tools-thing (vhdl-tools-get-name)))
     (vhdl-tools-push-marker)
     (save-excursion
       ;; get back to entity
@@ -458,9 +454,7 @@ When no symbol at point, move point to indentation."
 		 (when (search-forward vhdl-tools-follow-links-tosearch nil t)
 		   ;; otherwise, do this
 		   (back-to-indentation)
-		   (recenter-top-bottom)
-		   (let ((beacon-blink-duration 1))
-		     (beacon-blink)))
+		   (recenter-top-bottom))
 		 ;; erase modified hook
 		 (setq vhdl-tools-follow-links-tosearch nil)
 		 (setq ggtags-find-tag-hook nil)))
