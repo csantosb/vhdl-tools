@@ -111,6 +111,15 @@ Needed to determine end of name."
 (defcustom vhdl-tools-imenu-regexp "^\\s-*--\\s-\\([*]\\{1,8\\}\\s-.+\\)"
   "Regexp ...")
 
+(defvar vhdl-tools-jump-into-module-name nil)
+(defvar vhdl-tools-store-link-link nil)
+(defvar vhdl-tools-store-link-link nil)
+(defvar vhdl-tools-outline-active nil)
+(defvar vhdl-tools-ggtags-active nil)
+(defvar vhdl-tools-outline-regexp-old nil)
+(defvar vhdl-tools-follow-links-tag nil)
+(defvar vhdl-tools-follow-links-tosearch nil)
+
 ;;; Helper
 
 (defun vhdl-tools-push-marker ()
