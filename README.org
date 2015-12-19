@@ -42,6 +42,9 @@ The following keybinds are available
     [[file:JumpIntoInstance.gif][JumpIntoInstance.gif]]
 
   + =C-c M-a=, moves point to first appearance of symbol at point
+
+    [[file:JumpFirst.gif][JumpFirst.gif]]
+
   + =C-c M-u=, jumps to upper hierarchy level
 
 Cursor will jump to the target if there is one, searching packages too. The ring
