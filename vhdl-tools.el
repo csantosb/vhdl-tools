@@ -17,6 +17,7 @@
 ;; Version: 0.2
 ;; Package-Requires: ((ggtags "0.8.11"))
 
+
 ;;; License:
 
 ;; This file is NOT part of GNU Emacs.
@@ -33,6 +34,7 @@
 ;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 ;;; Commentary:
 ;;
@@ -85,9 +87,12 @@
 ;;
 ;; See README for details
 
-;;; NEWS 0.1 (2015-12-15):
+
+;;; NEWS 0.2 (2015-12-15):
+
 
 ;;; Todo:
+
 
 ;;; Code:
 
@@ -96,9 +101,13 @@
 (require 'outline)
 (require 'imenu)
 
+
 ;;; Variables
 
-(defgroup vhdl-tools nil "Some customizations of vhdl-tools packages" :group 'local)
+(defgroup vhdl-tools nil "Some customizations of vhdl-tools packages" :group
+  'local)
+
+;;;; User Variables
 
 (defcustom vhdl-tools-allowed-chars-in-signal "a-z0-9A-Z_"
   "Regexp with allowed characters in signal, constant or function.
@@ -111,6 +120,8 @@ Needed to determine end of name."
 (defcustom vhdl-tools-imenu-regexp "^\\s-*--\\s-\\([*]\\{1,8\\}\\s-.+\\)"
   "Regexp ...")
 
+;;;; Internal Variables
+
 (defvar vhdl-tools-jump-into-module-name nil)
 (defvar vhdl-tools-store-link-link nil)
 (defvar vhdl-tools-store-link-link nil)
@@ -119,6 +130,7 @@ Needed to determine end of name."
 (defvar vhdl-tools-outline-regexp-old nil)
 (defvar vhdl-tools-follow-links-tag nil)
 (defvar vhdl-tools-follow-links-tosearch nil)
+
 
 ;;; Helper
 
