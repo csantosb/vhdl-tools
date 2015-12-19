@@ -47,6 +47,8 @@ The following keybinds are available
 
   + =C-c M-u=, jumps to upper hierarchy level
 
+    [[file:JumpUpper.gif][JumpUpper.gif]]
+
 Cursor will jump to the target if there is one, searching packages too. The ring
 mark is push after jumping, so to get back, press =C-c C-p= or M-, (default
 binds under =ggtags=) if corresponding definition has been found. Works better
