@@ -155,13 +155,13 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
         (vhdl-tools--get-name)
       "")))
 
-(defun vhdl-tools-get-entity-name-of-architecture()
-  "Search for architecture and return its entity or empty string if nothing found."
-  (save-excursion
-    (goto-char (point-min))
-    (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
-        (vhdl-tools--get-name)
-      "")))
+;; (defun vhdl-tools-get-entity-name-of-architecture()
+;;   "Search for architecture and return its entity or empty string if nothing found."
+;;   (save-excursion
+;;     (goto-char (point-min))
+;;     (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
+;;         (vhdl-tools--get-name)
+;;       "")))
 
 (defun vhdl-tools--imenu-with-initial-minibuffer (str)
   (funcall `(lambda ()
