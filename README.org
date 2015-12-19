@@ -34,6 +34,9 @@ Then, activate the minor mode by completing the =vhdl-mode= hook.
 The following keybinds are available
 
   + =C-c M-D=, jumps to the definition of symbol at point
+
+    [[file:JumpDef.gif][JumpDef.gif]]
+
   + =C-c M-j=, follows the link at point
   + =C-c M-w=, stores a link
   + =C-c M-y=, pastes a link
