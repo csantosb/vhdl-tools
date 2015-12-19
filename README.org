@@ -38,6 +38,9 @@ The following keybinds are available
   + =C-c M-w=, stores a link
   + =C-c M-y=, pastes a link
   + =C-c M-.=, jumps into the instance at point
+
+    [[file:JumpIntoInstance.gif][JumpIntoInstance.gif]]
+
   + =C-c M-a=, moves point to first appearance of symbol at point
   + =C-c M-u=, jumps to upper hierarchy level
 
