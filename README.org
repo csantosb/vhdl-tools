@@ -1,14 +1,14 @@
 * VHDL Tools
 
 Vhdl-tools provide a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
-It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], =imenu= and =outline=
+It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], =imenu= and =outline/outshine=
 to ease navigating vhdl sources. It expects a working setup of =ggtags=,
 completing it with
 
   - Jumping into instances
   - Jump to upper level
   - Searching for references
-  - Link management
+  - Link and headings management
   - Custom use of imenu
 
 * Install
@@ -30,6 +30,32 @@ Then, activate the minor mode by completing the =vhdl-mode= hook.
 #+end_src
 
 * Use
+
+** Headings
+
+Following the status of the =vhdl-tools-use-outshine= flag (on by default),
+when the mode is enabled, =vhdl-tools= will activate =outline-minor-mode=
+locally and =outshine= globally, setting =vhdl-tools-outline-regexp= as the
+regexp used to locate headings.
+
+This enables using this kind of headings
+
+#+begin_src example
+  -- * Header Level 1
+
+  -- ** Header Level 2
+  MyInstance : MyComponent
+      port map ( ...
+#+end_src
+
+to delimit code blocks.
+
+The following keybinds are available to navigate headings
+
+  + =C-c C-n=, get to next header
+  + =C-c C-h=, get to previous header
+
+** Jumping around
 
 The following keybinds are available
 
@@ -62,3 +88,11 @@ for files with correct syntax: think =vhdl-beautify-buffer= before using
 =vhdl-tools=.
 
 Also have a look at customization possibilities with =M-x customize-group vhdl-tools=.
+
+* Related utilities
+
+Some additional packages useful in this context might be
+
+- [[https://github.com/mickeynp/smart-scan][Smart scan]]
+- [[https://github.com/Malabarba/beacon][Beacon]]
+- [[https://github.com/Malabarba/aggressive-indent-mode][Aggressive auto indent]]
