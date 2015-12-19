@@ -134,7 +134,7 @@ Needed to determine end of name."
 
 ;;; Helper
 
-(defun vhdl-tools-push-marker ()
+(defun vhdl-tools--push-marker ()
   ;; push tag (stolen from elisp-slime-nav.el)
   (if (fboundp 'xref-push-marker-stack)
       (xref-push-marker-stack)
@@ -142,17 +142,17 @@ Needed to determine end of name."
       (ring-insert find-tag-marker-ring (point-marker))))
   (setq ggtags-tag-ring-index nil))
 
-(defun vhdl-tools-get-name ()
+(defun vhdl-tools--get-name ()
   "Extract word at current position DONT-DOWNCASE.
 To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   (thing-at-point 'symbol t))
 
-(defun vhdl-tools-get-entity-or-package-name ()
+(defun vhdl-tools--get-entity-or-package-name ()
   "Return name of entity / package or empty string if nothing found."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "^ *\\(entity\\|package\\) +" nil t nil)
-        (vhdl-tools-get-name)
+        (vhdl-tools--get-name)
       "")))
 
 (defun vhdl-tools-get-entity-name-of-architecture()
@@ -160,10 +160,10 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
-        (vhdl-tools-get-name)
+        (vhdl-tools--get-name)
       "")))
 
-(defun vhdl-tools-imenu-with-initial-minibuffer (str)
+(defun vhdl-tools--imenu-with-initial-minibuffer (str)
   (funcall `(lambda ()
 	      (interactive)
 	      (minibuffer-with-setup-hook
@@ -194,7 +194,7 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
 	    (while (and (nth counter current-buffer-list)
 			(not found))
 	      (set-buffer (nth counter current-buffer-list))
-	      (if (equal entity-or-package-name (vhdl-tools-get-entity-or-package-name))
+	      (if (equal entity-or-package-name (vhdl-tools--get-entity-or-package-name))
 		  (setq found t)
 		(setq counter (1+ counter))))
 	    (if found
@@ -210,16 +210,16 @@ Only use the form work.NAME.something."
       (goto-char (point-min))
       (while (re-search-forward "^ *use  *work\." nil t nil)
         (forward-char)
-	(when (not (member (vhdl-tools-get-name) packages))
-	  (push (vhdl-tools-get-name) packages)))
+	(when (not (member (vhdl-tools--get-name) packages))
+	  (push (vhdl-tools--get-name) packages)))
       ;; search in all open buffers
       (dolist (var (buffer-list))
 	(set-buffer var)
 	(goto-char (point-min))
 	(while (re-search-forward "^ *use  *work\." nil t nil)
 	  (forward-char)
-	  (when (not (member (vhdl-tools-get-name) packages))
-	    (push (vhdl-tools-get-name) packages))))
+	  (when (not (member (vhdl-tools--get-name) packages))
+	    (push (vhdl-tools--get-name) packages))))
       ;; search in all files in current dir
       (dolist (var (file-expand-wildcards "*.vhd"))
 	(when (not (get-buffer var))
@@ -228,8 +228,8 @@ Only use the form work.NAME.something."
 	(goto-char (point-min))
 	(while (re-search-forward "^ *use  *work\." nil t nil)
 	  (forward-char)
-	  (when (not (member (vhdl-tools-get-name) packages))
-	    (push (vhdl-tools-get-name) packages))))
+	  (when (not (member (vhdl-tools--get-name) packages))
+	    (push (vhdl-tools--get-name) packages))))
       packages)))
 
 (defun vhdl-tools-process-file (name)
@@ -267,17 +267,17 @@ Test if it is a type definition or not."
       (goto-char (point-min))
       (while (and (not found)
 		  (re-search-forward "^ *\\(component\\|function\\|procedure\\|constant\\|file\\|type\\|subtype\\)[ \n\t]+" nil t nil))
-        (if (equal name (vhdl-tools-get-name))
+        (if (equal name (vhdl-tools--get-name))
             (setq found (point))))
       (goto-char (point-min))
       (while (and (not found)
 		  (re-search-forward "^[ \t]*signal[ \n\t]+" nil t nil))
-        (if (equal name (vhdl-tools-get-name))
+        (if (equal name (vhdl-tools--get-name))
             (setq found (point))
           (while (> (save-excursion (search-forward ":" nil t nil))
 		    (if (setq apoint (save-excursion (search-forward "," nil t nil))) apoint 0))
             (search-forward "," nil t nil)
-            (if (equal name (vhdl-tools-get-name))
+            (if (equal name (vhdl-tools--get-name))
                 (setq found (point)))))))
     (if found found nil)))
 
@@ -293,13 +293,13 @@ the vhdl file.  If a definition has been found in a package, package will be
 displayed.  To go back to original vhdl file press."
   (interactive)
   ;; when no symbol at point, move forward to next symbol
-  (vhdl-tools-push-marker)
-  (when (not (vhdl-tools-get-name))
+  (vhdl-tools--push-marker)
+  (when (not (vhdl-tools--get-name))
     (back-to-indentation))
   ;; check if found definition in calling file
-  (if (not (setq found (vhdl-tools-process-file (vhdl-tools-get-name))))
+  (if (not (setq found (vhdl-tools-process-file (vhdl-tools--get-name))))
       ;; no definition found in calling file found
-      (let ((to-search-for (vhdl-tools-get-name))
+      (let ((to-search-for (vhdl-tools--get-name))
 	    (package-list (vhdl-tools-package-names))
 	    (counter 0)
 	    found
@@ -338,13 +338,13 @@ Additionally, move point to signal at point.
 Declare a key-bind to get back to the original point."
   (interactive)
   ;; when no symbol at point, move forward to next symbol
-  (when (not (vhdl-tools-get-name))
+  (when (not (vhdl-tools--get-name))
     (back-to-indentation))
   ;; when nil, do nothing
-  (when (vhdl-tools-get-name)
+  (when (vhdl-tools--get-name)
     ;; necessary during hook (see later)
-    (setq vhdl-tools-jump-into-module-name (vhdl-tools-get-name))
-    (vhdl-tools-push-marker)
+    (setq vhdl-tools-jump-into-module-name (vhdl-tools--get-name))
+    (vhdl-tools--push-marker)
     (save-excursion
       ;; case of component instantiation
       ;; locate component name to jump into
@@ -388,12 +388,12 @@ Declare a key-bind to get back to the original point."
 When no symbol at point, move point to indentation."
   (interactive)
   ;; when no symbol at point, move forward to next symbol
-  (when (not (vhdl-tools-get-name))
+  (when (not (vhdl-tools--get-name))
     (back-to-indentation))
   ;; when nil, do nothing
-  (when (vhdl-tools-get-name)
-    (vhdl-tools-push-marker)
-    (let ((vhdl-tools-jump-first-name (vhdl-tools-get-name)))
+  (when (vhdl-tools--get-name)
+    (vhdl-tools--push-marker)
+    (let ((vhdl-tools-jump-first-name (vhdl-tools--get-name)))
       (goto-char (point-min))
       (search-forward-regexp vhdl-tools-jump-first-name nil t)
       (back-to-indentation))))
@@ -407,10 +407,10 @@ When no symbol at point, move point to indentation."
 When no symbol at point, move point to indentation."
   (interactive)
   ;; when no symbol at point, move forward to next symbol
-  (when (not (vhdl-tools-get-name))
+  (when (not (vhdl-tools--get-name))
     (back-to-indentation))
-  (let ((vhdl-tools-thing (vhdl-tools-get-name)))
-    (vhdl-tools-push-marker)
+  (let ((vhdl-tools-thing (vhdl-tools--get-name)))
+    (vhdl-tools--push-marker)
     (save-excursion
       ;; get back to entity
       (search-backward-regexp "^entity")
@@ -420,7 +420,7 @@ When no symbol at point, move point to indentation."
       (funcall `(lambda ()
 		  (minibuffer-with-setup-hook
 		      (lambda ()
-			(insert (format "^.* : \\(entity work.\\)*%s$" ,(vhdl-tools-get-name))))
+			(insert (format "^.* : \\(entity work.\\)*%s$" ,(vhdl-tools--get-name))))
 		    (helm-grep-do-git-grep t))))
       ;; search, when nil, do nothing
       (when vhdl-tools-thing
@@ -457,7 +457,7 @@ When no symbol at point, move point to indentation."
 		     (search-backward-regexp "entity")
 		     (forward-word)
 		     (forward-char 2)
-		     (vhdl-tools-get-name)))
+		     (vhdl-tools--get-name)))
 	 (mylink (format "%s\@%s" myentity myline)))
     (message mylink)
     (setq vhdl-tools-store-link-link mylink)))
@@ -506,7 +506,7 @@ When no symbol at point, move point to indentation."
   (when vhdl-tools-follow-links-tosearch
     ;; empty old content in hook
     (setq ggtags-find-tag-hook nil)
-    (vhdl-tools-push-marker)
+    (vhdl-tools--push-marker)
     ;; declare action after jumping to new buffer
     (add-hook 'ggtags-find-tag-hook
 	      '(lambda()
@@ -567,7 +567,7 @@ When no symbol at point, move point to indentation."
 	(helm-candidate-number-limit 50))
     (set-buffer-modified-p t)
     (save-buffer)
-    (vhdl-tools-imenu-with-initial-minibuffer "^Instance")))
+    (vhdl-tools--imenu-with-initial-minibuffer "^Instance")))
 
 ;;;; Processes
 
@@ -580,7 +580,7 @@ When no symbol at point, move point to indentation."
 	(helm-candidate-number-limit 50))
     (set-buffer-modified-p t)
     (save-buffer)
-    (vhdl-tools-imenu-with-initial-minibuffer "^Process")))
+    (vhdl-tools--imenu-with-initial-minibuffer "^Process")))
 
 ;;;; Headers
 
