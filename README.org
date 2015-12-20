@@ -1,7 +1,7 @@
 * VHDL Tools
 
 Vhdl-tools provide a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
-It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], =imenu= and =outline/outshine=
+It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], =imenu= and [[https://github.com/tj64/outshine][outshine]]
 to ease navigating vhdl sources. It expects a working setup of =ggtags=,
 completing it with
 
@@ -54,6 +54,16 @@ The following keybinds are available to navigate headings
 
   + =C-c C-n=, get to next header
   + =C-c C-h=, get to previous header
+
+** Custom Imenu
+
+The following keybinds are made available to browse current buffer contents
+
+  + =C-x c i m=  standard imenu
+  + =C-x c i i=  instances
+  + =C-x c i p=  processes
+  + =C-x c i *=  headers
+  + =C-x c i a=  all items
 
 ** Jumping around
 
