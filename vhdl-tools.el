@@ -115,19 +115,29 @@ Needed to determine end of name."
   :type 'string :group 'vhdl-tools)
 
 (defcustom vhdl-tools-outline-regexp "^\\s-*-- [*]\\{1,8\\} "
-  "Regexp ...")
+  "Regexp to be used as `outline-regexp' when `vhdl-tools' minor mode is active.")
 
 (defcustom vhdl-tools-imenu-regexp "^\\s-*--\\s-\\([*]\\{1,8\\}\\s-.+\\)"
   "Regexp ...")
+
+(defcustom vhdl-tools-use-outshine nil
+  "Flag to activate `outshine' when `vhdl-tools' minor mode in active.")
 
 ;;;; Internal Variables
 
 (defvar vhdl-tools-jump-into-module-name nil)
 (defvar vhdl-tools-store-link-link nil)
 (defvar vhdl-tools-store-link-link nil)
-(defvar vhdl-tools-outline-active nil)
-(defvar vhdl-tools-ggtags-active nil)
-(defvar vhdl-tools-outline-regexp-old nil)
+
+(defvar vhdl-tools--outline-active
+  "Stores state of `outline-minor-mode' prior to activating the minor mode.")
+
+(defvar vhdl-tools--ggtags-active
+  "Stores state of `ggtags-mode' prior to activating the minor mode.")
+
+(defvar vhdl-tools--outline-regexp-old
+  "Stores state of `outline-regexp' prior to activating the minor mode.")
+
 (defvar vhdl-tools-follow-links-tag nil)
 (defvar vhdl-tools-follow-links-tosearch nil)
 
