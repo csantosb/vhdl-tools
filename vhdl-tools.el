@@ -98,9 +98,8 @@
 
 (require 'vhdl-mode)
 (require 'ggtags)
-(require 'outline)
 (require 'imenu)
-
+(require 'outshine)
 
 ;;; Variables
 
@@ -677,24 +676,27 @@ Key bindings:
   :global nil
   (if vhdl-tools-mode
       (progn
-	;; try to keep things as they were
-	(setq vhdl-tools-outline-active outline-minor-mode)
-	(outline-minor-mode 1)
-	(setq vhdl-tools-ggtags-active ggtags-mode)
+	(when vhdl-tools-use-outshine
+	  ;; try to keep things as they were
+	  (setq vhdl-tools--outline-active outline-minor-mode)
+	  (outline-minor-mode 1)
+	  (outshine-hook-function)
+	  ;; custom outline regexp
+	  (setq-local vhdl-tools--outline-regexp-old outline-regexp)
+	  (setq-local outline-regexp vhdl-tools-outline-regexp))
+	(setq vhdl-tools--ggtags-active ggtags-mode)
 	(ggtags-mode 1)
-	;; custom outline regexp
-	(setq-local vhdl-tools-outline-regexp-old outline-regexp)
-	(setq-local outline-regexp vhdl-tools-outline-regexp)
 	;; notify
 	(message "VHDL Tools enabled."))
     (progn
-      ;; try to keep things as they were
-      (when (not vhdl-tools-outline-active)
-	(outline-minor-mode -1))
-      (when (not vhdl-tools-ggtags-active)
+      (when (not vhdl-tools--ggtags-active)
 	(ggtags-mode -1))
-      ;; custom outline regexp
-      (setq-local outline-regexp vhdl-tools-outline-regexp-old)
+      (when vhdl-tools-use-outshine
+	;; try to keep things as they were
+	(when (not vhdl-tools--outline-active)
+	  (outline-minor-mode -1))
+	;; custom outline regexp
+	(setq-local outline-regexp vhdl-tools--outline-regexp-old))
       ;; notify
       (message "VHDL Tools disabled."))))
 
