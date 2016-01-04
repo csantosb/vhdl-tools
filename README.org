@@ -31,7 +31,8 @@ completing it with
 
 * Install
 
-As usual: add to path and require after loading =vhdl-mode=
+Manual installation: as usual, download it, add to path and require after
+loading =vhdl-mode=
 
 #+begin_src emacs-lisp
   (with-eval-after-load 'vhdl-mode
@@ -39,7 +40,11 @@ As usual: add to path and require after loading =vhdl-mode=
     (require 'vhdl-tools))
 #+end_src
 
-or install from melpa.
+This package is available fom Melpa too, you may install it by calling
+
+#+begin_src emacs-lisp
+  M-x package-install RET vhdl-tools
+#+end_src
 
 Then, activate the minor mode by completing the =vhdl-mode= hook.
 
