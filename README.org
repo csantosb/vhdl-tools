@@ -4,7 +4,7 @@
 [[http://stable.melpa.org/#/vhdl-tools][file:http://stable.melpa.org/packages/vhdl-tools-badge.svg]]
 [[http://melpa.org/#/vhdl-tools][file:http://melpa.org/packages/vhdl-tools-badge.svg]]
 
-This project provides useful VHDL support for Emacs in terms of navigation and commands execution.
+This project provides useful VHDL support for Emacs in terms of navigation.
 
 * Table of contents
 
@@ -13,8 +13,8 @@ This project provides useful VHDL support for Emacs in terms of navigation and c
  - [[#use][Use]]
      - [[#headings][Headings]]
      - [[#custom-imenu][Custom Imenu]]
-     - [[#jumping-around][Jimping around]]
- - [[#related-articles][Related utilities]]
+     - [[#jumping-around][Jumping around]]
+ - [[#related-utilities][Related utilities]]
 
 * About
 
@@ -38,6 +38,8 @@ As usual: add to path and require after loading =vhdl-mode=
     (add-to-list 'load-path "...")
     (require 'vhdl-tools))
 #+end_src
+
+or install from melpa.
 
 Then, activate the minor mode by completing the =vhdl-mode= hook.
 
