@@ -8,13 +8,13 @@ This project provides useful VHDL support for Emacs in terms of navigation and c
 
 * Table of contents
 
- - [[#About][About]]
- - [[#Install][Install]]
- - [[#Use][Use]]
-     - [[#Headings][Headings]]
-     - [[#Custom Imenu][Custom Imenu]]
-     - [[#Jumping around][Jimping around]]
- - [[#Related utilities][Related utilities]]
+ - [[#about][About]]
+ - [[#install][Install]]
+ - [[#use][Use]]
+     - [[#headings][Headings]]
+     - [[#custom-imenu][Custom Imenu]]
+     - [[#jumping-around][Jimping around]]
+ - [[#related-articles][Related utilities]]
 
 * About
 
