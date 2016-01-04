@@ -4,7 +4,19 @@
 [[http://stable.melpa.org/#/vhdl-tools][file:http://stable.melpa.org/packages/vhdl-tools-badge.svg]]
 [[http://melpa.org/#/vhdl-tools][file:http://melpa.org/packages/vhdl-tools-badge.svg]]
 
-* VHDL Tools
+This project provides useful VHDL support for Emacs in terms of navigation and commands execution.
+
+* Table of contents
+
+ - [[#About][About]]
+ - [[#Install][Install]]
+ - [[#Use][Use]]
+     - [[#Headings][Headings]]
+     - [[#Custom Imenu][Custom Imenu]]
+     - [[#Jumping around][Jimping around]]
+ - [[#Related utilities][Related utilities]]
+
+* About
 
 Vhdl-tools provide a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
 It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], =imenu= and [[https://github.com/tj64/outshine][outshine]]
