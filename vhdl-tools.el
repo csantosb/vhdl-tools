@@ -3,7 +3,7 @@
 ;; Based on `vhdl-goto-def' at `http://www.emacswiki.org/emacs/vhdl-goto-def.el'
 
 ;; Copyright (C) 2003 Free Software Foundation, Inc.
-;; Copyright (C) 2015 Cayetano Santos
+;; Copyright (C) 2015-2016 Cayetano Santos
 
 ;; Original author:  wandad guscheh <wandad.guscheh@fh-hagenberg.at>
 ;; Author:           Cayetano Santos
