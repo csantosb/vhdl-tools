@@ -17,16 +17,15 @@
 ;; Version: 0.3
 ;; Package-Requires: ((ggtags "0.8.11") (emacs "24.3") (outshine "2.0"))
 
-
 ;;; License:
-
+;;
 ;; This file is NOT part of GNU Emacs.
-
+;;
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 3, or (at your option)
 ;; any later version.
-
+;;
 ;; This file is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -35,14 +34,14 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 ;;; Commentary:
 ;;
-;; Vhdl-tools provide a minor mode intended to be used under `vhdl-mode',
-;; It adds functionality on top of `ggtags', `imenu' and `outline' specific
-;; to ease navigating vhdl sources. It expects a working setup of `ggtags'.
-;;
-;;;; Install:
+;; Vhdl-tools provide a minor mode to be used under `vhdl-mode' major mode.
+;; It adds a layer of functionality on top of `ggtags' and relies on and extends
+;; `imenu' and `outshine' features to ease navigating vhdl sources.  It expects
+;; a working setup of `ggtags'.
+
+;;; Install:
 ;;
 ;; To install, proceed as usual: add to path and require after loading `vhdl-mode'
 ;;
@@ -50,13 +49,17 @@
 ;;   (add-to-list 'load-path "...")
 ;;   (require 'vhdl-tools))
 ;;
+;; or install from Melpa
+;;
+;;   M-x package-install RET vhdl-tools
+;;
 ;; Then, activate the minor mode by completing the `vhdl-mode' hook.
 ;;
 ;; (add-hook 'vhdl-mode-hook
 ;; 	  (lambda ()
 ;; 	    (vhdl-tools-mode 1)))
-;;
-;;;; Use:
+
+;;; Use:
 ;;
 ;; The minor mode provide utilities to ease navigating vhdl sources beyond what
 ;; is available with plain `ggtags'.
