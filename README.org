@@ -58,7 +58,7 @@ Then, activate the minor mode by completing the =vhdl-mode= hook.
 
 ** Headings
 
-Following the status of the =vhdl-tools-use-outshine= flag (on by default),
+Following the status of the =vhdl-tools-use-outshine= flag (off by default),
 when the mode is enabled, =vhdl-tools= will activate =outline-minor-mode=
 locally and =outshine= globally, setting =vhdl-tools-outline-regexp= as the
 regexp used to locate headings.
@@ -126,11 +126,17 @@ Also have a look at customization possibilities with =M-x customize-group vhdl-t
 
 * Related utilities
 
-Some additional packages useful in this context might be
+Some additional emacs packages useful in this context might be
 
 - [[https://github.com/mickeynp/smart-scan][Smart scan]]
 - [[https://github.com/Malabarba/beacon][Beacon]]
 - [[https://github.com/Malabarba/aggressive-indent-mode][Aggressive auto indent]]
+
+* Coding
+
+Sparse list of projects intended at improving coding homogeneity
+
+- [[https://github.com/VHDLTool/VHDLHandbook][VHDLHandbook]]
 
 * License
 
