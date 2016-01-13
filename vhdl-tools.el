@@ -90,12 +90,7 @@
 ;;
 ;; See README for details
 
-
-;;; NEWS 0.2 (2015-12-15):
-
-
 ;;; Todo:
-
 
 ;;; Code:
 
