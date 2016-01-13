@@ -368,16 +368,18 @@ Declare a key-bind to get back to the original point."
       ;; locate component name to jump into
       (if (search-backward-regexp "port map" nil t)
 	  (progn
-	    ;; take into account generics when searching backward
-	    (search-backward-regexp "generic map" nil t)
-	    (forward-line -1)
-	    (end-of-line)
-	    (backward-char 2))
+	    (search-backward-regexp " entity " nil t)
+	    ;; in case there is a comment at the end of the entity line
+	    (back-to-indentation)
+	    (search-forward-regexp "  " nil t)
+ 	    (backward-char 3))
 	;; case of component declaration
 	(progn
-	  (search-backward-regexp "component")
-	  (end-of-line)
-	  (backward-char 2)))
+	  (search-backward-regexp " component ")
+	  ;; in case there is a comment at the end of the entity line
+	  (back-to-indentation)
+	  (search-forward-regexp "  " nil t)
+	  (backward-char 3)))
       ;; empty old content in hook
       (setq ggtags-find-tag-hook nil)
       ;; update hook to execute an action
