@@ -665,7 +665,7 @@ When no symbol at point, move point to indentation."
     (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
     (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
     (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
-    (define-key vhdl-tools-imenu-map (kbd "*") #'vhdl-tools-imenu-headers)
+    (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-imenu-headers)
     (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all)
     m)
   "Keymap for `vhdl-tools'.")
@@ -691,7 +691,15 @@ Key bindings:
 	  (outshine-hook-function)
 	  ;; custom outline regexp
 	  (setq-local vhdl-tools--outline-regexp-old outline-regexp)
-	  (setq-local outline-regexp vhdl-tools-outline-regexp))
+	  (setq-local outline-regexp vhdl-tools-outline-regexp)
+	  ;;
+	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'(lambda (arg)
+							   (interactive "P")
+							   (if (equal arg '(4))
+							       (vhdl-tools-imenu-headers)
+							     (outshine-imenu
+							      nil))
+							   (recenter-top-bottom 10))))
 	(setq vhdl-tools--ggtags-active ggtags-mode)
 	(ggtags-mode 1)
 	;; notify
