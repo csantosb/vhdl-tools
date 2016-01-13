@@ -125,6 +125,9 @@ Needed to determine end of name."
 (defcustom vhdl-tools-use-outshine nil
   "Flag to activate `outshine' when `vhdl-tools' minor mode in active.")
 
+(defcustom vhdl-tools-recenter-nb-lines 10
+  "Number of lines from top of scren to recenter point after jumping to new location.")
+
 ;;;; Internal Variables
 
 (defvar vhdl-tools-jump-into-module-name nil)
@@ -181,6 +184,11 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
 	      (minibuffer-with-setup-hook
 		  (lambda () (insert (format "%s " ,str)))
 		(call-interactively 'helm-semantic-or-imenu)))))
+
+(defun vhdl-tools--post-jump-function ()
+  "To be called after jumping to recenter, indent, etc."
+  (recenter-top-bottom vhdl-tools-recenter-nb-lines)
+  (back-to-indentation))
 
 
 ;;; Get definition
@@ -329,14 +337,12 @@ displayed.  To go back to original vhdl file press."
 	    (progn
 	      (switch-to-buffer package-buffer)
 	      (goto-char found)
-	      (back-to-indentation)
-	      (recenter-top-bottom))
+	      (vhdl-tools--post-jump-function))
 	  (message "sorry, no corresponding definition found")))
     ;; found in current file
     (progn
       (goto-char found)
-      (back-to-indentation)
-      (recenter-top-bottom))))
+      (vhdl-tools--post-jump-function))))
 
 
 ;;; Jumping
@@ -379,8 +385,7 @@ Declare a key-bind to get back to the original point."
       (add-hook 'ggtags-find-tag-hook
 		'(lambda()
 		   (when (search-forward vhdl-tools-jump-into-module-name nil t)
-		     (back-to-indentation)
-		     (recenter-top-bottom)
+		     (vhdl-tools--post-jump-function)
 		     ;; erase modified hook
 		     (setq vhdl-tools-jump-into-module-name nil)
 		     ;; erase hook
@@ -437,8 +442,7 @@ When no symbol at point, move point to indentation."
       ;; search, when nil, do nothing
       (when vhdl-tools-thing
 	(search-forward-regexp vhdl-tools-thing nil t)
-	(back-to-indentation)
-	(recenter-top-bottom)))))
+	(vhdl-tools--post-jump-function)))))
 
 
 ;;; Links
@@ -526,8 +530,7 @@ When no symbol at point, move point to indentation."
 		 ;; if no tosearch is found, do nothing
 		 (when (search-forward vhdl-tools-follow-links-tosearch nil t)
 		   ;; otherwise, do this
-		   (back-to-indentation)
-		   (recenter-top-bottom))
+		   (vhdl-tools--post-jump-function))
 		 ;; erase modified hook
 		 (setq vhdl-tools-follow-links-tosearch nil)
 		 (setq ggtags-find-tag-hook nil)))
@@ -544,7 +547,7 @@ When no symbol at point, move point to indentation."
   "Get to next heading."
   (interactive)
   (re-search-forward outline-regexp)
-  (beginning-of-line))
+  (vhdl-tools--post-jump-function))
 
 ;;;; Get to previous
 
@@ -553,7 +556,7 @@ When no symbol at point, move point to indentation."
   "Get to previous heading."
   (interactive)
   (re-search-backward outline-regexp)
-  (beginning-of-line))
+  (vhdl-tools--post-jump-function))
 
 
 ;;; Helm-imenu navigation
