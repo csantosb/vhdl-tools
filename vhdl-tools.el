@@ -599,6 +599,8 @@ When no symbol at point, move point to indentation."
     (save-buffer)
     (vhdl-tools--imenu-with-initial-minibuffer "^Process")))
 
+;;; Components
+
 ;;;###autoload
 (defun vhdl-tools-imenu-component()
   (interactive)
@@ -609,7 +611,6 @@ When no symbol at point, move point to indentation."
     (set-buffer-modified-p t)
     (save-buffer)
     (vhdl-tools--imenu-with-initial-minibuffer "^Component")))
-
 
 ;;;; Headers
 
@@ -623,6 +624,17 @@ When no symbol at point, move point to indentation."
     (set-buffer-modified-p t)
     (save-buffer)
     (call-interactively 'helm-semantic-or-imenu)))
+
+;;; Outshine - imenu
+
+;;;###autoload
+(defun vhdl-tools-outshine-imenu-headers(arg)
+  (interactive "P")
+  (if (equal arg '(4))
+      (vhdl-tools-imenu-headers)
+    (outshine-imenu
+     nil))
+  (vhdl-tools--post-jump-function))
 
 ;;;; All
 
@@ -706,13 +718,7 @@ Key bindings:
 	  (setq-local vhdl-tools--outline-regexp-old outline-regexp)
 	  (setq-local outline-regexp vhdl-tools-outline-regexp)
 	  ;;
-	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'(lambda (arg)
-							   (interactive "P")
-							   (if (equal arg '(4))
-							       (vhdl-tools-imenu-headers)
-							     (outshine-imenu
-							      nil))
-							   (recenter-top-bottom 10))))
+	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-outshine-imenu-headers))
 	(setq vhdl-tools--ggtags-active ggtags-mode)
 	(ggtags-mode 1)
 	;; notify
