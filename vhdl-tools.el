@@ -186,6 +186,21 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   (back-to-indentation))
 
 
+;;; Misc
+
+;;;###autoload
+(defun vhdl-tools-beautify-region (arg)
+  "Call beautify-region but auto activate region first.
+With a prefix ARG, fall back to previous behaviour."
+  (interactive "P")
+  (if (equal arg '(4))
+      (call-interactively 'vhdl-beautify-region)
+    (save-excursion
+      (when (not (region-active-p))
+	(mark-paragraph))
+      (call-interactively 'vhdl-beautify-region))))
+
+
 ;;; Get definition
 
 ;;;###autoload
@@ -594,7 +609,7 @@ When no symbol at point, move point to indentation."
     (save-buffer)
     (vhdl-tools--imenu-with-initial-minibuffer "^Process")))
 
-;;; Components
+;;;; Components
 
 ;;;###autoload
 (defun vhdl-tools-imenu-component()
@@ -618,7 +633,7 @@ When no symbol at point, move point to indentation."
     (save-buffer)
     (call-interactively 'helm-semantic-or-imenu)))
 
-;;; Outshine - imenu
+;;;; Outshine - imenu
 
 ;;;###autoload
 (defun vhdl-tools-outshine-imenu-headers(arg)
@@ -675,6 +690,7 @@ When no symbol at point, move point to indentation."
     (define-key m (kbd "C-c M-u") #'vhdl-tools-jump-upper)
     (define-key m (kbd "C-c C-n") #'vhdl-tools-headings-next)
     (define-key m (kbd "C-c C-h") #'vhdl-tools-headings-prev)
+    (define-key m (kbd "C-c M-b") #'vhdl-tools-beautify-region)
     ;;
     (define-prefix-command 'vhdl-tools-imenu-map)
     (define-key m (kbd "C-x c i") 'vhdl-tools-imenu-map)
