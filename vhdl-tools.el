@@ -546,6 +546,7 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-headings-next()
   "Get to next heading."
   (interactive)
+  (back-to-indentation)
   (re-search-forward outline-regexp)
   (vhdl-tools--post-jump-function))
 
@@ -555,6 +556,7 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-headings-prev()
   "Get to previous heading."
   (interactive)
+  (back-to-indentation)
   (re-search-backward outline-regexp)
   (vhdl-tools--post-jump-function))
 
