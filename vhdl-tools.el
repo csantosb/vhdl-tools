@@ -599,6 +599,18 @@ When no symbol at point, move point to indentation."
     (save-buffer)
     (vhdl-tools--imenu-with-initial-minibuffer "^Process")))
 
+;;;###autoload
+(defun vhdl-tools-imenu-component()
+  (interactive)
+  (let ((imenu-generic-expression vhdl-imenu-generic-expression)
+	(helm-imenu-delimiter " ")
+	(helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
+    (set-buffer-modified-p t)
+    (save-buffer)
+    (vhdl-tools--imenu-with-initial-minibuffer "^Component")))
+
+
 ;;;; Headers
 
 ;;;###autoload
@@ -665,6 +677,7 @@ When no symbol at point, move point to indentation."
     (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
     (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
     (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
+    (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
     (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-imenu-headers)
     (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all)
     m)
