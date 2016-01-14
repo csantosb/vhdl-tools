@@ -86,11 +86,11 @@ The following keybinds are available to navigate headings
 
 The following keybinds are made available to browse current buffer contents
 
-  + =C-x c i m=  standard imenu
-  + =C-x c i i=  instances
-  + =C-x c i p=  processes
-  + =C-x c i *=  headers
-  + =C-x c i a=  all items
+  + =C-x c i m=    standard imenu
+  + =C-x c i i=    instances
+  + =C-x c i p=    processes
+  + =C-x c i SPC=  headers
+  + =C-x c i a=    all items
 
 ** Jumping around
 
@@ -133,6 +133,7 @@ Some additional emacs packages useful in this context might be
 - [[https://github.com/mickeynp/smart-scan][Smart scan]]
 - [[https://github.com/Malabarba/beacon][Beacon]]
 - [[https://github.com/Malabarba/aggressive-indent-mode][Aggressive auto indent]]
+- [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]]
 
 * Coding
 

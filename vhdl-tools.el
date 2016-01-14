@@ -639,9 +639,8 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-outshine-imenu-headers(arg)
   (interactive "P")
   (if (equal arg '(4))
-      (vhdl-tools-imenu-headers)
-    (outshine-imenu
-     nil))
+      (outshine-imenu nil)
+    (vhdl-tools-imenu-headers))
   (vhdl-tools--post-jump-function))
 
 ;;;; All
