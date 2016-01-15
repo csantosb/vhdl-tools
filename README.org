@@ -20,7 +20,7 @@ This project provides useful VHDL support for Emacs in terms of navigation.
 
 * About
 
-Vhdl-tools provide a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
+[[https://csantosb.github.io/blog/2015/12/23/vhdl-tools/][Vhdl-tools]] provide a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
 It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], =imenu= and [[https://github.com/tj64/outshine][outshine]]
 to ease navigating vhdl sources. It expects a working setup of =ggtags=,
 completing it with
@@ -42,7 +42,7 @@ loading =vhdl-mode=
     (require 'vhdl-tools))
 #+end_src
 
-This package is available fom Melpa too, you may install it by calling
+This package is available fom [[http://stable.melpa.org/#/vhdl-tools][Melpa]] too, you may install it by calling
 
 #+begin_src emacs-lisp
   M-x package-install RET vhdl-tools
