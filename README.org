@@ -20,7 +20,7 @@ This project provides useful VHDL support for Emacs in terms of navigation.
 
 * About
 
-[[https://csantosb.github.io/blog/2015/12/23/vhdl-tools/][Vhdl-tools]] provide a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
+[[https://csantosb.github.io/blog/2015/12/23/vhdl-tools/][Vhdl-tools]] provides a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
 It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], =imenu= and [[https://github.com/tj64/outshine][outshine]]
 to ease navigating vhdl sources. It expects a working setup of =ggtags=,
 completing it with
@@ -88,8 +88,9 @@ The following keybinds are made available to browse current buffer contents
 
   + =C-x c i m=    standard imenu
   + =C-x c i i=    instances
+  + =C-x c i c=    components
   + =C-x c i p=    processes
-  + =C-x c i SPC=  headers
+  + =C-x c i SPC=  headers (with a prefix argument use ido instead)
   + =C-x c i a=    all items
 
 ** Jumping around
@@ -125,6 +126,10 @@ for files with correct syntax: think =vhdl-beautify-buffer= before using
 =vhdl-tools=.
 
 Also have a look at customization possibilities with =M-x customize-group vhdl-tools=.
+
+** Misc
+
++ =C-c M-b=, beautify current block (module, etc.)
 
 * Related utilities
 
