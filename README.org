@@ -133,12 +133,14 @@ Also have a look at customization possibilities with =M-x customize-group vhdl-t
 
 * Related utilities
 
-Some additional emacs packages useful in this context might be
+Some additional emacs packages useful in this context
 
-- [[https://github.com/mickeynp/smart-scan][Smart scan]]
+- [[https://github.com/mickeynp/smart-scan][Smart scan]] :: jump
 - [[https://github.com/Malabarba/beacon][Beacon]]
 - [[https://github.com/Malabarba/aggressive-indent-mode][Aggressive auto indent]]
 - [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]]
+- [[https://github.com/sh-ow/vhdl-capf][VDHL capf]]
+- http://csantosb.pw:5003/emacs.cat/org-config.cat/csb-vhdl
 
 * Coding
 
