@@ -135,12 +135,13 @@ Also have a look at customization possibilities with =M-x customize-group vhdl-t
 
 Some additional emacs packages useful in this context
 
-- [[https://github.com/mickeynp/smart-scan][Smart scan]] :: jump
-- [[https://github.com/Malabarba/beacon][Beacon]]
-- [[https://github.com/Malabarba/aggressive-indent-mode][Aggressive auto indent]]
-- [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]]
-- [[https://github.com/sh-ow/vhdl-capf][VDHL capf]]
-- http://csantosb.pw:5003/emacs.cat/org-config.cat/csb-vhdl
+- [[https://github.com/mickeynp/smart-scan][smart scan]] :: Jumps between other symbols found at point in Emacs
+- [[https://github.com/Malabarba/beacon][beacon]] :: A light that follows your cursor around so you don't lose it!
+- [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]] :: Emacs minor mode that keeps your code always
+     indented. More reliable than electric-indent-mode
+- [[https://github.com/sh-ow/vhdl-capf][VDHL capf]] :: emacs completion at point function (capf) for vhdl-mode
+
+For an example, see my personal [[http://csantosb.pw:5003/emacs.cat/org-config.cat/csb-vhdl][config]].
 
 * Coding
 
