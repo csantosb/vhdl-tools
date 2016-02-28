@@ -720,21 +720,26 @@ Key bindings:
   :group 'vhdl-tools
   :global nil
   (if vhdl-tools-mode
-      (progn
-	(when vhdl-tools-use-outshine
-	  ;; try to keep things as they were
-	  (setq vhdl-tools--outline-active outline-minor-mode)
-	  (outline-minor-mode 1)
-	  (outshine-hook-function)
-	  ;; custom outline regexp
-	  (setq-local vhdl-tools--outline-regexp-old outline-regexp)
-	  (setq-local outline-regexp vhdl-tools-outline-regexp)
-	  ;;
-	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-outshine-imenu-headers))
-	(setq vhdl-tools--ggtags-active ggtags-mode)
-	(ggtags-mode 1)
-	;; notify
-	(message "VHDL Tools enabled."))
+      ;; activate when gtags files are available
+      (if (file-exists-p (format "%sGTAGS" (projectile-project-root)))
+	  (progn
+	    (when vhdl-tools-use-outshine
+	      ;; try to keep things as they were
+	      (setq vhdl-tools--outline-active outline-minor-mode)
+	      (outline-minor-mode 1)
+	      ;; (outshine-hook-function)
+	      ;; custom outline regexp
+	      (setq-local vhdl-tools--outline-regexp-old outline-regexp)
+	      (setq-local outline-regexp vhdl-tools-outline-regexp)
+	      ;;
+	      (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-outshine-imenu-headers))
+	    (setq vhdl-tools--ggtags-active ggtags-mode)
+	    (ggtags-mode 1)
+	    ;; notify
+	    (message "VHDL Tools enabled."))
+	;; not gtags files available
+	(message "VHDL Tools NOT enabled."))
+    ;; disable
     (progn
       (when (not vhdl-tools--ggtags-active)
 	(ggtags-mode -1))
