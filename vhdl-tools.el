@@ -559,9 +559,12 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-headings-next()
   "Get to next heading."
   (interactive)
-  (back-to-indentation)
+  ;; hack: when already in outline-regexp, point will stay
+  ;; I move forward one char to force getting to next
+  (forward-char)
   (re-search-forward outline-regexp)
-  (vhdl-tools--post-jump-function))
+  (vhdl-tools--post-jump-function)
+  (beginning-of-line))
 
 ;;;; Get to previous
 
@@ -569,10 +572,11 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-headings-prev()
   "Get to previous heading."
   (interactive)
-  (back-to-indentation)
+  ;; hack: no necessary in this case
+  ;; (see vhdl-tools-headings-next)
   (re-search-backward outline-regexp)
-  (vhdl-tools--post-jump-function))
-
+  (vhdl-tools--post-jump-function)
+  (beginning-of-line))
 
 ;;; Helm-imenu navigation
 
