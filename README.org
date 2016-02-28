@@ -75,9 +75,16 @@ This enables using this kind of headings
       port map ( ...
 #+end_src
 
-to delimit code blocks.
+to delimit code blocks. Just don’t [[https://github.com/tj64/outshine#installation][forget]] to
 
-The following keybinds are available to navigate headings
+#+begin_src example
+  (require 'outshine)
+  (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+#+end_src
+
+before activating the mode.
+
+Finally, the following keybinds are provided to navigate headings
 
   + =C-c C-n=, get to next header
   + =C-c C-h=, get to previous header
@@ -139,15 +146,27 @@ Some additional emacs packages useful in this context
 - [[https://github.com/Malabarba/beacon][beacon]] :: A light that follows your cursor around so you don't lose it!
 - [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]] :: Emacs minor mode that keeps your code always
      indented. More reliable than electric-indent-mode
-- [[https://github.com/sh-ow/vhdl-capf][VDHL capf]] :: emacs completion at point function (capf) for vhdl-mode
+- [[https://github.com/sh-ow/vhdl-capf][VDHL capf]] :: emacs completion at point function (capf) backend for use withe
+     [[https://company-mode.github.io/][company]]
 
-For an example, see my personal [[http://csantosb.pw:5003/emacs.cat/org-config.cat/csb-vhdl][config]].
+Remember to
+
+#+begin_src example
+  (add-to-list 'company-begin-commands 'outshine-self-insert-command)
+#+end_src
+
+when setting =vhdl-tools-use-outshine= to true, otherwise =company= idle
+completion won’t [[https://github.com/tj64/outshine/issues/38][work]].
 
 * Coding
 
-Sparse list of projects intended at improving coding homogeneity
+Sparse list of projects intended at improving coding
 
 - [[https://github.com/VHDLTool/VHDLHandbook][VHDLHandbook]]
+
+* Configurations
+
+For an example configuration, see my [[http://csantosb.pw:5003/emacs.cat/org-config.cat/csb-vhdl][personal]] setup.
 
 * License
 
