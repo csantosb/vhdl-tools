@@ -715,7 +715,7 @@ When no symbol at point, move point to indentation."
 
 Key bindings:
 \\{vhdl-tools-map}"
-  :lighter " vhdl-t"
+  :lighter " #vhdl"
   :keymap vhdl-tools-map
   :group 'vhdl-tools
   :global nil
