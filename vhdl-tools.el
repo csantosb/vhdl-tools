@@ -15,7 +15,7 @@
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs >= 24.3
 ;; Version: 0.4
-;; Package-Requires: ((ggtags "0.8.11") (emacs "24.3") (outshine "2.0"))
+;; Package-Requires: ((ggtags "0.8.11") (emacs "24.3") (outshine "2.0") (projectile "0.13.0"))
 
 ;;; License:
 ;;
@@ -98,6 +98,7 @@
 (require 'ggtags)
 (require 'imenu)
 (require 'outshine)
+(require 'projectile)
 
 ;;; Variables
 
