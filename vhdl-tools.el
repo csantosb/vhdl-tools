@@ -380,7 +380,7 @@ Declare a key-bind to get back to the original point."
       ;; locate component name to jump into
       (if (search-backward-regexp "port map" nil t)
 	  (progn
-	    (search-backward-regexp "\\s-:\\s-" nil t)
+	    (search-backward-regexp "\\s-*:\\s-"  nil t)
 	    ;; in case there is a comment at the end of the entity line
 	    (back-to-indentation)
 	    (search-forward-regexp "  " nil t)
