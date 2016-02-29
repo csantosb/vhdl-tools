@@ -10,6 +10,7 @@ This project provides useful VHDL support for Emacs in terms of navigation.
 
  - [[#about][About]]
  - [[#install][Install]]
+ - [[#setup][Setup]]
  - [[#use][Use]]
      - [[#headings][Headings]]
      - [[#custom-imenu][Custom Imenu]]
