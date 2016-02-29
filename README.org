@@ -15,8 +15,10 @@ This project provides useful VHDL support for Emacs in terms of navigation.
      - [[#headings][Headings]]
      - [[#custom-imenu][Custom Imenu]]
      - [[#jumping-around][Jumping around]]
+     - [[#misc][Misc]]
  - [[#related-utilities][Related utilities]]
  - [[#coding][Coding]]
+ - [[#configurations][Configurations]]
  - [[#license][License]]
 
 * About
@@ -79,7 +81,8 @@ before activating =vhdl-tools=. Remember to
   (add-to-list 'company-begin-commands 'outshine-self-insert-command)
 #+end_src
 
-otherwise =company= idle completion won’t [[https://github.com/tj64/outshine/issues/38][work]].
+otherwise =company= idle completion using the =capf= backed won’t [[https://github.com/tj64/outshine/issues/38][work]] (see
+[[#related-utilities][Related utilities]] section below).
 
 * Use
 
