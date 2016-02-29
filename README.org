@@ -32,7 +32,7 @@ It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggt
   - Jump to upper level
   - Searching for references
   - Link and headings management
-  - Custom use of imenu
+  - Custom use of =imenu=
 
 * Install
 
@@ -61,11 +61,10 @@ Then, activate the minor mode by completing the =vhdl-mode= hook.
 
 * Setup
 
-=VHDL-tools= expects a correct setup of the packages it relies on.
+=VHDL-tools= expects a correct setup of the packages it relies on
 
 - configure [[https://github.com/leoliu/ggtags][ggtags]]
-- setup [[https://github.com/bbatsov/projectile][projectile]] whether by creating a =.projectile= file at your project’s root
-     folder, whether put it under version control
+- setup [[https://github.com/bbatsov/projectile][projectile]] by putting it under version control with [[https://git-scm.com/][git]]
 
 Finally, if you plan to use [[https://github.com/tj64/outshine][outshine]] by setting =vhdl-tools-use-outshine= to
 true, just don’t [[https://github.com/tj64/outshine#installation][forget]] to

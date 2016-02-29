@@ -13,9 +13,9 @@
 ;; Description: Utilities for navigating vhdl sources.
 ;; URL: https://github.com/csantosb/vhdl-tools
 ;; Keywords: convenience
-;; Compatibility: GNU Emacs >= 24.3
-;; Version: 0.4
-;; Package-Requires: ((ggtags "0.8.11") (emacs "24.3") (outshine "2.0") (projectile "0.13.0"))
+;; Compatibility: GNU Emacs >= 24.5
+;; Version: 0.4.2
+;; Package-Requires: ((ggtags "0.8.11") (emacs "24.3") (outshine "2.0") (projectile "0.13.0") (helm "1.9.2"))
 
 ;;; License:
 ;;
@@ -99,6 +99,7 @@
 (require 'imenu)
 (require 'outshine)
 (require 'projectile)
+(require 'helm-grep)
 
 ;;; Variables
 
