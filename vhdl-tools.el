@@ -451,8 +451,8 @@ When no symbol at point, move point to indentation."
       (funcall `(lambda ()
 		  (minibuffer-with-setup-hook
 		      (lambda ()
-			(insert (format "^.* : \\(entity work.\\)*%s$" ,(vhdl-tools--get-name))))
-		    (helm-grep-do-git-grep t))))
+			(insert (format "^.*: \\(entity work.\\)*%s$" ,(vhdl-tools--get-name))))
+		    (call-interactively 'helm-grep-do-git-grep))))
       ;; search, when nil, do nothing
       (when vhdl-tools-thing
 	(search-forward-regexp vhdl-tools-thing nil t)
