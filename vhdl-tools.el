@@ -398,7 +398,7 @@ Declare a key-bind to get back to the original point."
       ;; once jumped to new buffer
       (add-hook 'ggtags-find-tag-hook
 		'(lambda()
-		   (when (search-forward vhdl-tools-jump-into-module-name nil t)
+		   (when (search-forward (format "%s " vhdl-tools-jump-into-module-name)  nil t)
 		     (vhdl-tools--post-jump-function)
 		     ;; erase modified hook
 		     (setq vhdl-tools-jump-into-module-name nil)
@@ -451,11 +451,12 @@ When no symbol at point, move point to indentation."
       (funcall `(lambda ()
 		  (minibuffer-with-setup-hook
 		      (lambda ()
-			(insert (format "^.*: \\(entity work.\\)*%s$" ,(vhdl-tools--get-name))))
-		    (call-interactively 'helm-grep-do-git-grep))))
+			;; (insert (format "^.* : \\(entity work.\\)*%s$" ,(vhdl-tools--get-name)))
+			(insert (format "^.*: %s$" ,(vhdl-tools--get-name))))
+		    (call-interactively 'helm-grep-do-git-grep (projectile-project-root) nil))))
       ;; search, when nil, do nothing
       (when vhdl-tools-thing
-	(search-forward-regexp vhdl-tools-thing nil t)
+	(search-forward-regexp (format "%s " vhdl-tools-thing) nil t)
 	(vhdl-tools--post-jump-function)))))
 
 
