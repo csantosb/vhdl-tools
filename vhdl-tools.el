@@ -460,6 +460,60 @@ When no symbol at point, move point to indentation."
 	(vhdl-tools--post-jump-function)))))
 
 
+;;; Org / VHDL
+
+;; Following the literate programming paradigm, here we intend to provide some
+;; infrastructure to deal with jumping between a "filename.vhd" and its
+;; corresponding "filename.org", the former being tangled from the latter.
+
+;;;; VHDL to Org
+
+;;;###autoload
+(defun vhdl-tools-jump-to-org()
+  "From vhdl file, jump to same line in org file."
+  (interactive)
+  (let ((myfile (format "%s.org" (file-name-base)))
+	(myline (save-excursion
+		  (back-to-indentation)
+		  (set-mark-command nil)
+		  (end-of-line)
+		  (buffer-substring-no-properties (region-beginning)
+						  (region-end)))))
+    (when (file-exists-p myfile)
+      (find-file-other-window myfile)
+      (beginning-of-buffer)
+      (when (search-forward myline nil t nil)
+	(org-back-to-heading nil)
+	(org-show-entry)
+	(search-forward myline nil t nil)
+	(recenter-top-bottom vhdl-tools-recenter-nb-lines)
+	(back-to-indentation)))))
+
+;;;; Org to VHDL
+
+;;;###autoload
+(defun vhdl-tools-jump-from-org()
+  "From org file, jump to same line in vhdl file."
+  (interactive)
+  (back-to-indentation)
+  (let ((myfile (format "%s.vhd" (file-name-base)))
+	(myline (save-excursion
+		  (back-to-indentation)
+		  (set-mark-command nil)
+		  (end-of-line)
+		  (buffer-substring-no-properties (region-beginning)
+						  (region-end)))))
+    (when (file-exists-p myfile)
+      (setq toto myline)
+      (find-file-other-window myfile)
+      (beginning-of-buffer)
+      (when (search-forward myline nil t nil)
+	(org-back-to-heading nil)
+	(org-show-entry)
+	(search-forward myline nil t nil)
+	(recenter-top-bottom vhdl-tools-recenter-nb-lines)
+	(back-to-indentation)))))
+
 ;;; Links
 ;;
 ;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
@@ -694,6 +748,7 @@ When no symbol at point, move point to indentation."
     (define-key m (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
     (define-key m (kbd "C-c M-a") #'vhdl-tools-jump-first)
     (define-key m (kbd "C-c M-u") #'vhdl-tools-jump-upper)
+    (define-key m (kbd "C-c M-^") #'vhdl-tools-jump-to-org)
     (define-key m (kbd "C-c C-n") #'vhdl-tools-headings-next)
     (define-key m (kbd "C-c C-h") #'vhdl-tools-headings-prev)
     (define-key m (kbd "C-c M-b") #'vhdl-tools-beautify-region)

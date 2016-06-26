@@ -14,6 +14,7 @@ This project provides useful VHDL support for Emacs in terms of navigation.
  - [[#use][Use]]
      - [[#headings][Headings]]
      - [[#custom-imenu][Custom Imenu]]
+     - [[#org-vhdl][Org / VHDL]]
      - [[#jumping-around][Jumping around]]
      - [[#misc][Misc]]
  - [[#related-utilities][Related utilities]]
@@ -121,6 +122,22 @@ The following keybinds are made available to browse current buffer contents
   + =C-x c i p=    processes
   + =C-x c i SPC=  headers (with a prefix argument use ido instead)
   + =C-x c i a=    all items
+
+** Org vhdl
+
+Following the literate programming paradigm, it is possible to tangle an
+org-mode file containing source code blocks to a source code file. This helps
+documenting code, for example. Assuming its names are identical, and only its
+extension changes, it is possible to jump from the source to the org file with
+
+  + =C-C M-^=      jump from vhdl to org
+
+Up to the user to define a key to jump from org to vhdl source code, as for
+example
+
+#+begin_src emacs-lisp
+  (define-key org-mode-map (kbd "C-c M-,") #'vhdl-tools-jump-from-org)
+#+end_src
 
 ** Jumping around
 
