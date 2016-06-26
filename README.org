@@ -139,6 +139,17 @@ example
   (define-key org-mode-map (kbd "C-c M-,") #'vhdl-tools-jump-from-org)
 #+end_src
 
+When tangling the org file, this code helps to set proper indentation,
+whitespace fixup, alignment, and case fixing to entire buffer.
+
+#+begin_src emacs-lisp
+  (add-hook 'org-babel-post-tangle-hook
+            (lambda ()
+              (when (string= major-mode "vhdl-mode")
+                (vhdl-beautify-buffer)
+                (save-buffer))))
+#+end_src
+
 ** Jumping around
 
 The following keybinds are available
