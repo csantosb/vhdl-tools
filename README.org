@@ -6,17 +6,16 @@
 
 This project provides useful VHDL support for Emacs in terms of navigation.
 
-* Table of contents
-
+* Table of contents                                                                 :TOC:
  - [[#about][About]]
  - [[#install][Install]]
  - [[#setup][Setup]]
  - [[#use][Use]]
-     - [[#headings][Headings]]
-     - [[#custom-imenu][Custom Imenu]]
-     - [[#org-vhdl][Org / VHDL]]
-     - [[#jumping-around][Jumping around]]
-     - [[#misc][Misc]]
+   - [[#headings][Headings]]
+   - [[#custom-imenu][Custom Imenu]]
+   - [[#org-vhdl][Org vhdl]]
+   - [[#jumping-around][Jumping around]]
+   - [[#misc][Misc]]
  - [[#related-utilities][Related utilities]]
  - [[#coding][Coding]]
  - [[#configurations][Configurations]]
