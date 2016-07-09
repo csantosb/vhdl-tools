@@ -122,6 +122,9 @@ Needed to determine end of name."
 (defcustom vhdl-tools-use-outshine nil
   "Flag to activate `outshine' when `vhdl-tools' minor mode in active.")
 
+(defcustom vhdl-tools-remap-smartscan nil
+  "Flag to allow remapping `smartscan' when `vhdl-tools' minor mode in active.")
+
 (defcustom vhdl-tools-recenter-nb-lines 10
   "Number of lines from top of scren to recenter point after jumping to new location.")
 
@@ -460,6 +463,35 @@ When no symbol at point, move point to indentation."
 	(vhdl-tools--post-jump-function)))))
 
 
+;;; SmartScan
+
+;; Custom version of `smartscan' jumping functions.  Here, I manage
+;; folding/unfolding of code headings, so that upon jumping only the relevant
+;; section is shown
+
+;;;; Go Forward
+
+(defun vhdl-tools-smcn-next()
+  (interactive)
+  (smartscan-symbol-go-forward)
+  (when vhdl-tools-use-outshine
+    (save-excursion
+      (hide-sublevels 5)
+      (org-back-to-heading nil)
+      (org-show-subtree))))
+
+;;;; Go Backwards
+
+(defun vhdl-tools-smcn-prev()
+  (interactive)
+  (smartscan-symbol-go-backward)
+  (when vhdl-tools-use-outshine
+    (save-excursion
+      (hide-sublevels 5)
+      (org-back-to-heading nil)
+      (org-show-subtree))))
+
+
 ;;; Org / VHDL
 
 ;; Following the literate programming paradigm, here we intend to provide some
@@ -634,6 +666,7 @@ When no symbol at point, move point to indentation."
   (vhdl-tools--post-jump-function)
   (beginning-of-line))
 
+
 ;;; Helm-imenu navigation
 
 ;;;; Standard Imenu
@@ -753,6 +786,7 @@ When no symbol at point, move point to indentation."
     (define-key m (kbd "C-c C-h") #'vhdl-tools-headings-prev)
     (define-key m (kbd "C-c M-b") #'vhdl-tools-beautify-region)
     ;;
+    ;; imenu related
     (define-prefix-command 'vhdl-tools-imenu-map)
     (define-key m (kbd "C-x c i") 'vhdl-tools-imenu-map)
     (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
@@ -780,6 +814,15 @@ Key bindings:
       ;; activate when gtags files are available
       (if (file-exists-p (format "%sGTAGS" (projectile-project-root)))
 	  (progn
+	    ;; optional smartscan remapping
+	    (when (and vhdl-tools-remap-smartscan
+		       (boundp 'smartscan-mode)
+		       (smartscan-mode 1))
+	      (define-key vhdl-mode-map [remap smartscan-symbol-go-forward]
+		#'vhdl-tools-smcn-next)
+	      (define-key vhdl-mode-map [remap smartscan-symbol-go-backward]
+		#'vhdl-tools-smcn-prev))
+	    ;;
 	    (when vhdl-tools-use-outshine
 	      ;; try to keep things as they were
 	      (setq vhdl-tools--outline-active outline-minor-mode)
@@ -798,6 +841,9 @@ Key bindings:
 	(message "VHDL Tools NOT enabled."))
     ;; disable
     (progn
+      (when vhdl-tools-remap-smartscan
+	(define-key vhdl-tools-map [remap smartscan-symbol-go-forward] nil)
+	(define-key vhdl-tools-map [remap smartscan-symbol-go-backward] nil))
       (when (not vhdl-tools--ggtags-active)
 	(ggtags-mode -1))
       (when vhdl-tools-use-outshine

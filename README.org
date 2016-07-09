@@ -6,13 +6,18 @@
 
 This project provides useful VHDL support for Emacs in terms of navigation.
 
-* Table of contents                                                                 :TOC:
+* Table of Contents                                 :TOC:
+:PROPERTIES:
+:VISIBILITY: all
+:END:
+
  - [[#about][About]]
  - [[#install][Install]]
  - [[#setup][Setup]]
  - [[#use][Use]]
    - [[#headings][Headings]]
    - [[#custom-imenu][Custom Imenu]]
+   - [[#custom-smartscan][Custom SmartScan]]
    - [[#org-vhdl][Org vhdl]]
    - [[#jumping-around][Jumping around]]
    - [[#misc][Misc]]
@@ -121,6 +126,14 @@ The following keybinds are made available to browse current buffer contents
   + =C-x c i p=    processes
   + =C-x c i SPC=  headers (with a prefix argument use ido instead)
   + =C-x c i a=    all items
+
+** Custom SmartScan
+
+Following the status of the =vhdl-tools-remap-smartscan= and
+=vhdl-tools-use-outshine= flags (off by default), when the mode is enabled,
+=vhdl-tools= will customize the behaviour of =smartscan-symbol-go-forward= and
+=smartscan-symbol-go-backward=, so that they manage folding/unfolding of section
+headings. This way, upon jumping, only the relevant section is shown.
 
 ** Org vhdl
 
