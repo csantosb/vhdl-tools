@@ -15,7 +15,7 @@
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs >= 24.5
 ;; Version: 4.4
-;; Package-Requires: ((ggtags "0.8.11") (emacs "24.3") (outshine "2.0") (projectile "0.13.0") (helm "1.9.2"))
+;; Package-Requires: ((ggtags "0.8.11") (emacs "24.5") (outshine "2.0") (helm "1.9.9") (vhdl-mode "3.38.1"))
 
 ;;; License:
 ;;
@@ -98,15 +98,31 @@
 (require 'ggtags)
 (require 'imenu)
 (require 'outshine)
-(require 'projectile)
 (require 'helm-grep)
+
+;;; Groups
+
+(defgroup vhdl-tools nil "Some customizations of vhdl-tools package"
+  :group 'local)
+
+(defgroup vhdl-tools-vorg nil "Some customizations of vhdl-tools vorg package"
+  :group 'local)
 
 ;;; Variables
 
-(defgroup vhdl-tools nil "Some customizations of vhdl-tools packages" :group
-  'local)
-
 ;;;; User Variables
+
+;;;;; vOrg
+
+(defcustom vhdl-tools-vorg-tangle-comment-format-beg "@@@"
+  "Variable to assign to `org-babel-tangle-comment-format-beg' during `vorg' tangling."
+  :type 'string :group 'vhdl-tools-vorg)
+
+(defcustom vhdl-tools-vorg-tangle-comment-format-end "@@@"
+  "Variable to assign to `org-babel-tangle-comment-format-end' during `vorg' tangling."
+  :type 'string :group 'vhdl-tools-vorg)
+
+;;;;; tools
 
 (defcustom vhdl-tools-allowed-chars-in-signal "a-z0-9A-Z_"
   "Regexp with allowed characters in signal, constant or function.
@@ -114,43 +130,98 @@ Needed to determine end of name."
   :type 'string :group 'vhdl-tools)
 
 (defcustom vhdl-tools-outline-regexp "^\\s-*-- [*]\\{1,8\\} "
-  "Regexp to be used as `outline-regexp' when `vhdl-tools' minor mode is active.")
+  "Regexp to be used as `outline-regexp' when `vhdl-tools' minor mode is active."
+  :type 'string :group 'vhdl-tools)
 
 (defcustom vhdl-tools-imenu-regexp "^\\s-*--\\s-\\([*]\\{1,8\\}\\s-.+\\)"
-  "Regexp ...")
+  "Regexp ..."
+  :type 'string :group 'vhdl-tools)
 
 (defcustom vhdl-tools-use-outshine nil
-  "Flag to activate `outshine' when `vhdl-tools' minor mode in active.")
+  "Flag to activate `outshine' when `vhdl-tools' minor mode in active."
+  :group 'vhdl-tools)
 
 (defcustom vhdl-tools-remap-smartscan nil
-  "Flag to allow remapping `smartscan' when `vhdl-tools' minor mode in active.")
+  "Flag to allow remapping `smartscan' when `vhdl-tools' minor mode in active."
+  :group 'vhdl-tools)
+
+(defcustom vhdl-tools-manage-folding t
+  "Flag to allow remapping auto folding when jumping around."
+  :group 'vhdl-tools)
+
+(defcustom vhdl-tools-tangle-comments t
+  "Flag to force set the comments:link header in vhdl src blocks."
+  :group 'vhdl-tools)
 
 (defcustom vhdl-tools-recenter-nb-lines 10
-  "Number of lines from top of scren to recenter point after jumping to new location.")
+  "Number of lines from top of scren to recenter point after jumping to new location."
+  :group 'vhdl-tools)
 
 ;;;; Internal Variables
 
-(defvar vhdl-tools-jump-into-module-name nil)
-(defvar vhdl-tools-store-link-link nil)
-(defvar vhdl-tools-store-link-link nil)
+(defvar vhdl-tools--jump-into-module-name nil)
 
-(defvar vhdl-tools--outline-active
-  "Stores state of `outline-minor-mode' prior to activating the minor mode.")
+(defvar vhdl-tools--store-link-link nil)
 
-(defvar vhdl-tools--ggtags-active
+(defvar vhdl-tools--outline-active nil
+  "Stores state of variable `outline-minor-mode' prior to activating the minor mode.")
+
+(defvar vhdl-tools--ggtags-active nil
   "Stores state of `ggtags-mode' prior to activating the minor mode.")
 
-(defvar vhdl-tools--outline-regexp-old
+(defvar vhdl-tools--outline-regexp-old nil
   "Stores state of `outline-regexp' prior to activating the minor mode.")
 
-(defvar vhdl-tools-follow-links-tag nil)
-(defvar vhdl-tools-follow-links-tosearch nil)
+(defvar vhdl-tools--follow-links-tag nil)
+
+(defvar vhdl-tools--follow-links-tosearch nil)
 
 
 ;;; Helper
 
+;; Ancillary functions
+
+(defun vhdl-tools--prologue-header-argument ()
+  "To be used as def argument to `prologue' in source block header."
+  (save-excursion
+    (org-back-to-heading nil)
+    (let ((heading (car (cdr (org-element-headline-parser (point))))))
+      (format "\n-- %s %s\n\n"
+	      (if (> (plist-get heading ':level) 1)
+		  (make-string (- (plist-get heading ':level) 1)
+			       ?*)
+		(make-string 1 ?*))
+	      (plist-get heading ':raw-value)))))
+
+(defun vhdl-tools--cleanup-tangled ()
+  "Make invisible reference comments after tangling."
+  (interactive)
+  (when vhdl-tools-tangle-comments
+    (save-excursion
+      (when vhdl-tools-use-outshine
+	(outline-show-all)
+	(beginning-of-buffer))
+      (while (re-search-forward (format "^-- %s.*$" vhdl-tools-vorg-tangle-comment-format-beg) nil t nil)
+	(let ((endp (point))
+	      (begp (progn (beginning-of-line) (point))))
+	  (overlay-put (make-overlay begp endp)
+		       'invisible
+		       (intern "vhdl-tangled")))
+	(next-line))
+      (add-to-invisibility-spec 'vhdl-tangled)
+      (vhdl-tools--fold))))
+
+(defun vhdl-tools--fold ()
+  "Fold to current heading level."
+  (when (and vhdl-tools-use-outshine
+	     vhdl-tools-manage-folding)
+    (save-excursion
+      (outline-hide-sublevels 5)
+      (org-back-to-heading nil)
+      (outline-show-entry))))
+
 (defun vhdl-tools--push-marker ()
-  ;; push tag (stolen from elisp-slime-nav.el)
+  "Push tag (stolen from elisp-slime-nav.el)."
   (if (fboundp 'xref-push-marker-stack)
       (xref-push-marker-stack)
     (with-no-warnings
@@ -170,15 +241,8 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
         (vhdl-tools--get-name)
       "")))
 
-;; (defun vhdl-tools-get-entity-name-of-architecture()
-;;   "Search for architecture and return its entity or empty string if nothing found."
-;;   (save-excursion
-;;     (goto-char (point-min))
-;;     (if (re-search-forward "\\(^\\)\\s-*architecture\\s-+[a-zA-Z0-9_]+\\s-+of\\s-+" nil t nil)
-;;         (vhdl-tools--get-name)
-;;       "")))
-
 (defun vhdl-tools--imenu-with-initial-minibuffer (str)
+  "Text `STR'."
   (funcall `(lambda ()
 	      (interactive)
 	      (minibuffer-with-setup-hook
@@ -376,7 +440,7 @@ Declare a key-bind to get back to the original point."
   ;; when nil, do nothing
   (when (vhdl-tools--get-name)
     ;; necessary during hook (see later)
-    (setq vhdl-tools-jump-into-module-name (vhdl-tools--get-name))
+    (setq vhdl-tools--jump-into-module-name (vhdl-tools--get-name))
     (vhdl-tools--push-marker)
     (save-excursion
       ;; case of component instantiation
@@ -401,10 +465,12 @@ Declare a key-bind to get back to the original point."
       ;; once jumped to new buffer
       (add-hook 'ggtags-find-tag-hook
 		'(lambda()
-		   (when (search-forward (format "%s " vhdl-tools-jump-into-module-name)  nil t)
+		   (when (progn
+			   (vhdl-tools--fold)
+			   (search-forward (format "%s " vhdl-tools--jump-into-module-name)  nil t))
 		     (vhdl-tools--post-jump-function)
 		     ;; erase modified hook
-		     (setq vhdl-tools-jump-into-module-name nil)
+		     (setq vhdl-tools--jump-into-module-name nil)
 		     ;; erase hook
 		     (setq ggtags-find-tag-hook nil))
 		   ;; remove last jump so that `pop-tag-mark' will get to
@@ -414,6 +480,7 @@ Declare a key-bind to get back to the original point."
       (call-interactively 'ggtags-find-definition))))
 
 ;;;; Jump to first
+
 ;; Utility to jump to first time a symbol appears on file
 
 ;;;###autoload
@@ -430,7 +497,8 @@ When no symbol at point, move point to indentation."
     (let ((vhdl-tools-jump-first-name (vhdl-tools--get-name)))
       (goto-char (point-min))
       (search-forward-regexp vhdl-tools-jump-first-name nil t)
-      (back-to-indentation))))
+      (vhdl-tools--fold)
+      (backward-word))))
 
 ;;;; Jump Upper
 ;; Utility to jump to upper level
@@ -440,6 +508,7 @@ When no symbol at point, move point to indentation."
   "Get to upper level module and move point to signal at point.
 When no symbol at point, move point to indentation."
   (interactive)
+  (require 'vc)
   ;; when no symbol at point, move forward to next symbol
   (when (not (vhdl-tools--get-name))
     (back-to-indentation))
@@ -456,12 +525,12 @@ When no symbol at point, move point to indentation."
 		      (lambda ()
 			;; (insert (format "^.* : \\(entity work.\\)*%s$" ,(vhdl-tools--get-name)))
 			(insert (format "^.*: %s$" ,(vhdl-tools--get-name))))
-		    (call-interactively 'helm-grep-do-git-grep (projectile-project-root) nil))))
+		    (call-interactively 'helm-grep-do-git-grep (vc-find-root (buffer-file-name) ".git") nil))))
       ;; search, when nil, do nothing
       (when vhdl-tools-thing
 	(search-forward-regexp (format "%s " vhdl-tools-thing) nil t)
+	(vhdl-tools--fold)
 	(vhdl-tools--post-jump-function)))))
-
 
 ;;; SmartScan
 
@@ -474,22 +543,14 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-smcn-next()
   (interactive)
   (smartscan-symbol-go-forward)
-  (when vhdl-tools-use-outshine
-    (save-excursion
-      (hide-sublevels 5)
-      (org-back-to-heading nil)
-      (org-show-subtree))))
+  (vhdl-tools--fold))
 
 ;;;; Go Backwards
 
 (defun vhdl-tools-smcn-prev()
   (interactive)
   (smartscan-symbol-go-backward)
-  (when vhdl-tools-use-outshine
-    (save-excursion
-      (hide-sublevels 5)
-      (org-back-to-heading nil)
-      (org-show-subtree))))
+  (vhdl-tools--fold))
 
 
 ;;; Org / VHDL
@@ -498,13 +559,41 @@ When no symbol at point, move point to indentation."
 ;; infrastructure to deal with jumping between a "filename.vhd" and its
 ;; corresponding "filename.org", the former being tangled from the latter.
 
-;;;; VHDL to Org
+;;;; VHDL to VOrg
+
+;; TODO: depending on `vhdl-tools-tangle-comments', jump to vOrg using old strategy
+
+;; (defun vhdl-tools-vorg-jump-to-vorg(arg)
+;;   "From vhdl file, jump to same line in vorg file."
+;;   (interactive "P")
+;;   (let ((myfile (format "%s.vorg" (file-name-base)))
+;; 	(myline (save-excursion
+;; 		  (back-to-indentation)
+;; 		  (set-mark-command nil)
+;; 		  (end-of-line)
+;; 		  (buffer-substring-no-properties (region-beginning)
+;; 						  (region-end)))))
+;;     (when (file-exists-p myfile)
+;;       (if (equal arg '(4))
+;; 	  (progn
+;; 	    (find-file myfile)
+;; 	    (beginning-of-buffer)
+;; 	    (search-forward myline nil t nil))
+;; 	(org-babel-tangle-jump-to-org))
+;;       (org-content 5)
+;;       (org-back-to-heading nil)
+;;       (org-show-subtree)
+;;       (search-forward myline nil t nil)
+;;       (recenter-top-bottom vhdl-tools-recenter-nb-lines)
+;;       (back-to-indentation)
+;;       (when (region-active-p) (keyboard-quit)))))
+
 
 ;;;###autoload
-(defun vhdl-tools-jump-to-org()
-  "From vhdl file, jump to same line in org file."
+(defun vhdl-tools-vorg-jump-to-vorg()
+  "From `vhdl' file, jump to same line in `vorg' file."
   (interactive)
-  (let ((myfile (format "%s.org" (file-name-base)))
+  (let ((myfile (format "%s.vorg" (file-name-base)))
 	(myline (save-excursion
 		  (back-to-indentation)
 		  (set-mark-command nil)
@@ -512,20 +601,20 @@ When no symbol at point, move point to indentation."
 		  (buffer-substring-no-properties (region-beginning)
 						  (region-end)))))
     (when (file-exists-p myfile)
-      (find-file-other-window myfile)
-      (beginning-of-buffer)
-      (when (search-forward myline nil t nil)
-	(org-back-to-heading nil)
-	(org-show-entry)
-	(search-forward myline nil t nil)
-	(recenter-top-bottom vhdl-tools-recenter-nb-lines)
-	(back-to-indentation)))))
+      (org-babel-tangle-jump-to-org)
+      (org-content 5)
+      (org-back-to-heading nil)
+      (org-show-subtree)
+      (search-forward myline nil t nil)
+      (recenter-top-bottom vhdl-tools-recenter-nb-lines)
+      (back-to-indentation)
+      (when (region-active-p) (keyboard-quit)))))
 
-;;;; Org to VHDL
+;;;; VOrg to VHDL
 
 ;;;###autoload
-(defun vhdl-tools-jump-from-org()
-  "From org file, jump to same line in vhdl file."
+(defun vhdl-tools-vorg-jump-from-vorg()
+  "From `vorg' file, jump to same line in `vhdl' file."
   (interactive)
   (back-to-indentation)
   (let ((myfile (format "%s.vhd" (file-name-base)))
@@ -536,15 +625,34 @@ When no symbol at point, move point to indentation."
 		  (buffer-substring-no-properties (region-beginning)
 						  (region-end)))))
     (when (file-exists-p myfile)
-      (setq toto myline)
-      (find-file-other-window myfile)
+      (find-file myfile)
       (beginning-of-buffer)
+      (when vhdl-tools-use-outshine
+	(outline-next-heading))
       (when (search-forward myline nil t nil)
-	(org-back-to-heading nil)
-	(org-show-entry)
+	(vhdl-tools--fold)
 	(search-forward myline nil t nil)
 	(recenter-top-bottom vhdl-tools-recenter-nb-lines)
-	(back-to-indentation)))))
+	(back-to-indentation))))
+  (when (region-active-p) (keyboard-quit)))
+
+;;;; VOrg tangle
+
+;;;###autoload
+(defun vhdl-tools-vorg-tangle (myfile)
+  "Tangle a `vorg' `MYFILE' file to its corresponding `vhdl' file."
+  (interactive (list (format "%s.vorg" (file-name-base))))
+  (when (region-active-p) (keyboard-quit))
+  (let ((org-babel-tangle-uncomment-comments nil)
+	(org-babel-tangle-comment-format-beg
+	 (format "%s %s" vhdl-tools-vorg-tangle-comment-format-beg
+		 org-babel-tangle-comment-format-beg))
+	(org-babel-tangle-comment-format-end
+	 (format "%s %s" vhdl-tools-vorg-tangle-comment-format-end
+		 org-babel-tangle-comment-format-end)))
+    (org-babel-tangle-file myfile (format "%s.vhd" (file-name-base myfile)) "vhdl")
+    (when (called-interactively-p)
+      (call-interactively 'vhdl-tools-vorg-jump-from-vorg))))
 
 ;;; Links
 ;;
@@ -577,7 +685,7 @@ When no symbol at point, move point to indentation."
 		     (vhdl-tools--get-name)))
 	 (mylink (format "%s\@%s" myentity myline)))
     (message mylink)
-    (setq vhdl-tools-store-link-link mylink)))
+    (setq vhdl-tools--store-link-link mylink)))
 
 ;;;; Link Paste
 
@@ -585,7 +693,7 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-paste-link()
   "Paste previous stored link."
   (interactive)
-  (insert (format "`%s`" vhdl-tools-store-link-link)))
+  (insert (format "`%s`" vhdl-tools--store-link-link)))
 
 ;;;; Link Follow
 
@@ -606,11 +714,11 @@ When no symbol at point, move point to indentation."
 	    (buffer-substring-no-properties
 	     tmp-point-min tmp-point-max)))
       ;; tag
-      (setq vhdl-tools-follow-links-tag
+      (setq vhdl-tools--follow-links-tag
 	    (substring vhdl-tools-follow-links-item 0
 		       (string-match "@" vhdl-tools-follow-links-item)))
       ;; tosearch
-      (setq vhdl-tools-follow-links-tosearch
+      (setq vhdl-tools--follow-links-tosearch
 	    ;; with a prefix argument, ignore tosearch
 	    (when (not (equal arg '(4)))
 	      nil
@@ -620,7 +728,7 @@ When no symbol at point, move point to indentation."
 		   (+ 1 (string-match "@" vhdl-tools-follow-links-item)) nil)
 		nil)))))
   ;; when tosearch non nil, update hook to execute an action
-  (when vhdl-tools-follow-links-tosearch
+  (when vhdl-tools--follow-links-tosearch
     ;; empty old content in hook
     (setq ggtags-find-tag-hook nil)
     (vhdl-tools--push-marker)
@@ -629,14 +737,14 @@ When no symbol at point, move point to indentation."
 	      '(lambda()
 		 ;; action: forward search
 		 ;; if no tosearch is found, do nothing
-		 (when (search-forward vhdl-tools-follow-links-tosearch nil t)
+		 (when (search-forward vhdl-tools--follow-links-tosearch nil t)
 		   ;; otherwise, do this
 		   (vhdl-tools--post-jump-function))
 		 ;; erase modified hook
-		 (setq vhdl-tools-follow-links-tosearch nil)
+		 (setq vhdl-tools--follow-links-tosearch nil)
 		 (setq ggtags-find-tag-hook nil)))
     ;; jump !
-    (ggtags-find-definition vhdl-tools-follow-links-tag)))
+    (ggtags-find-definition vhdl-tools--follow-links-tag)))
 
 
 ;;; Headings
@@ -651,8 +759,18 @@ When no symbol at point, move point to indentation."
   ;; I move forward one char to force getting to next
   (forward-char)
   (re-search-forward outline-regexp)
-  (vhdl-tools--post-jump-function)
-  (beginning-of-line))
+  (beginning-of-line)
+  (vhdl-tools--fold)
+  (vhdl-tools--post-jump-function))
+
+(defun vhdl-tools-vorg-headings-next()
+  "Get to next heading in vorg buffer."
+  (interactive)
+  (org-next-visible-heading 1)
+  (when vhdl-tools-manage-folding
+    (outline-hide-sublevels 5)
+    (org-show-entry)
+    (vhdl-tools--post-jump-function)))
 
 ;;;; Get to previous
 
@@ -663,8 +781,18 @@ When no symbol at point, move point to indentation."
   ;; hack: no necessary in this case
   ;; (see vhdl-tools-headings-next)
   (re-search-backward outline-regexp)
-  (vhdl-tools--post-jump-function)
-  (beginning-of-line))
+  (beginning-of-line)
+  (vhdl-tools--fold)
+  (vhdl-tools--post-jump-function))
+
+(defun vhdl-tools-vorg-headings-prev()
+  "Get to next heading in vorg buffer."
+  (interactive)
+  (org-previous-visible-heading 1)
+  (when vhdl-tools-manage-folding
+    (outline-hide-sublevels 5)
+    (org-show-entry)
+    (vhdl-tools--post-jump-function)))
 
 
 ;;; Helm-imenu navigation
@@ -677,7 +805,8 @@ When no symbol at point, move point to indentation."
   (let ((imenu-generic-expression vhdl-imenu-generic-expression))
     (set-buffer-modified-p t)
     (save-buffer)
-    (call-interactively 'imenu)))
+    (call-interactively 'imenu)
+    (vhdl-tools--fold)))
 
 ;;;; Instances
 
@@ -689,7 +818,8 @@ When no symbol at point, move point to indentation."
 	(helm-candidate-number-limit 50))
     (set-buffer-modified-p t)
     (save-buffer)
-    (vhdl-tools--imenu-with-initial-minibuffer "^Instance")))
+    (vhdl-tools--imenu-with-initial-minibuffer "^Instance")
+    (vhdl-tools--fold)))
 
 ;;;; Processes
 
@@ -701,7 +831,8 @@ When no symbol at point, move point to indentation."
 	(helm-candidate-number-limit 50))
     (set-buffer-modified-p t)
     (save-buffer)
-    (vhdl-tools--imenu-with-initial-minibuffer "^Process")))
+    (vhdl-tools--imenu-with-initial-minibuffer "^Process")
+    (vhdl-tools--fold)))
 
 ;;;; Components
 
@@ -713,7 +844,8 @@ When no symbol at point, move point to indentation."
 	(helm-candidate-number-limit 50))
     (set-buffer-modified-p t)
     (save-buffer)
-    (vhdl-tools--imenu-with-initial-minibuffer "^Component")))
+    (vhdl-tools--imenu-with-initial-minibuffer "^Component")
+    (vhdl-tools--fold)))
 
 ;;;; Headers
 
@@ -725,7 +857,8 @@ When no symbol at point, move point to indentation."
 	(helm-candidate-number-limit 50))
     (set-buffer-modified-p t)
     (save-buffer)
-    (call-interactively 'helm-semantic-or-imenu)))
+    (call-interactively 'helm-semantic-or-imenu)
+    (vhdl-tools--fold)))
 
 ;;;; Outshine - imenu
 
@@ -735,7 +868,8 @@ When no symbol at point, move point to indentation."
   (if (equal arg '(4))
       (outshine-imenu nil)
     (vhdl-tools-imenu-headers))
-  (vhdl-tools--post-jump-function))
+  (vhdl-tools--post-jump-function)
+  (vhdl-tools--fold))
 
 ;;;; All
 
@@ -765,10 +899,11 @@ When no symbol at point, move point to indentation."
 	(helm-candidate-number-limit 50))
     (set-buffer-modified-p t)
     (save-buffer)
-    (call-interactively 'helm-semantic-or-imenu)))
+    (call-interactively 'helm-semantic-or-imenu)
+    (vhdl-tools--fold)))
 
 
-;;; Minor Mode
+;;; Minor Mode - Tools
 
 ;;;; Keybindings
 
@@ -781,7 +916,7 @@ When no symbol at point, move point to indentation."
     (define-key m (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
     (define-key m (kbd "C-c M-a") #'vhdl-tools-jump-first)
     (define-key m (kbd "C-c M-u") #'vhdl-tools-jump-upper)
-    (define-key m (kbd "C-c M-^") #'vhdl-tools-jump-to-org)
+    (define-key m (kbd "C-c M-^") #'vhdl-tools-vorg-jump-to-vorg)
     (define-key m (kbd "C-c C-n") #'vhdl-tools-headings-next)
     (define-key m (kbd "C-c C-h") #'vhdl-tools-headings-prev)
     (define-key m (kbd "C-c M-b") #'vhdl-tools-beautify-region)
@@ -810,9 +945,10 @@ Key bindings:
   :keymap vhdl-tools-map
   :group 'vhdl-tools
   :global nil
+  (require 'vc)
   (if vhdl-tools-mode
       ;; activate when gtags files are available
-      (if (file-exists-p (format "%sGTAGS" (projectile-project-root)))
+      (if (file-exists-p (format "%sGTAGS" (vc-find-root (buffer-file-name) ".git")))
 	  (progn
 	    ;; optional smartscan remapping
 	    (when (and vhdl-tools-remap-smartscan
@@ -854,6 +990,39 @@ Key bindings:
 	(setq-local outline-regexp vhdl-tools--outline-regexp-old))
       ;; notify
       (message "VHDL Tools disabled."))))
+
+
+;;; Minor Mode - vOrg
+
+;;;; Keybindings
+
+(defvar vhdl-tools-vorg-map
+  (let ((m (make-sparse-keymap)))
+    (define-key m (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
+    (define-key m [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
+    (define-key m (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
+    (define-key m (kbd "C-c C-h") #'vhdl-tools-vorg-headings-prev)
+    m)
+  "Keymap for `vhdl-tools-vorg'.")
+
+;;;; Mode
+
+;;;###autoload
+(define-minor-mode vhdl-tools-vorg-mode
+  "Utilities for navigating vhdl sources in vorg files.
+
+Key bindings:
+\\{vhdl-tools-map}"
+  :lighter " #OrgHDL"
+  :keymap vhdl-tools-vorg-map
+  :group 'vhdl-tools-vorg
+  :global nil
+  (require 'vc)
+  (require 'vhdl-tools)
+  (if vhdl-tools-vorg-mode
+      (message "VHDL Tools Vorg enabled.")
+    ;; disable
+    (message "VHDL Tools Vorg disabled.")))
 
 (provide 'vhdl-tools)
 
