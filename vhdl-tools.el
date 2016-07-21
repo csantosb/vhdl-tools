@@ -139,23 +139,23 @@ Needed to determine end of name."
 
 (defcustom vhdl-tools-use-outshine nil
   "Flag to activate `outshine' when `vhdl-tools' minor mode in active."
-  :group 'vhdl-tools)
+  :type 'boolean :group 'vhdl-tools)
 
 (defcustom vhdl-tools-remap-smartscan nil
   "Flag to allow remapping `smartscan' when `vhdl-tools' minor mode in active."
-  :group 'vhdl-tools)
+  :type 'boolean :group 'vhdl-tools)
 
 (defcustom vhdl-tools-manage-folding t
   "Flag to allow remapping auto folding when jumping around."
-  :group 'vhdl-tools)
+  :type 'boolean :group 'vhdl-tools)
 
 (defcustom vhdl-tools-tangle-comments t
   "Flag to force set the comments:link header in vhdl src blocks."
-  :group 'vhdl-tools)
+  :type 'boolean :group 'vhdl-tools)
 
 (defcustom vhdl-tools-recenter-nb-lines 10
   "Number of lines from top of scren to recenter point after jumping to new location."
-  :group 'vhdl-tools)
+  :type 'boolean :group 'vhdl-tools)
 
 ;;;; Internal Variables
 
