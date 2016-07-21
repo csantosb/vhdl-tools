@@ -200,14 +200,14 @@ Needed to determine end of name."
     (save-excursion
       (when vhdl-tools-use-outshine
 	(outline-show-all)
-	(beginning-of-buffer))
+	(goto-char (point-min)))
       (while (re-search-forward (format "^-- %s.*$" vhdl-tools-vorg-tangle-comment-format-beg) nil t nil)
 	(let ((endp (point))
 	      (begp (progn (beginning-of-line) (point))))
 	  (overlay-put (make-overlay begp endp)
 		       'invisible
 		       (intern "vhdl-tangled")))
-	(next-line))
+	(forward-line))
       (add-to-invisibility-spec 'vhdl-tangled)
       (vhdl-tools--fold))))
 
@@ -626,7 +626,7 @@ When no symbol at point, move point to indentation."
 						  (region-end)))))
     (when (file-exists-p myfile)
       (find-file myfile)
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (when vhdl-tools-use-outshine
 	(outline-next-heading))
       (when (search-forward myline nil t nil)
@@ -651,7 +651,7 @@ When no symbol at point, move point to indentation."
 	 (format "%s %s" vhdl-tools-vorg-tangle-comment-format-end
 		 org-babel-tangle-comment-format-end)))
     (org-babel-tangle-file myfile (format "%s.vhd" (file-name-base myfile)) "vhdl")
-    (when (called-interactively-p)
+    (when (called-interactively-p 'interactive)
       (call-interactively 'vhdl-tools-vorg-jump-from-vorg))))
 
 ;;; Links
