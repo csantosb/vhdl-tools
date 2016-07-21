@@ -918,7 +918,7 @@ When no symbol at point, move point to indentation."
     (define-key m (kbd "C-c M-u") #'vhdl-tools-jump-upper)
     (define-key m (kbd "C-c M-^") #'vhdl-tools-vorg-jump-to-vorg)
     (define-key m (kbd "C-c C-n") #'vhdl-tools-headings-next)
-    (define-key m (kbd "C-c C-h") #'vhdl-tools-headings-prev)
+    (define-key m (kbd "C-c C-p") #'vhdl-tools-headings-prev)
     (define-key m (kbd "C-c M-b") #'vhdl-tools-beautify-region)
     ;;
     ;; imenu related
@@ -1001,7 +1001,7 @@ Key bindings:
     (define-key m (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
     (define-key m [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
     (define-key m (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
-    (define-key m (kbd "C-c C-h") #'vhdl-tools-vorg-headings-prev)
+    (define-key m (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
     m)
   "Keymap for `vhdl-tools-vorg'.")
 
