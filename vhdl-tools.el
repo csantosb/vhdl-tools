@@ -543,14 +543,16 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-smcn-next()
   (interactive)
   (smartscan-symbol-go-forward)
-  (vhdl-tools--fold))
+  (vhdl-tools--fold)
+  (recenter))
 
 ;;;; Go Backwards
 
 (defun vhdl-tools-smcn-prev()
   (interactive)
   (smartscan-symbol-go-backward)
-  (vhdl-tools--fold))
+  (vhdl-tools--fold)
+  (recenter))
 
 
 ;;; Org / VHDL
