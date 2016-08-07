@@ -270,7 +270,9 @@ With a prefix ARG, fall back to previous behaviour."
       (call-interactively 'vhdl-beautify-region))))
 
 
-;;; Get definition
+;;; Jumping
+
+;;;; Get definition
 
 ;;;###autoload
 (defun vhdl-tools-get-buffer (entity-or-package-name)
@@ -422,9 +424,6 @@ displayed.  To go back to original vhdl file press."
     (progn
       (goto-char found)
       (vhdl-tools--post-jump-function))))
-
-
-;;; Jumping
 
 ;;;; Jump into module
 
