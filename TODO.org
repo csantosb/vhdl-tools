@@ -1,3 +1,39 @@
+* Table of Contents                                 :TOC:
+:PROPERTIES:
+:VISIBILITY: all
+:END:
+
+ - [[#todo][TODO]]
+   - [[#include-here-imenu-related-functions][Include here imenu related functions]]
+   - [[#this][This]]
+   - [[#remove-ugly-line-from-vorg-files][Remove ugly line from =vOrg= files]]
+
 * TODO
 
 ** Include here imenu related functions
+
+
+** This
+
+In vhdl-tools--prologue-header-argument, replace (org-back-to-heading nil) by
+something to detect i previous element is a header or not; proceed only if its a header
+
+
+** Remove ugly line from =vOrg= files
+
+#+begin_src org :tangle no
+  #+begin_src vhdl :prologue (vhdl-tools--prologue-header-argument)
+#+end_src
+
+Try something like
+
+#+begin_src emacs-lisp :tangle no
+  (add-hook 'vhdl-tools-vorg-mode-hook
+            (lambda ()
+              (when vhdl-tools-use-outshine
+                (setq-local org-babel-default-header-args
+                            (cons `(:prologue . ,(vhdl-tools--prologue-header-argument))
+                                  (assq-delete-all :prologue org-babel-default-header-args))))))
+#+end_src
+
+Unfourtunately, this makes the same header appear on top of all blocks.
