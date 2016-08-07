@@ -145,7 +145,7 @@ Needed to determine end of name."
   "Flag to allow remapping `smartscan' when `vhdl-tools' minor mode in active."
   :type 'boolean :group 'vhdl-tools)
 
-(defcustom vhdl-tools-manage-folding t
+(defcustom vhdl-tools-manage-folding nil
   "Flag to allow remapping auto folding when jumping around."
   :type 'boolean :group 'vhdl-tools)
 
@@ -500,6 +500,7 @@ When no symbol at point, move point to indentation."
       (backward-word))))
 
 ;;;; Jump Upper
+
 ;; Utility to jump to upper level
 
 ;;;###autoload
@@ -534,8 +535,8 @@ When no symbol at point, move point to indentation."
 ;;; SmartScan
 
 ;; Custom version of `smartscan' jumping functions.  Here, I manage
-;; folding/unfolding of code headings, so that upon jumping only the relevant
-;; section is shown
+;; folding/unfolding of code headings, so that upon jumping only the
+;; relevant section is shown
 
 ;;;; Go Forward
 
@@ -848,7 +849,7 @@ When no symbol at point, move point to indentation."
     (vhdl-tools--imenu-with-initial-minibuffer "^Component")
     (vhdl-tools--fold)))
 
-;;;; Headers
+;;;; Headings
 
 ;;;###autoload
 (defun vhdl-tools-imenu-headers()
