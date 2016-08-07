@@ -18,9 +18,9 @@ This project provides useful VHDL support for Emacs in terms of navigation.
    - [[#headings][Headings]]
    - [[#custom-imenu][Custom Imenu]]
    - [[#custom-smartscan][Custom SmartScan]]
-   - [[#org-vhdl][Org vhdl]]
    - [[#jumping-around][Jumping around]]
    - [[#misc][Misc]]
+   - [[#vorg][vOrg]]
  - [[#related-utilities][Related utilities]]
  - [[#coding][Coding]]
  - [[#configurations][Configurations]]
@@ -29,7 +29,7 @@ This project provides useful VHDL support for Emacs in terms of navigation.
 * About
 
 [[https://csantosb.github.io/blog/2015/12/23/vhdl-tools/][Vhdl-tools]] provides a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
-It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], [[http://batsov.com/projectile/][projectile]], =imenu= and
+It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], [[http://batsov.com/projectile/][projectile]], [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html][imenu]] and
 [[https://github.com/tj64/outshine][outshine]] to ease navigating vhdl sources. It expects a working setup of
 =ggtags=, completing it with
 
@@ -64,6 +64,8 @@ Then, activate the minor mode by completing the =vhdl-mode= hook.
               (vhdl-tools-mode 1)))
 #+end_src
 
+When this minor mode is active, a lighter =#vhdl= will be shown in the mode line.
+
 * Setup
 
 =VHDL-tools= expects a correct setup of the packages it relies on
@@ -71,7 +73,7 @@ Then, activate the minor mode by completing the =vhdl-mode= hook.
 - configure [[https://github.com/leoliu/ggtags][ggtags]]
 - setup [[https://github.com/bbatsov/projectile][projectile]] by putting it under version control with [[https://git-scm.com/][git]]
 
-Finally, if you plan to use [[https://github.com/tj64/outshine][outshine]] by setting =vhdl-tools-use-outshine= to
+Then, if you plan to use [[https://github.com/tj64/outshine][outshine]] by setting =vhdl-tools-use-outshine= to
 true, just don’t [[https://github.com/tj64/outshine#installation][forget]] to
 
 #+begin_src example
@@ -87,6 +89,12 @@ before activating =vhdl-tools=. Remember to
 
 otherwise =company= idle completion using the =capf= backed won’t [[https://github.com/tj64/outshine/issues/38][work]] (see
 [[#related-utilities][Related utilities]] section below).
+
+Additionally, setting =vhdl-tools-manage-folding= (off by default) to true will
+allow auto folding when jumping around.
+
+Finally, have a look at all customization possibilities with =M-x customize-group
+vhdl-tools=.
 
 * Use
 
@@ -113,8 +121,13 @@ Then, call =outshine-speed-command-help= to get an overview over the available
 functionality and the keybindings. Additionally, the following keybinds are
 provided to navigate headings
 
-  + =C-c C-n=, get to next header
-  + =C-c C-h=, get to previous header
+  + =C-c C-n=      get to next header
+  + =C-c C-p=      get to previous header
+
+Setting =vhdl-tools-manage-folding= (off by default) to true will allow auto
+folding upon jumping.
+
+Finally, to browse all headings use =imenu= as shown in next section.
 
 ** Custom Imenu
 
@@ -124,7 +137,7 @@ The following keybinds are made available to browse current buffer contents
   + =C-x c i i=    instances
   + =C-x c i c=    components
   + =C-x c i p=    processes
-  + =C-x c i SPC=  headers (with a prefix argument use ido instead)
+  + =C-x c i SPC=  headings (with a prefix argument use ido instead)
   + =C-x c i a=    all items
 
 ** Custom SmartScan
@@ -135,21 +148,80 @@ Following the status of the =vhdl-tools-remap-smartscan= and
 =smartscan-symbol-go-backward=, so that they manage folding/unfolding of section
 headings. This way, upon jumping, only the relevant section is shown.
 
-** Org vhdl
+** Jumping around
 
-Following the literate programming paradigm, it is possible to tangle an
-org-mode file containing source code blocks to a source code file. This helps
-documenting code, for example. Assuming its names are identical, and only its
-extension changes, it is possible to jump from the source to the org file with
+The following keybinds are available
 
-  + =C-C M-^=      jump from vhdl to org
+  + =C-c M-D=    jumps to the definition of symbol at point
 
-Up to the user to define a key to jump from org to vhdl source code, as for
-example
+    [[file:JumpDef.gif][JumpDef.gif]]
+
+  + =C-c M-w=     store a link
+  + =C-c M-y=     paste a link
+  + =C-c M-j=     follows the link at point
+
+    [[file:Links.gif][Links.gif]]
+
+  + =C-c M-.=     jumps into the instance at point and move point to current signal
+
+    [[file:JumpIntoInstance.gif][JumpIntoInstance.gif]]
+
+  + =C-c M-a=     moves point to first appearance of symbol at point
+
+    [[file:JumpFirst.gif][JumpFirst.gif]]
+
+  + =C-c M-u=     jumps to upper hierarchy level
+
+    [[file:JumpUpper.gif][JumpUpper.gif]]
+
+Cursor will jump to the target if there is one, searching packages too. The ring
+mark is push after jumping, so to get back, press =C-c C-p= or =M-,= (default binds
+under =ggtags=) if corresponding definition has been found. Works better for files
+with correct syntax: think =vhdl-beautify-buffer= before using =vhdl-tools=.
+
+** Misc
+
++ =C-c M-b=    beautify current block (module, etc.)
+
+** vOrg
+
+Following the [[http://orgmode.org/worg/org-contrib/babel/intro.html][literate programming paradigm]], it is possible to tangle an
+[[http://orgmode.org/][org-mode]] file containing source code blocks to a source code file. This helps
+documenting code, for example, and provides lots of other benefits.
+
+In order to ease handling this workflow, this package defines an ancillary minor
+mode called =vOrg= intended to be used along with org major mode. When this minor
+mode is active, a lighter =vOrg= will be shown in the mode line.
+
+To auto activate =vOrg=, one may hook org mode
 
 #+begin_src emacs-lisp
-  (define-key org-mode-map (kbd "C-c M-,") #'vhdl-tools-jump-from-org)
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (when (and (buffer-file-name)
+                         (file-exists-p (format "%s.vhd" (file-name-base
+                                                          (buffer-file-name)))))
+                (require 'vhdl-tools)
+                (vhdl-tools-vorg-mode 1))))
 #+end_src
+
+Otherwise, it is to be enabled manually.
+
+When the =vOrg= file exists, and assuming its names are identical, and only its
+extension changes, it is possible to jump from the source vhdl file to the org
+file with help of
+
+  + =C-C M-^=    jump from vhdl to org
+
+Once =vOrg= is active the following keys are made available
+
+  + =C-c M-,=    jump from org to vhdl
+  + =C-c C-n=    get to next header
+  + =C-c C-p=    get to previous header
+  + =C-c v t=    [[http://orgmode.org/manual/Extracting-source-code.html][tangle]] =vOrg= file
+
+Setting =vhdl-tools-manage-folding= (off by default) to true will allow auto
+folding upon jumping.
 
 When tangling the org file, this code helps to set proper indentation,
 whitespace fixup, alignment, and case fixing to entire buffer.
@@ -162,43 +234,26 @@ whitespace fixup, alignment, and case fixing to entire buffer.
                 (save-buffer))))
 #+end_src
 
-** Jumping around
+Similarly, when editing code
 
-The following keybinds are available
+#+begin_src emacs-lisp
+  (add-hook 'org-src-mode-hook
+            (lambda ()
+              (when (string= major-mode "vhdl-mode")
+                (require 'vhdl-mode)
+                (vhdl-beautify-buffer))))
+#+end_src
 
-  + =C-c M-D=, jumps to the definition of symbol at point
+And maybe defining a custom beautification command might be useful too
 
-    [[file:JumpDef.gif][JumpDef.gif]]
-
-  + =C-c M-w=, stores a link
-  + =C-c M-y=, pastes a link
-  + =C-c M-j=, follows the link at point
-
-    [[file:Links.gif][Links.gif]]
-
-  + =C-c M-.=, jumps into the instance at point
-
-    [[file:JumpIntoInstance.gif][JumpIntoInstance.gif]]
-
-  + =C-c M-a=, moves point to first appearance of symbol at point
-
-    [[file:JumpFirst.gif][JumpFirst.gif]]
-
-  + =C-c M-u=, jumps to upper hierarchy level
-
-    [[file:JumpUpper.gif][JumpUpper.gif]]
-
-Cursor will jump to the target if there is one, searching packages too. The ring
-mark is push after jumping, so to get back, press =C-c C-p= or M-, (default
-binds under =ggtags=) if corresponding definition has been found. Works better
-for files with correct syntax: think =vhdl-beautify-buffer= before using
-=vhdl-tools=.
-
-Also have a look at customization possibilities with =M-x customize-group vhdl-tools=.
-
-** Misc
-
-+ =C-c M-b=, beautify current block (module, etc.)
+#+begin_src emacs-lisp
+  (define-key vhdl-tools-vorg-map (kbd "C-c M-b")
+    #'(lambda()(interactive)
+        (org-edit-src-code)
+        (vhdl-beautify-buffer)
+        (org-edit-src-save)
+        (org-edit-src-exit)))
+#+end_src
 
 * Related utilities
 
