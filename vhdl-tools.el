@@ -1015,7 +1015,7 @@ Key bindings:
 
 Key bindings:
 \\{vhdl-tools-map}"
-  :lighter " #OrgHDL"
+  :lighter " vOrg"
   :keymap vhdl-tools-vorg-map
   :group 'vhdl-tools-vorg
   :global nil
