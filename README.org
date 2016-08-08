@@ -20,11 +20,10 @@ This project provides useful VHDL support for Emacs in terms of navigation.
    - [[#custom-smartscan][Custom SmartScan]]
    - [[#jumping-around][Jumping around]]
    - [[#misc][Misc]]
-   - [[#vorg][vOrg]]
-     - [[#vorg-features][vOrg features]]
-     - [[#vorg-tangling][vOrg tangling]]
-     - [[#vorg-heading-export][vOrg heading export]]
-     - [[#vorg-beautify][vOrg beautify]]
+ - [[#vorg-use][vOrg Use]]
+   - [[#features][Features]]
+   - [[#tangling][Tangling]]
+   - [[#heading-export][Heading export]]
  - [[#related-utilities][Related utilities]]
  - [[#coding][Coding]]
  - [[#configurations][Configurations]]
@@ -190,9 +189,9 @@ with correct syntax: think =vhdl-beautify-buffer= before using =vhdl-tools=.
 
 + =C-c M-b=    beautify current block (module, etc.)
 
-** vOrg
+* vOrg Use
 
-*** vOrg features
+** Features
 
 Following the [[http://orgmode.org/worg/org-contrib/babel/intro.html][literate programming paradigm]], it is possible to tangle an
 [[http://orgmode.org/][org-mode]] file containing source code blocks to a source code file. This helps
@@ -226,12 +225,16 @@ Once =vOrg= minor mode is active the following keys are made available
   + C-c M-,    jump from =vOrg= to vhdl
   + =C-c C-n=    get to next header
   + =C-c C-p=    get to previous header
-  + =C-c v t=    [[http://orgmode.org/manual/Extracting-source-code.html][tangle]] =vOrg= file
+  + =C-c v t=    [[http://orgmode.org/manual/Extracting-source-code.html][tangle]] =vOrg= file and beautify resulting buffer
+  + =C-c M-b=    beautify code block at point
 
 Setting =vhdl-tools-manage-folding= (off by default) to true will allow auto
 folding upon jumping.
 
-*** vOrg tangling
+Finally, when editing source code blocks in the =vOrg= file, the minor mode will
+auto set proper indentation, whitespace fixup and alignment of source code.
+
+** Tangling
 
 Org mode includes special infrastructure to tangle org files containing source
 code. As explained in the org [[https://www.gnu.org/software/emacs/manual/html_node/org/comments.html#comments][manual]], extra comments may be inserted in the
@@ -257,43 +260,7 @@ jumping features in =vOrg= minor mode may be used, except that in this case, a
 regular text search of text in current file is used to locate the point to jump
 to.
 
-*** vOrg heading export
-
-
-
-*** vOrg beautify
-
-When tangling the org file, this code helps to auto set proper indentation,
-whitespace fixup, alignment, and case fixing to entire exported buffer.
-
-#+begin_src emacs-lisp
-  (add-hook 'org-babel-post-tangle-hook
-            (lambda ()
-              (when (string= major-mode "vhdl-mode")
-                (vhdl-beautify-buffer)
-                (save-buffer))))
-#+end_src
-
-Similarly, when editing source code blocks
-
-#+begin_src emacs-lisp
-  (add-hook 'org-src-mode-hook
-            (lambda ()
-              (when (string= major-mode "vhdl-mode")
-                (require 'vhdl-mode)
-                (vhdl-beautify-buffer))))
-#+end_src
-
-And maybe defining a custom beautification command might be useful too
-
-#+begin_src emacs-lisp
-  (define-key vhdl-tools-vorg-map (kbd "C-c M-b")
-    #'(lambda()(interactive)
-        (org-edit-src-code)
-        (vhdl-beautify-buffer)
-        (org-edit-src-save)
-        (org-edit-src-exit)))
-#+end_src
+** Heading export
 
 * Related utilities
 
