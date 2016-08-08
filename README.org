@@ -21,8 +21,10 @@ This project provides useful VHDL support for Emacs in terms of navigation.
    - [[#jumping-around][Jumping around]]
    - [[#misc][Misc]]
    - [[#vorg][vOrg]]
-     - [[#vorg-link-tangling][vOrg link tangling]]
-       - [[#vorg-tangling-extra][vOrg tangling extra]]
+     - [[#vorg-features][vOrg features]]
+     - [[#vorg-tangling][vOrg tangling]]
+     - [[#vorg-heading-export][vOrg heading export]]
+     - [[#vorg-beautify][vOrg beautify]]
  - [[#related-utilities][Related utilities]]
  - [[#coding][Coding]]
  - [[#configurations][Configurations]]
@@ -190,6 +192,8 @@ with correct syntax: think =vhdl-beautify-buffer= before using =vhdl-tools=.
 
 ** vOrg
 
+*** vOrg features
+
 Following the [[http://orgmode.org/worg/org-contrib/babel/intro.html][literate programming paradigm]], it is possible to tangle an
 [[http://orgmode.org/][org-mode]] file containing source code blocks to a source code file. This helps
 documenting code, for example, and provides lots of other benefits.
@@ -225,31 +229,19 @@ Once =vOrg= minor mode is active the following keys are made available
   + =C-c v t=    [[http://orgmode.org/manual/Extracting-source-code.html][tangle]] =vOrg= file
 
 Setting =vhdl-tools-manage-folding= (off by default) to true will allow auto
-folding upon jumping, which should work regardless of
-the =vhdl-tools-tangle-comments-link= flag explained in next section.
+folding upon jumping.
 
-*** vOrg link tangling
+*** vOrg tangling
 
 Org mode includes special infrastructure to tangle org files containing source
 code. As explained in the org [[https://www.gnu.org/software/emacs/manual/html_node/org/comments.html#comments][manual]], extra comments may be inserted in the
 tangled code file. In particular, the “comments:link” option provides pointers
-back to the original org file, as a reference for jumping back and forth between =vorg=
-and =vhdl=.
+back to the original org file, as a reference for jumping back and forth between
+=vorg= and =vhdl=. This behaviour is activated by setting the
+=vhdl-tools-tangle-comments-link= flag. Otherwise, only code is extracted from the
+=vOrg= file.
 
-In next code =vhdl-tools-vorg-mode-hook= is used to set =“:comments”= header argument
-to =“link”=, so that =org= exports comments along with source code when the
-=vhdl-tools-tangle-comments-link= flag is set
-
-#+begin_src emacs-lisp
-  (add-hook 'vhdl-tools-vorg-mode-hook
-            (lambda ()
-              (when vhdl-tools-tangle-comments-link
-                (setq-local org-babel-default-header-args
-                            (cons '(:comments . "link")
-                                  (assq-delete-all :comments org-babel-default-header-args))))))
-#+end_src
-
-Note that the variables =vhdl-tools-vorg-tangle-comment-format-beg= and
+Additionally, the variables =vhdl-tools-vorg-tangle-comment-format-beg= and
 =vhdl-tools-vorg-tangle-comment-format-end= are used to format inserted
 comments in tangled code files.
 
@@ -260,10 +252,19 @@ the source =vhdl= file may be put out of sight with help of
   (add-hook 'vhdl-mode-hook #'vhdl-tools--cleanup-tangled)
 #+end_src
 
-**** vOrg tangling extra
+Note that even if the =vhdl-tools-tangle-comments-link= flag is not set, the
+jumping features in =vOrg= minor mode may be used, except that in this case, a
+regular text search of text in current file is used to locate the point to jump
+to.
 
-When tangling the org file, this code helps to set proper indentation,
-whitespace fixup, alignment, and case fixing to entire buffer.
+*** vOrg heading export
+
+
+
+*** vOrg beautify
+
+When tangling the org file, this code helps to auto set proper indentation,
+whitespace fixup, alignment, and case fixing to entire exported buffer.
 
 #+begin_src emacs-lisp
   (add-hook 'org-babel-post-tangle-hook
@@ -273,7 +274,7 @@ whitespace fixup, alignment, and case fixing to entire buffer.
                 (save-buffer))))
 #+end_src
 
-Similarly, when editing code
+Similarly, when editing source code blocks
 
 #+begin_src emacs-lisp
   (add-hook 'org-src-mode-hook
