@@ -149,7 +149,7 @@ Needed to determine end of name."
   "Flag to allow remapping auto folding when jumping around."
   :type 'boolean :group 'vhdl-tools)
 
-(defcustom vhdl-tools-tangle-comments-link t
+(defcustom vhdl-tools-tangle-comments-link nil
   "Flag to force set the comments:link header in vhdl src blocks."
   :type 'boolean :group 'vhdl-tools)
 
@@ -595,7 +595,7 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-vorg-jump-to-vorg()
   "From `vhdl' file, jump to same line in `vorg' file."
   (interactive)
-  (let ((myfile (format "%s.vorg" (file-name-base)))
+  (let ((myfile (format "%s.org" (file-name-base)))
 	(myline (save-excursion
 		  (back-to-indentation)
 		  (set-mark-command nil)
@@ -643,7 +643,7 @@ When no symbol at point, move point to indentation."
 ;;;###autoload
 (defun vhdl-tools-vorg-tangle (myfile)
   "Tangle a `vorg' `MYFILE' file to its corresponding `vhdl' file."
-  (interactive (list (format "%s.vorg" (file-name-base))))
+  (interactive (list (format "%s.org" (file-name-base))))
   (when (region-active-p) (keyboard-quit))
   (let ((org-babel-tangle-uncomment-comments nil)
 	(org-babel-tangle-comment-format-beg
