@@ -681,6 +681,17 @@ Beautifies source code blocks before editing."
     (vhdl-beautify-buffer)))
 
 ;;;; VOrg source block beautify
+
+;;;###autoload
+(defun vhdl-tools-vorg-src-block-beautify ()
+  "Beautify of source code block at point."
+  (interactive)
+  (org-edit-src-code)
+  (vhdl-beautify-buffer)
+  (org-edit-src-save)
+  (org-edit-src-exit))
+
+
 ;;; Links
 ;;
 ;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
@@ -1029,6 +1040,7 @@ Key bindings:
     (define-key m [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
     (define-key m (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
     (define-key m (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
+    (define-key m (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
     m)
   "Keymap for `vhdl-tools-vorg'.")
 
