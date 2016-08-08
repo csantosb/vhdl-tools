@@ -149,7 +149,7 @@ Needed to determine end of name."
   "Flag to allow remapping auto folding when jumping around."
   :type 'boolean :group 'vhdl-tools)
 
-(defcustom vhdl-tools-tangle-comments t
+(defcustom vhdl-tools-tangle-comments-link t
   "Flag to force set the comments:link header in vhdl src blocks."
   :type 'boolean :group 'vhdl-tools)
 
@@ -196,7 +196,7 @@ Needed to determine end of name."
 (defun vhdl-tools--cleanup-tangled ()
   "Make invisible reference comments after tangling."
   (interactive)
-  (when vhdl-tools-tangle-comments
+  (when vhdl-tools-tangle-comments-link
     (save-excursion
       (when vhdl-tools-use-outshine
 	(outline-show-all)
@@ -563,7 +563,7 @@ When no symbol at point, move point to indentation."
 
 ;;;; VHDL to VOrg
 
-;; TODO: depending on `vhdl-tools-tangle-comments', jump to vOrg using old strategy
+;; TODO: depending on `vhdl-tools-tangle-comments-link', jump to vOrg using old strategy
 
 ;; (defun vhdl-tools-vorg-jump-to-vorg(arg)
 ;;   "From vhdl file, jump to same line in vorg file."
