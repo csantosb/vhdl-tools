@@ -671,6 +671,16 @@ When no symbol at point, move point to indentation."
     (when (called-interactively-p 'interactive)
       (call-interactively 'vhdl-tools-vorg-jump-from-vorg))))
 
+;;;; VOrg source editing beautify
+
+(defun vhdl-tools-vorg-src-edit-beautify ()
+  "To be added to `org-src-mode-hook' when `vorg' mode is active.
+Beautifies source code blocks before editing."
+  (when (string= major-mode "vhdl-mode")
+    (require 'vhdl-mode)
+    (vhdl-beautify-buffer)))
+
+;;;; VOrg source block beautify
 ;;; Links
 ;;
 ;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
@@ -1037,9 +1047,13 @@ Key bindings:
   (require 'vc)
   (require 'vhdl-tools)
   (if vhdl-tools-vorg-mode
-      (message "VHDL Tools Vorg enabled.")
+      (progn
+	(message "VHDL Tools Vorg enabled.")
+	(add-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))
     ;; disable
-    (message "VHDL Tools Vorg disabled.")))
+    (progn
+      (message "VHDL Tools Vorg disabled.")
+      (remove-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))))
 
 (provide 'vhdl-tools)
 
