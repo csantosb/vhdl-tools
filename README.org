@@ -21,6 +21,8 @@ This project provides useful VHDL support for Emacs in terms of navigation.
    - [[#jumping-around][Jumping around]]
    - [[#misc][Misc]]
    - [[#vorg][vOrg]]
+     - [[#vorg-link-tangling][vOrg link tangling]]
+       - [[#vorg-tangling-extra][vOrg tangling extra]]
  - [[#related-utilities][Related utilities]]
  - [[#coding][Coding]]
  - [[#configurations][Configurations]]
@@ -38,6 +40,8 @@ It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggt
   - Searching for references
   - Link and headings management
   - Custom use of =imenu=
+  - Custom =smartscan=
+  - Org / vhdl coupling
 
 * Install
 
@@ -91,7 +95,8 @@ otherwise =company= idle completion using the =capf= backed won’t [[https://gi
 [[#related-utilities][Related utilities]] section below).
 
 Additionally, setting =vhdl-tools-manage-folding= (off by default) to true will
-allow auto folding when jumping around.
+allow auto folding when jumping around, and =vhdl-tools-recenter-nb-lines= will be
+used as number of lines from top after jumping.
 
 Finally, have a look at all customization possibilities with =M-x customize-group
 vhdl-tools=.
@@ -143,10 +148,10 @@ The following keybinds are made available to browse current buffer contents
 ** Custom SmartScan
 
 Following the status of the =vhdl-tools-remap-smartscan= and
-=vhdl-tools-use-outshine= flags (off by default), when the mode is enabled,
-=vhdl-tools= will customize the behaviour of =smartscan-symbol-go-forward= and
-=smartscan-symbol-go-backward=, so that they manage folding/unfolding of section
-headings. This way, upon jumping, only the relevant section is shown.
+=vhdl-tools-use-outshine= flags (off by default), =vhdl-tools= will customize the
+behaviour of =smartscan-symbol-go-forward= and =smartscan-symbol-go-backward=, so
+that they manage folding/unfolding of section headings. This way, upon jumping,
+only the relevant section is shown.
 
 ** Jumping around
 
@@ -175,7 +180,7 @@ The following keybinds are available
     [[file:JumpUpper.gif][JumpUpper.gif]]
 
 Cursor will jump to the target if there is one, searching packages too. The ring
-mark is push after jumping, so to get back, press =C-c C-p= or =M-,= (default binds
+mark is push after jumping, so to get back, press =C-c C-p= or M-, (default binds
 under =ggtags=) if corresponding definition has been found. Works better for files
 with correct syntax: think =vhdl-beautify-buffer= before using =vhdl-tools=.
 
@@ -207,21 +212,55 @@ To auto activate =vOrg=, one may hook org mode
 
 Otherwise, it is to be enabled manually.
 
-When the =vOrg= file exists, and assuming its names are identical, and only its
-extension changes, it is possible to jump from the source vhdl file to the org
-file with help of
+When the =vOrg= file exists it is possible to jump from the vhdl file to the =vOrg=
+file -assuming its names are identical and only its extension changes- with help of
 
-  + =C-C M-^=    jump from vhdl to org
+  + =C-C M-^=    jump from vhdl to =vOrg=
 
-Once =vOrg= is active the following keys are made available
+Once =vOrg= minor mode is active the following keys are made available
 
-  + =C-c M-,=    jump from org to vhdl
+  + C-c M-,    jump from =vOrg= to vhdl
   + =C-c C-n=    get to next header
   + =C-c C-p=    get to previous header
   + =C-c v t=    [[http://orgmode.org/manual/Extracting-source-code.html][tangle]] =vOrg= file
 
 Setting =vhdl-tools-manage-folding= (off by default) to true will allow auto
-folding upon jumping.
+folding upon jumping, which should work regardless of
+the =vhdl-tools-tangle-comments-link= flag explained in next section.
+
+*** vOrg link tangling
+
+Org mode includes special infrastructure to tangle org files containing source
+code. As explained in the org [[https://www.gnu.org/software/emacs/manual/html_node/org/comments.html#comments][manual]], extra comments may be inserted in the
+tangled code file. In particular, the “comments:link” option provides pointers
+back to the original org file, as a reference for jumping back and forth between =vorg=
+and =vhdl=.
+
+In next code =vhdl-tools-vorg-mode-hook= is used to set =“:comments”= header argument
+to =“link”=, so that =org= exports comments along with source code when the
+=vhdl-tools-tangle-comments-link= flag is set
+
+#+begin_src emacs-lisp
+  (add-hook 'vhdl-tools-vorg-mode-hook
+            (lambda ()
+              (when vhdl-tools-tangle-comments-link
+                (setq-local org-babel-default-header-args
+                            (cons '(:comments . "link")
+                                  (assq-delete-all :comments org-babel-default-header-args))))))
+#+end_src
+
+Note that the variables =vhdl-tools-vorg-tangle-comment-format-beg= and
+=vhdl-tools-vorg-tangle-comment-format-end= are used to format inserted
+comments in tangled code files.
+
+Once the code is tangled from the =vorg= file, the reference comments around in
+the source =vhdl= file may be put out of sight with help of
+
+#+begin_src emacs-lisp
+  (add-hook 'vhdl-mode-hook #'vhdl-tools--cleanup-tangled)
+#+end_src
+
+**** vOrg tangling extra
 
 When tangling the org file, this code helps to set proper indentation,
 whitespace fixup, alignment, and case fixing to entire buffer.
