@@ -645,7 +645,17 @@ When no symbol at point, move point to indentation."
   "Tangle a `vorg' `MYFILE' file to its corresponding `vhdl' file."
   (interactive (list (format "%s.org" (file-name-base))))
   (when (region-active-p) (keyboard-quit))
-  (let ((org-babel-tangle-uncomment-comments nil)
+  (let (;; When tangling the org file, this code helps to auto set proper
+	;; indentation, whitespace fixup, alignment, and case fixing to entire
+	;; exported buffer
+	(org-babel-post-tangle-hook
+	 (add-hook 'org-babel-post-tangle-hook
+		   (lambda ()
+		     (when (string= major-mode "vhdl-mode")
+		       (vhdl-beautify-buffer)
+		       (save-buffer))) nil t))
+	(org-babel-tangle-uncomment-comments nil)
+	;; sets the "comments:link" header arg
 	(org-babel-default-header-args
 	 (if vhdl-tools-tangle-comments-link
 	     (cons '(:comments . "link")
