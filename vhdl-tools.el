@@ -646,6 +646,11 @@ When no symbol at point, move point to indentation."
   (interactive (list (format "%s.org" (file-name-base))))
   (when (region-active-p) (keyboard-quit))
   (let ((org-babel-tangle-uncomment-comments nil)
+	(org-babel-default-header-args
+	 (if vhdl-tools-tangle-comments-link
+	     (cons '(:comments . "link")
+		   (assq-delete-all :comments org-babel-default-header-args))
+	   org-babel-default-header-args))
 	(org-babel-tangle-comment-format-beg
 	 (format "%s %s" vhdl-tools-vorg-tangle-comment-format-beg
 		 org-babel-tangle-comment-format-beg))
