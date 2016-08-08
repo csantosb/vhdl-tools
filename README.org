@@ -23,7 +23,6 @@ This project provides useful VHDL support for Emacs in terms of navigation.
  - [[#vorg-use][vOrg Use]]
    - [[#features][Features]]
    - [[#tangling][Tangling]]
-   - [[#heading-export][Heading export]]
  - [[#related-utilities][Related utilities]]
  - [[#coding][Coding]]
  - [[#configurations][Configurations]]
@@ -193,9 +192,9 @@ with correct syntax: think =vhdl-beautify-buffer= before using =vhdl-tools=.
 
 ** Features
 
-Following the [[http://orgmode.org/worg/org-contrib/babel/intro.html][literate programming paradigm]], it is possible to tangle an
+Following the [[http://orgmode.org/worg/org-contrib/babel/intro.html][literate programming paradigm]], it is possible to [[http://orgmode.org/manual/Extracting-source-code.html][tangle]] an
 [[http://orgmode.org/][org-mode]] file containing source code blocks to a source code file. This helps
-documenting code, for example, and provides lots of other benefits.
+documenting code, for example, and provides lots of other [[http://howardism.org/Technical/Emacs/literate-programming-tutorial.html][benefits]].
 
 In order to ease handling this workflow, this package defines an ancillary minor
 mode called =vOrg= intended to be used along with org major mode. When this minor
@@ -225,7 +224,7 @@ Once =vOrg= minor mode is active the following keys are made available
   + C-c M-,    jump from =vOrg= to vhdl
   + =C-c C-n=    get to next header
   + =C-c C-p=    get to previous header
-  + =C-c v t=    [[http://orgmode.org/manual/Extracting-source-code.html][tangle]] =vOrg= file and beautify resulting buffer
+  + =C-c v t=    tangle =vOrg= file and beautify resulting buffer
   + =C-c M-b=    beautify code block at point
 
 Setting =vhdl-tools-manage-folding= (off by default) to true will allow auto
@@ -259,8 +258,6 @@ Note that even if the =vhdl-tools-tangle-comments-link= flag is not set, the
 jumping features in =vOrg= minor mode may be used, except that in this case, a
 regular text search of text in current file is used to locate the point to jump
 to.
-
-** Heading export
 
 * Related utilities
 
