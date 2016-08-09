@@ -680,9 +680,11 @@ When no symbol at point, move point to indentation."
 	(org-babel-tangle-comment-format-end
 	 (format "%s %s" vhdl-tools-vorg-tangle-comment-format-end
 		 org-babel-tangle-comment-format-end)))
-    (org-babel-tangle-file myfile (format "%s.vhd" (file-name-base myfile)) "vhdl")
-    (when (called-interactively-p 'interactive)
-      (call-interactively 'vhdl-tools-vorg-jump-from-vorg))))
+    ;; tangle and jump to tangled file only when there are tangled blocks
+    (when (org-babel-tangle-file myfile (format "%s.vhd" (file-name-base
+							  myfile)) "vhdl")
+      (when (called-interactively-p 'interactive)
+	(call-interactively 'vhdl-tools-vorg-jump-from-vorg)))))
 
 ;;;; VOrg source editing beautify
 
