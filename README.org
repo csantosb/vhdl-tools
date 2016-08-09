@@ -263,17 +263,6 @@ to.
 
 ** Tangling extras
 
- - In order to systematically tangle a set of files in a directory the following
-   code may be used, such that for each =“file.org”= file in =src= directory, a new
-   =“file.vhd”= will be exported.
-
-#+begin_src emacs-lisp :results silent
-   (let ((vc-follow-symlinks nil))
-    (loop for thisfile in (file-expand-wildcards "src/*.org") do
-          (unless (string-match "readme" thisfile)
-            (vhdl-tools-vorg-tangle thisfile))))
-#+end_src
-
  - *Dynamically defining source code block header arguments* is possible in
    org. This may achieved by setting “header-args:vhdl” in the properties
    drawer of the topmost heading, which will propagate to all lower level
@@ -329,6 +318,19 @@ defined as a buffer [[https://www.gnu.org/software/emacs/manual/html_node/elisp/
 
 This provides a way to replicate the file structure of the org file in the
 source code file.
+
+ - In order to systematically tangle a set of files in a directory the following
+   code may be used, such that for each =“file.org”= file in =src= directory, a new
+   =“file.vhd”= will be exported.
+
+#+begin_src emacs-lisp :results silent
+  (let ((vc-follow-symlinks nil))
+    (require 'vhdl-tools)
+    (let ((org-global-properties '(("header-args:vhdl" . ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (vhdl-tools-vorg-tangle-header-argument)"))))
+      (loop for thisfile in (file-expand-wildcards "*.org") do
+            (unless (string-match "readme" thisfile)
+              (vhdl-tools-vorg-tangle thisfile)))))
+#+end_src
 
 * Related utilities
 
