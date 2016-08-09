@@ -122,6 +122,10 @@
   "Variable to assign to `org-babel-tangle-comment-format-end' during `vorg' tangling."
   :type 'string :group 'vhdl-tools-vorg)
 
+(defcustom vhdl-tools-vorg-tangle-comments-link nil
+  "Flag to force set the comments:link header in vhdl src blocks."
+  :type 'boolean :group 'vhdl-tools-vorg)
+
 ;;;;; tools
 
 (defcustom vhdl-tools-allowed-chars-in-signal "a-z0-9A-Z_"
@@ -196,7 +200,7 @@ Needed to determine end of name."
 (defun vhdl-tools--cleanup-tangled ()
   "Make invisible reference comments after tangling."
   (interactive)
-  (when vhdl-tools-tangle-comments-link
+  (when vhdl-tools-vorg-tangle-comments-link
     (save-excursion
       (when vhdl-tools-use-outshine
 	(outline-show-all)
@@ -563,7 +567,7 @@ When no symbol at point, move point to indentation."
 
 ;;;; VHDL to VOrg
 
-;; TODO: depending on `vhdl-tools-tangle-comments-link', jump to vOrg using old strategy
+;; TODO: depending on `vhdl-tools-vorg-tangle-comments-link', jump to vOrg using old strategy
 
 ;; (defun vhdl-tools-vorg-jump-to-vorg(arg)
 ;;   "From vhdl file, jump to same line in vorg file."
@@ -656,8 +660,9 @@ When no symbol at point, move point to indentation."
 		       (save-buffer))) nil t))
 	(org-babel-tangle-uncomment-comments nil)
 	;; sets the "comments:link" header arg
+	;; possible as this is constant header arg, not dynamic with code block
 	(org-babel-default-header-args
-	 (if vhdl-tools-tangle-comments-link
+	 (if vhdl-tools-vorg-tangle-comments-link
 	     (cons '(:comments . "link")
 		   (assq-delete-all :comments org-babel-default-header-args))
 	   org-babel-default-header-args))
