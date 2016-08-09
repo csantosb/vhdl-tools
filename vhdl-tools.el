@@ -126,6 +126,10 @@
   "Flag to force set the comments:link header in vhdl src blocks."
   :type 'boolean :group 'vhdl-tools-vorg)
 
+(defcustom vhdl-tools-vorg-tangle-header-argument-var nil
+  "Variable used to filter code blocks to be tangled."
+  :type 'boolean :group 'vhdl-tools-vorg)
+
 ;;;;; tools
 
 (defcustom vhdl-tools-allowed-chars-in-signal "a-z0-9A-Z_"
@@ -151,10 +155,6 @@ Needed to determine end of name."
 
 (defcustom vhdl-tools-manage-folding nil
   "Flag to allow remapping auto folding when jumping around."
-  :type 'boolean :group 'vhdl-tools)
-
-(defcustom vhdl-tools-tangle-comments-link nil
-  "Flag to force set the comments:link header in vhdl src blocks."
   :type 'boolean :group 'vhdl-tools)
 
 (defcustom vhdl-tools-recenter-nb-lines 10
@@ -185,7 +185,15 @@ Needed to determine end of name."
 
 ;; Ancillary functions
 
-(defun vhdl-tools--prologue-header-argument ()
+(defun vhdl-tools-vorg-tangle-header-argument ()
+  "To be used as def argument to `tangle' in source block header."
+  (if (let ((mytags (org-get-tags-at (point) t)))
+	(or (member vhdl-tools-vorg-tangle-header-argument-var mytags)
+	    (null mytags)))
+      (format "%s.vhd" (file-name-base
+			(buffer-file-name))) "no"))
+
+(defun vhdl-tools-vorg-prologue-header-argument ()
   "To be used as def argument to `prologue' in source block header."
   (save-excursion
     (org-back-to-heading nil)
