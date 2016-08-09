@@ -282,9 +282,11 @@ to.
 #+begin_src emacs-lisp
   (add-hook 'vhdl-tools-vorg-mode-hook
             (lambda ()
-              (while (equal (car (org-get-tags-at (point) t)) "TOC")
-                (org-next-visible-heading 1))
-              (org-set-property "header-args:vhdl" ":prologue (prologue-defun) :tangle (tangle-defun)")))
+              (save-excursion
+                (beginning-of-buffer)
+                (while (equal (car (org-get-tags-at (point) t)) "TOC")
+                  (org-next-visible-heading 1))
+                (org-set-property "header-args:vhdl" ":prologue (prologue-defun) :tangle (tangle-defun)"))))
 #+end_src
 
 In this example, upon activation of the =vOrg= minor mode, a property is set at
@@ -299,9 +301,11 @@ the first heading, avoiding any heading containing the “TOC” tag. Here, the
 #+begin_src emacs-lisp
   (add-hook 'vhdl-tools-vorg-mode-hook
             (lambda ()
-              (while (equal (car (org-get-tags-at (point) t)) "TOC")
-                (org-next-visible-heading 1))
-              (org-set-property "header-args:vhdl" ":prologue (prologue-defun) :tangle (vhdl-tools-vorg-tangle-header-argument)")))
+              (save-excursion
+                (beginning-of-buffer)
+                (while (equal (car (org-get-tags-at (point) t)) "TOC")
+                  (org-next-visible-heading 1))
+                (org-set-property "header-args:vhdl" ":prologue (prologue-defun) :tangle (vhdl-tools-vorg-tangle-header-argument)"))))
 #+end_src
 
 This function acts as a filter, and provides a means to only tangle code blocks
@@ -316,9 +320,11 @@ defined as a buffer [[https://www.gnu.org/software/emacs/manual/html_node/elisp/
 #+begin_src emacs-lisp
   (add-hook 'vhdl-tools-vorg-mode-hook
             (lambda ()
-              (while (equal (car (org-get-tags-at (point) t)) "TOC")
-                (org-next-visible-heading 1))
-              (org-set-property "header-args:vhdl" ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (tangle-defun)")))
+              (save-excursion
+                (beginning-of-buffer)
+                (while (equal (car (org-get-tags-at (point) t)) "TOC")
+                  (org-next-visible-heading 1))
+                (org-set-property "header-args:vhdl" ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (tangle-defun)"))))
 #+end_src
 
 This provides a way to replicate the file structure of the org file in the
