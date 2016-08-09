@@ -20,9 +20,10 @@ This project provides useful VHDL support for Emacs in terms of navigation.
    - [[#custom-smartscan][Custom SmartScan]]
    - [[#jumping-around][Jumping around]]
    - [[#misc][Misc]]
- - [[#vorg-use][vOrg Use]]
+ - [[#vorg][vOrg]]
    - [[#features][Features]]
    - [[#tangling][Tangling]]
+   - [[#tangling-extras][Tangling extras]]
  - [[#related-utilities][Related utilities]]
  - [[#coding][Coding]]
  - [[#configurations][Configurations]]
@@ -188,13 +189,14 @@ with correct syntax: think =vhdl-beautify-buffer= before using =vhdl-tools=.
 
 + =C-c M-b=    beautify current block (module, etc.)
 
-* vOrg Use
+* vOrg
 
 ** Features
 
 Following the [[http://orgmode.org/worg/org-contrib/babel/intro.html][literate programming paradigm]], it is possible to [[http://orgmode.org/manual/Extracting-source-code.html][tangle]] an
 [[http://orgmode.org/][org-mode]] file containing source code blocks to a source code file. This helps
-documenting code, for example, and provides lots of other [[http://howardism.org/Technical/Emacs/literate-programming-tutorial.html][benefits]].
+documenting code, for example, and provides lots of other [[http://howardism.org/Technical/Emacs/literate-programming-tutorial.html][benefits]]. An example
+projet following this approach may be found [[https://gitlab.in2p3.fr/cayetano-santos/common-firmware][here]].
 
 In order to ease handling this workflow, this package defines an ancillary minor
 mode called =vOrg= intended to be used along with org major mode. When this minor
@@ -239,13 +241,13 @@ Org mode includes special infrastructure to tangle org files containing source
 code. As explained in the org [[https://www.gnu.org/software/emacs/manual/html_node/org/comments.html#comments][manual]], extra comments may be inserted in the
 tangled code file. In particular, the “comments:link” option provides pointers
 back to the original org file, as a reference for jumping back and forth between
-=vorg= and =vhdl=. This behaviour is activated by setting the
-=vhdl-tools-tangle-comments-link= flag. Otherwise, only code is extracted from the
-=vOrg= file.
+=vorg= and =vhdl=.
 
-Additionally, the variables =vhdl-tools-vorg-tangle-comment-format-beg= and
-=vhdl-tools-vorg-tangle-comment-format-end= are used to format inserted
-comments in tangled code files.
+This behaviour is activated by setting the =vhdl-tools-tangle-comments-link=
+flag. Otherwise, only code is extracted from the =vOrg= file. The variables
+=vhdl-tools-vorg-tangle-comment-format-beg= and
+=vhdl-tools-vorg-tangle-comment-format-end= are used to format inserted comments
+in tangled code files.
 
 Once the code is tangled from the =vorg= file, the reference comments around in
 the source =vhdl= file may be put out of sight with help of
@@ -259,6 +261,69 @@ jumping features in =vOrg= minor mode may be used, except that in this case, a
 regular text search of text in current file is used to locate the point to jump
 to.
 
+** Tangling extras
+
+ - In order to systematically tangle a set of files in a directory the following
+   code may be used, such that for each =“file.org”= file in =src= directory, a new
+   =“file.vhd”= will be exported.
+
+#+begin_src emacs-lisp :results silent
+   (let ((vc-follow-symlinks nil))
+    (loop for thisfile in (file-expand-wildcards "src/*.org") do
+          (unless (string-match "readme" thisfile)
+            (vhdl-tools-vorg-tangle thisfile))))
+#+end_src
+
+ - *Dynamically defining source code block header arguments* is possible in
+   org. This may achieved by setting “header-args:vhdl” in the properties
+   drawer of the topmost heading, which will propagate to all lower level
+   headings
+
+#+begin_src emacs-lisp
+  (add-hook 'vhdl-tools-vorg-mode-hook
+            (lambda ()
+              (while (equal (car (org-get-tags-at (point) t)) "TOC")
+                (org-next-visible-heading 1))
+              (org-set-property "header-args:vhdl" ":prologue (prologue-defun) :tangle (tangle-defun)")))
+#+end_src
+
+In this example, upon activation of the =vOrg= minor mode, a property is set at
+the first heading, avoiding any heading containing the “TOC” tag. Here, the
+“prologue-defun” and “tangle-defun” will get evaluated for each code block.
+
+ - *Conditionally tangling code blocks* is feasible using the previous
+   feature. This might be useful for code reuse between projects. This may
+   achieved by using the =“vhdl-tools-vorg-tangle-header-argument”= provided function
+   and setting a tag in the heading above the code block.
+
+#+begin_src emacs-lisp
+  (add-hook 'vhdl-tools-vorg-mode-hook
+            (lambda ()
+              (while (equal (car (org-get-tags-at (point) t)) "TOC")
+                (org-next-visible-heading 1))
+              (org-set-property "header-args:vhdl" ":prologue (prologue-defun) :tangle (vhdl-tools-vorg-tangle-header-argument)")))
+#+end_src
+
+This function acts as a filter, and provides a means to only tangle code blocks
+with tags in the variable =“vhdl-tools-vorg-tangle-header-argument-var”=, to be
+defined as a buffer [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Local-Variables.html][local variable]]. As an example, setting a heading tag to
+“altera” will allow tangling this block only if the previous variable includes
+“altera”. Note that when no tag is defined, all blocks are tangled.
+
+ - *Heading inclusion* in tangled code is also possible by using the
+   =“vhdl-tools-vorg-prologue-header-argument”= provided function
+
+#+begin_src emacs-lisp
+  (add-hook 'vhdl-tools-vorg-mode-hook
+            (lambda ()
+              (while (equal (car (org-get-tags-at (point) t)) "TOC")
+                (org-next-visible-heading 1))
+              (org-set-property "header-args:vhdl" ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (tangle-defun)")))
+#+end_src
+
+This provides a way to replicate the file structure of the org file in the
+source code file.
+
 * Related utilities
 
 Some additional emacs packages useful in this context
@@ -268,6 +333,7 @@ Some additional emacs packages useful in this context
 - [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]] :: Emacs minor mode that keeps your code always
      indented. More reliable than electric-indent-mode
 - [[https://github.com/sh-ow/vhdl-capf][VDHL capf]] :: emacs completion at point function (capf) backend for use with [[https://company-mode.github.io/][company]]
+- [[https://github.com/snosov1/toc-org][toc org]] :: up-to-date table of contents in org files
 
 * Coding
 
