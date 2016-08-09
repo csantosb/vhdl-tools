@@ -686,6 +686,19 @@ When no symbol at point, move point to indentation."
       (when (called-interactively-p 'interactive)
 	(call-interactively 'vhdl-tools-vorg-jump-from-vorg)))))
 
+;;;###autoload
+(defun vhdl-tools-vorg-tangle-all ()
+  "Tangle all `vorg' files in current dir to its corresponding `vhdl' file."
+  (interactive)
+  (let ((vc-follow-symlinks nil)
+	(org-global-properties
+	 '(("header-args:vhdl" . ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (vhdl-tools-vorg-tangle-header-argument)"))))
+    (loop for thisfile in (file-expand-wildcards "*.org") do
+	  (unless (or (string-match "readme" thisfile)
+		      (and (file-exists-p (format "%s.el" (file-name-base thisfile)))
+			   (not (file-newer-than-file-p this (format "%s.el" (file-name-base thisfile))))))
+	    (vhdl-tools-vorg-tangle thisfile)))))
+
 ;;;; VOrg source editing beautify
 
 (defun vhdl-tools-vorg-src-edit-beautify ()
@@ -1053,6 +1066,7 @@ Key bindings:
   (let ((m (make-sparse-keymap)))
     (define-key m (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
     (define-key m [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
+    (define-key m (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
     (define-key m (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
     (define-key m (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
     (define-key m (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
