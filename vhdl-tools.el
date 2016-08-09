@@ -984,7 +984,7 @@ Beautifies source code blocks before editing."
 
 Key bindings:
 \\{vhdl-tools-map}"
-  :lighter " #vhdl"
+  :lighter " #vtool"
   :keymap vhdl-tools-map
   :group 'vhdl-tools
   :global nil
