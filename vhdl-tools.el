@@ -226,7 +226,14 @@ Needed to determine end of name."
 (defun vhdl-tools--fold ()
   "Fold to current heading level."
   (when (and vhdl-tools-use-outshine
-	     vhdl-tools-manage-folding)
+	     vhdl-tools-manage-folding
+	     ;; only when heading exists
+	     (save-excursion
+	       (beginning-of-line)
+	       (or (outline-on-heading-p)
+		   (save-excursion
+		     (re-search-backward (concat "^\\(?:" outline-regexp "\\)")
+					 nil t)))))
     (save-excursion
       (outline-hide-sublevels 5)
       (org-back-to-heading nil)
