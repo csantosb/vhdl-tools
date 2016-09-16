@@ -721,10 +721,11 @@ Beautifies source code blocks before editing."
 (defun vhdl-tools-vorg-src-block-beautify ()
   "Beautify of source code block at point."
   (interactive)
-  (org-edit-src-code)
-  (vhdl-beautify-buffer)
-  (org-edit-src-save)
-  (org-edit-src-exit))
+  (when (org-in-src-block-p t)
+    (org-edit-src-code)
+    (vhdl-beautify-buffer)
+    (org-edit-src-save)
+    (org-edit-src-exit)))
 
 
 ;;; Links
