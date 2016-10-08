@@ -7,6 +7,7 @@
    - [[#include-here-imenu-related-functions][Include here imenu related functions]]
    - [[#this][This]]
    - [[#remove-ugly-line-from-vorg-files][Remove ugly line from =vOrg= files]]
+   - [[#vhdl-tools-vorg-src-block-beautify][vhdl-tools-vorg-src-block-beautify]]
 
 * TODO
 
@@ -37,3 +38,9 @@ Try something like
 #+end_src
 
 Unfourtunately, this makes the same header appear on top of all blocks.
+
+
+** vhdl-tools-vorg-src-block-beautify
+
+vhdl-tools-vorg-src-block-beautify, as a command depending on context,
+similar to the article in endless parantheses
