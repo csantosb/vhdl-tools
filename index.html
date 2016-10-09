@@ -361,8 +361,7 @@ port map ( ...
 		  <pre class="src src-emacs-lisp"><span style="color: #DCDCCC;">(</span>add-hook 'org-mode-hook
 		    <span style="color: #BFEBBF;">(</span><span style="color: #F0DFAF; font-weight: bold;">lambda</span> <span style="color: #D0BF8F;">()</span>
 		    <span style="color: #D0BF8F;">(</span><span style="color: #F0DFAF; font-weight: bold;">when</span> <span style="color: #93E0E3;">(</span><span style="color: #F0DFAF; font-weight: bold;">and</span> <span style="color: #9FC59F;">(</span>buffer-file-name<span style="color: #9FC59F;">)</span>
-                    <span style="color: #9FC59F;">(</span>file-exists-p <span style="color: #94BFF3;">(</span>format <span style="color: #CC9393;">"%s.vhd"</span> <span style="color: #E0CF9F;">(</span>file-name-base
-                    <span style="color: #8FB28F;">(</span>buffer-file-name<span style="color: #8FB28F;">)</span><span style="color: #E0CF9F;">)</span><span style="color: #94BFF3;">)</span><span style="color: #9FC59F;">)</span><span style="color: #93E0E3;">)</span>
+                    <span style="color: #9FC59F;">(</span>file-exists-p <span style="color: #94BFF3;">(</span>format <span style="color: #CC9393;">"%s.vhd"</span> <span style="color: #E0CF9F;">(</span>file-name-base <span style="color: #8FB28F;">(</span>buffer-file-name<span style="color: #8FB28F;">)</span><span style="color: #E0CF9F;">)</span><span style="color: #94BFF3;">)</span><span style="color: #9FC59F;">)</span><span style="color: #93E0E3;">)</span>
 		    <span style="color: #93E0E3;">(</span><span style="color: #F0DFAF; font-weight: bold;">require</span> '<span style="color: #BFEBBF;">vhdl-tools</span><span style="color: #93E0E3;">)</span>
 		    <span style="color: #93E0E3;">(</span>vhdl-tools-vorg-mode 1<span style="color: #93E0E3;">)</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span></pre>
 		</div>
