@@ -80,7 +80,7 @@
 	  <div id="outline-container-orgheadline1" class="outline-2">
 	    <h2 id="orgheadline1"><span class="section-number-2">1</span> About</h2>
 	    <div class="outline-text-2" id="text-1">
-	      <p>
+	      <p align="justify">
 		<a href="https://csantosb.github.io/blog/2015/12/23/vhdl-tools/">Vhdl-tools</a> provides a minor mode intended to be used under <a href="https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html">vhdl-mode</a>.
 		It adds specific functionality on top of <a href="https://github.com/leoliu/ggtags">ggtags</a>, <a href="http://batsov.com/projectile/">projectile</a>, <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html">imenu</a> and
 		<a href="https://github.com/tj64/outshine">outshine</a> to ease navigating vhdl sources. It expects a working setup of
@@ -111,8 +111,7 @@
 
 		<pre class="src src-emacs-lisp"><span style="color: #DCDCCC;">(</span><span style="color: #F0DFAF; font-weight: bold;">with-eval-after-load</span> 'vhdl-mode
 		  <span style="color: #BFEBBF;">(</span>add-to-list 'load-path <span style="color: #CC9393;">"..."</span><span style="color: #BFEBBF;">)</span>
-		  <span style="color: #BFEBBF;">(</span><span style="color: #F0DFAF; font-weight: bold;">require</span> '<span style="color: #BFEBBF;">vhdl-tools</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>
-		</pre>
+		  <span style="color: #BFEBBF;">(</span><span style="color: #F0DFAF; font-weight: bold;">require</span> '<span style="color: #BFEBBF;">vhdl-tools</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span></pre>
 	      </div>
 
 	      <p>
@@ -121,8 +120,7 @@
 
 	      <div class="org-src-container">
 
-		<pre class="src src-emacs-lisp">M-x package-install RET vhdl-tools
-		</pre>
+		<pre class="src src-emacs-lisp">M-x package-install RET vhdl-tools</pre>
 	      </div>
 
 	      <p>
@@ -133,8 +131,7 @@
 
 		<pre class="src src-emacs-lisp"><span style="color: #DCDCCC;">(</span>add-hook 'vhdl-mode-hook
 		  <span style="color: #BFEBBF;">(</span><span style="color: #F0DFAF; font-weight: bold;">lambda</span> <span style="color: #D0BF8F;">()</span>
-		  <span style="color: #D0BF8F;">(</span>vhdl-tools-mode 1<span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>
-		</pre>
+		  <span style="color: #D0BF8F;">(</span>vhdl-tools-mode 1<span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span></pre>
 	      </div>
 
 	      <p>
@@ -163,8 +160,7 @@
 	      <div class="org-src-container">
 
 		<pre class="src src-example">(require 'outshine)
-		  (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
-		</pre>
+(add-hook 'outline-minor-mode-hook 'outshine-hook-function)</pre>
 	      </div>
 
 	      <p>
@@ -173,16 +169,14 @@
 
 	      <div class="org-src-container">
 
-		<pre class="src src-example">(add-to-list 'company-begin-commands 'outshine-self-insert-command)
-		</pre>
+		<pre class="src src-example">(add-to-list 'company-begin-commands 'outshine-self-insert-command)</pre>
 	      </div>
 
-	      <p>
-		otherwise <code>company</code> idle completion using the <code>capf</code> backed won’t <a href="https://github.com/tj64/outshine/issues/38">work</a> (see
-		[#related-utilities][Related utilities]] section below).
+	      <p align="justify">
+		otherwise <code>company</code> idle completion using the <code>capf</code> backed won’t <a href="https://github.com/tj64/outshine/issues/38">work</a> (see related utilities section below).
 	      </p>
 
-	      <p>
+	      <p align="justify">
 		Additionally, setting <code>vhdl-tools-manage-folding</code> (off by default) to true will
 		allow auto folding when jumping around, and <code>vhdl-tools-recenter-nb-lines</code> will be
 		used as number of lines from top after jumping.
@@ -201,7 +195,7 @@
 	    </div><div id="outline-container-orgheadline4" class="outline-3">
 	      <h3 id="orgheadline4"><span class="section-number-3">4.1</span> Headings</h3>
 	      <div class="outline-text-3" id="text-4-1">
-		<p>
+		<p align="justify">
 		  Following the status of the <code>vhdl-tools-use-outshine</code> flag (off by default),
 		  when the mode is enabled, <code>vhdl-tools</code> will activate <code>outline-minor-mode</code>
 		  locally and <code>outshine</code> globally, setting <code>vhdl-tools-outline-regexp</code> as the
@@ -214,11 +208,12 @@
 
 		<div class="org-src-container">
 
-		  <pre class="src src-example">-- * Header Level 1
+		  <pre class="src src-example">
+-- * Header Level 1
 
-		    -- ** Header Level 2
-		    MyInstance : MyComponent
-		    port map ( ...
+-- ** Header Level 2
+MyInstance : MyComponent
+port map ( ...
 		  </pre>
 		</div>
 
@@ -269,7 +264,7 @@
 	    <div id="outline-container-orgheadline6" class="outline-3">
 	      <h3 id="orgheadline6"><span class="section-number-3">4.3</span> Custom SmartScan</h3>
 	      <div class="outline-text-3" id="text-4-3">
-		<p>
+		<p align="justify">
 		  Following the status of the <code>vhdl-tools-remap-smartscan</code> and
 		  <code>vhdl-tools-use-outshine</code> flags (off by default), <code>vhdl-tools</code> will customize the
 		  behaviour of <code>smartscan-symbol-go-forward</code> and <code>smartscan-symbol-go-backward</code>, so
@@ -287,50 +282,38 @@
 		</p>
 
 		<ul class="org-ul">
-		  <li><p>
-		      <code>C-c M-D</code>    jumps to the definition of symbol at point
-		    </p>
+		  <li><p><code>C-c M-D</code>    jumps to the definition of symbol at point</p></li>
 
-		    <p>
-		      <a href="JumpDef.gif">JumpDef.gif</a>
-		  </p></li>
+		  <p><a href="JumpDef.gif">
+		      <img src="JumpDef.gif">
+		  </a></p>
 
 		  <li><code>C-c M-w</code>     store a link</li>
 		  <li><code>C-c M-y</code>     paste a link</li>
-		  <li><p>
-		      <code>C-c M-j</code>     follows the link at point
-		    </p>
+		  <li><p><code>C-c M-j</code>     follows the link at point</p></li>
 
-		    <p>
-		      <a href="Links.gif">Links.gif</a>
-		  </p></li>
+		  <p><a href="Links.gif">
+		      <img src="Links.gif"></a></p>
 
-		  <li><p>
-		      <code>C-c M-.</code>     jumps into the instance at point and move point to current signal
-		    </p>
+		  <li><p><code>C-c M-.</code>     jumps into the instance at point and move point to current signal</p>
+		  </li>
 
-		    <p>
-		      <a href="JumpIntoInstance.gif">JumpIntoInstance.gif</a>
-		  </p></li>
+		  <p><a href="JumpIntoInstance.gif">
+		      <img src="JumpIntoInstance.gif"></a></p>
 
-		  <li><p>
-		      <code>C-c M-a</code>     moves point to first appearance of symbol at point
-		    </p>
+		  <li><p><code>C-c M-a</code>     moves point to first appearance of symbol at point</p></li>
+		  <p><a href="JumpFirst.gif">
+		      <img src="JumpFirst.gif">
+		  </a></p>
 
-		    <p>
-		      <a href="JumpFirst.gif">JumpFirst.gif</a>
-		  </p></li>
+		  <li><p><code>C-c M-u</code>     jumps to upper hierarchy level</p></li>
 
-		  <li><p>
-		      <code>C-c M-u</code>     jumps to upper hierarchy level
-		    </p>
+		  <p><a href="JumpUpper.gif">
+		      <img src="JumpUpper.gif"></a></p>
 
-		    <p>
-		      <a href="JumpUpper.gif">JumpUpper.gif</a>
-		  </p></li>
 		</ul>
 
-		<p>
+		<p align="justify">
 		  Cursor will jump to the target if there is one, searching packages too. The ring
 		  mark is push after jumping, so to get back, press <code>C-c C-p</code> or M-, (default binds
 		  under <code>ggtags</code>) if corresponding definition has been found. Works better for files
@@ -355,14 +338,14 @@
 	    </div><div id="outline-container-orgheadline10" class="outline-3">
 	      <h3 id="orgheadline10"><span class="section-number-3">5.1</span> Features</h3>
 	      <div class="outline-text-3" id="text-5-1">
-		<p>
+		<p align="justify">
 		  Following the <a href="http://orgmode.org/worg/org-contrib/babel/intro.html">literate programming paradigm</a>, it is possible to <a href="http://orgmode.org/manual/Extracting-source-code.html">tangle</a> an
 		  <a href="http://orgmode.org/">org-mode</a> file containing source code blocks to a source code file. This helps
 		  documenting code, for example, and provides lots of other <a href="http://howardism.org/Technical/Emacs/literate-programming-tutorial.html">benefits</a>. An example
 		  <a href="https://gitlab.in2p3.fr/cayetano-santos/common-firmware">project</a> following this approach may be found <a href="https://gitlab.in2p3.fr/cayetano-santos/common-firmware/blob/master/src/Handle_cati_data_out.org">here</a>.
 		</p>
 
-		<p>
+		<p align="justify">
 		  In order to ease handling this workflow, this package defines an ancillary minor
 		  mode called <code>vOrg</code> intended to be used along with org major mode. When this minor
 		  mode is active, a lighter <code>vOrg</code> will be shown in the mode line.
@@ -380,15 +363,14 @@
                     <span style="color: #9FC59F;">(</span>file-exists-p <span style="color: #94BFF3;">(</span>format <span style="color: #CC9393;">"%s.vhd"</span> <span style="color: #E0CF9F;">(</span>file-name-base
                     <span style="color: #8FB28F;">(</span>buffer-file-name<span style="color: #8FB28F;">)</span><span style="color: #E0CF9F;">)</span><span style="color: #94BFF3;">)</span><span style="color: #9FC59F;">)</span><span style="color: #93E0E3;">)</span>
 		    <span style="color: #93E0E3;">(</span><span style="color: #F0DFAF; font-weight: bold;">require</span> '<span style="color: #BFEBBF;">vhdl-tools</span><span style="color: #93E0E3;">)</span>
-		    <span style="color: #93E0E3;">(</span>vhdl-tools-vorg-mode 1<span style="color: #93E0E3;">)</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>
-		  </pre>
+		    <span style="color: #93E0E3;">(</span>vhdl-tools-vorg-mode 1<span style="color: #93E0E3;">)</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span></pre>
 		</div>
 
-		<p>
+		<p align="justify">
 		  Otherwise, it is to be enabled manually.
 		</p>
 
-		<p>
+		<p align="justify">
 		  When the <code>vOrg</code> file exists it is possible to jump from the vhdl file to the <code>vOrg</code>
 		  file -assuming its names are identical and only its extension changes- with help of
 		</p>
@@ -410,12 +392,12 @@
 		  <li><code>C-c M-b</code>    beautify code block at point</li>
 		</ul>
 
-		<p>
+		<p align="justify">
 		  Setting <code>vhdl-tools-manage-folding</code> (off by default) to true will allow auto
 		  folding upon jumping.
 		</p>
 
-		<p>
+		<p align="justify">
 		  Finally, when editing source code blocks in the <code>vOrg</code> file, the minor mode will
 		  auto set proper indentation, whitespace fixup and alignment of source code.
 		</p>
@@ -425,7 +407,7 @@
 	    <div id="outline-container-orgheadline11" class="outline-3">
 	      <h3 id="orgheadline11"><span class="section-number-3">5.2</span> Tangling</h3>
 	      <div class="outline-text-3" id="text-5-2">
-		<p>
+		<p align="justify">
 		  Org mode includes special infrastructure to tangle org files containing source
 		  code. As explained in the org <a href="https://www.gnu.org/software/emacs/manual/html_node/org/comments.html#comments">manual</a>, extra comments may be inserted in the
 		  tangled code file. In particular, the “comments:link” option provides pointers
@@ -433,7 +415,7 @@
 		  <code>vorg</code> and <code>vhdl</code>.
 		</p>
 
-		<p>
+		<p align="justify">
 		  This behaviour is activated by setting the <code>vhdl-tools-tangle-comments-link</code>
 		  flag. Otherwise, only code is extracted from the <code>vOrg</code> file. The variables
 		  <code>vhdl-tools-vorg-tangle-comment-format-beg</code> and
@@ -441,18 +423,17 @@
 		  in tangled code files.
 		</p>
 
-		<p>
+		<p align="justify">
 		  Once the code is tangled from the <code>vorg</code> file, the reference comments around in
 		  the source <code>vhdl</code> file may be put out of sight with help of
 		</p>
 
 		<div class="org-src-container">
 
-		  <pre class="src src-emacs-lisp"><span style="color: #DCDCCC;">(</span>add-hook 'vhdl-mode-hook #'vhdl-tools--cleanup-tangled<span style="color: #DCDCCC;">)</span>
-		  </pre>
+		  <pre class="src src-emacs-lisp"><span style="color: #DCDCCC;">(</span>add-hook 'vhdl-mode-hook #'vhdl-tools--cleanup-tangled<span style="color: #DCDCCC;">)</span></pre>
 		</div>
 
-		<p>
+		<p align="justify">
 		  Note that even if the <code>vhdl-tools-tangle-comments-link</code> flag is not set, the
 		  jumping features in <code>vOrg</code> minor mode may be used, except that in this case, a
 		  regular text search of text in current file is used to locate the point to jump
@@ -465,7 +446,7 @@
 	      <h3 id="orgheadline12"><span class="section-number-3">5.3</span> Tangling extras</h3>
 	      <div class="outline-text-3" id="text-5-3">
 		<ul class="org-ul">
-		  <li><b>Dynamically defining source code block header arguments</b> is possible in
+		  <li align="justify"><b>Dynamically defining source code block header arguments</b> is possible in
 		    org. This may achieved by setting “header-args:vhdl” in the properties
 		    drawer of the topmost heading, which will propagate to all lower level
 		    headings</li>
@@ -479,18 +460,19 @@
 		    <span style="color: #93E0E3;">(</span>beginning-of-buffer<span style="color: #93E0E3;">)</span>
 		    <span style="color: #93E0E3;">(</span><span style="color: #F0DFAF; font-weight: bold;">while</span> <span style="color: #9FC59F;">(</span>equal <span style="color: #94BFF3;">(</span>car <span style="color: #E0CF9F;">(</span>org-get-tags-at <span style="color: #8FB28F;">(</span>point<span style="color: #8FB28F;">)</span> t<span style="color: #E0CF9F;">)</span><span style="color: #94BFF3;">)</span> <span style="color: #CC9393;">"TOC"</span><span style="color: #9FC59F;">)</span>
                     <span style="color: #9FC59F;">(</span>org-next-visible-heading 1<span style="color: #9FC59F;">)</span><span style="color: #93E0E3;">)</span>
-		    <span style="color: #93E0E3;">(</span>org-set-property <span style="color: #CC9393;">"header-args:vhdl"</span> <span style="color: #CC9393;">":prologue (prologue-defun) :tangle (tangle-defun)"</span><span style="color: #93E0E3;">)</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>
-		  </pre>
+		    <span style="color:
+		    #93E0E3;">(</span>org-set-property <span style="color: #CC9393;">"header-args:vhdl"</span>
+		    <span style="color: #CC9393;">":prologue (prologue-defun) :tangle (tangle-defun)"</span><span style="color: #93E0E3;">)</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span></pre>
 		</div>
 
-		<p>
+		<p align="justify">
 		  In this example, upon activation of the <code>vOrg</code> minor mode, a property is set at
 		  the first heading, avoiding any heading containing the “TOC” tag. Here, the
 		  “prologue-defun” and “tangle-defun” will get evaluated for each code block.
 		</p>
 
 		<ul class="org-ul">
-		  <li><b>Conditionally tangling code blocks</b> is feasible using the previous
+		  <li align="justify"><b>Conditionally tangling code blocks</b> is feasible using the previous
 		    feature. This might be useful for code reuse between projects. This may
 		    achieved by using the <code>“vhdl-tools-vorg-tangle-header-argument”</code> provided function
 		    and setting a tag in the heading above the code block.</li>
@@ -504,11 +486,12 @@
 		    <span style="color: #93E0E3;">(</span>beginning-of-buffer<span style="color: #93E0E3;">)</span>
 		    <span style="color: #93E0E3;">(</span><span style="color: #F0DFAF; font-weight: bold;">while</span> <span style="color: #9FC59F;">(</span>equal <span style="color: #94BFF3;">(</span>car <span style="color: #E0CF9F;">(</span>org-get-tags-at <span style="color: #8FB28F;">(</span>point<span style="color: #8FB28F;">)</span> t<span style="color: #E0CF9F;">)</span><span style="color: #94BFF3;">)</span> <span style="color: #CC9393;">"TOC"</span><span style="color: #9FC59F;">)</span>
                     <span style="color: #9FC59F;">(</span>org-next-visible-heading 1<span style="color: #9FC59F;">)</span><span style="color: #93E0E3;">)</span>
-		    <span style="color: #93E0E3;">(</span>org-set-property <span style="color: #CC9393;">"header-args:vhdl"</span> <span style="color: #CC9393;">":prologue (prologue-defun) :tangle (vhdl-tools-vorg-tangle-header-argument)"</span><span style="color: #93E0E3;">)</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>
-		  </pre>
+		    <span style="color:
+		    #93E0E3;">(</span>org-set-property <span style="color: #CC9393;">"header-args:vhdl"</span>
+		    <span style="color: #CC9393;">":prologue (prologue-defun) :tangle (vhdl-tools-vorg-tangle-header-argument)"</span><span style="color: #93E0E3;">)</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span></pre>
 		</div>
 
-		<p>
+		<p align="justify">
 		  This function acts as a filter, and provides a means to only tangle code blocks
 		  with tags in the variable <code>“vhdl-tools-vorg-tangle-header-argument-var”</code>, to be
 		  defined as a buffer <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Local-Variables.html">local variable</a>. As an example, setting a heading tag to
@@ -517,7 +500,7 @@
 		</p>
 
 		<ul class="org-ul">
-		  <li><b>Heading inclusion</b> in tangled code is also possible by using the
+		  <li align="justify"><b>Heading inclusion</b> in tangled code is also possible by using the
 		    <code>“vhdl-tools-vorg-prologue-header-argument”</code> provided function</li>
 		</ul>
 
@@ -529,8 +512,8 @@
 		    <span style="color: #93E0E3;">(</span>beginning-of-buffer<span style="color: #93E0E3;">)</span>
 		    <span style="color: #93E0E3;">(</span><span style="color: #F0DFAF; font-weight: bold;">while</span> <span style="color: #9FC59F;">(</span>equal <span style="color: #94BFF3;">(</span>car <span style="color: #E0CF9F;">(</span>org-get-tags-at <span style="color: #8FB28F;">(</span>point<span style="color: #8FB28F;">)</span> t<span style="color: #E0CF9F;">)</span><span style="color: #94BFF3;">)</span> <span style="color: #CC9393;">"TOC"</span><span style="color: #9FC59F;">)</span>
                     <span style="color: #9FC59F;">(</span>org-next-visible-heading 1<span style="color: #9FC59F;">)</span><span style="color: #93E0E3;">)</span>
-		    <span style="color: #93E0E3;">(</span>org-set-property <span style="color: #CC9393;">"header-args:vhdl"</span> <span style="color: #CC9393;">":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (tangle-defun)"</span><span style="color: #93E0E3;">)</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span>
-		  </pre>
+		    <span style="color: #93E0E3;">(</span>org-set-property <span style="color: #CC9393;">"header-args:vhdl"</span>
+		    <span style="color: #CC9393;">":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (tangle-defun)"</span><span style="color: #93E0E3;">)</span><span style="color: #D0BF8F;">)</span><span style="color: #BFEBBF;">)</span><span style="color: #DCDCCC;">)</span></pre>
 		</div>
 
 		<p>
@@ -584,21 +567,21 @@
 	  <div id="outline-container-orgheadline17" class="outline-2">
 	    <h2 id="orgheadline17"><span class="section-number-2">9</span> License</h2>
 	    <div class="outline-text-2" id="text-9">
-	      <p>
+	      <p align="justify">
 		This program is free software; you can redistribute it and/or modify
 		it under the terms of the GNU General Public License as published by
 		the Free Software Foundation, either version 3 of the License, or
 		(at your option) any later version.
 	      </p>
 
-	      <p>
+	      <p align="justify">
 		This program is distributed in the hope that it will be useful,
 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		GNU General Public License for more details.
 	      </p>
 
-	      <p>
+	      <p align="justify">
 		You should have received a copy of the GNU General Public License
 		along with this program.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.
 	      </p>
