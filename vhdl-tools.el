@@ -11,7 +11,7 @@
 
 ;; Filename: vhdl-tools.el
 ;; Description: Utilities for navigating vhdl sources.
-;; URL: https://github.com/csantosb/vhdl-tools
+;; URL: http://csantosb.github.io/vhdl-tools/
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs >= 24.5
 ;; Version: 5.3
