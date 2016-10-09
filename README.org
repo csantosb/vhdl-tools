@@ -1,25 +1,17 @@
 #+TITLE: Emacs VHDL Tools
 
+This project provides support under Emacs in terms of navigation of
+VHDL sources.
+
 [[https://github.com/csantosb/vhdl-tools/blob/master/LICENSE][file:http://img.shields.io/badge/license-GNU%20GPLv3-blue.svg]]
 [[http://stable.melpa.org/#/vhdl-tools][file:http://stable.melpa.org/packages/vhdl-tools-badge.svg]]
 [[http://melpa.org/#/vhdl-tools][file:http://melpa.org/packages/vhdl-tools-badge.svg]]
 
-This project provides useful VHDL support for Emacs in terms of navigation.
-
-* Table of Contents                                 :TOC:
-:PROPERTIES:
-:VISIBILITY: all
-:END:
-
- - [[#about][About]]
- - [[#license][License]]
-
-* About
-
-[[https://csantosb.github.io/blog/2015/12/23/vhdl-tools/][Vhdl-tools]] provides a minor mode intended to be used under [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]].
-It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], [[http://batsov.com/projectile/][projectile]], [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html][imenu]] and
-[[https://github.com/tj64/outshine][outshine]] to ease navigating vhdl sources. It expects a working setup of
-=ggtags=, completing it with
+[[http://csantosb.github.io/vhdl-tools/][Vhdl-tools]] provides an extra layer in the form of a minor mode
+intended to be used along with emacs [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]]. It adds specific
+functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], [[http://batsov.com/projectile/][projectile]], [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html][imenu]] and [[https://github.com/tj64/outshine][outshine]] to ease
+navigating vhdl sources. It expects a working setup of =ggtags=,
+completing it with
 
   - Jumping into instances
   - Jump to upper level
@@ -28,6 +20,8 @@ It adds specific functionality on top of [[https://github.com/leoliu/ggtags][ggt
   - Custom use of =imenu=
   - Custom =smartscan=
   - Org / vhdl coupling
+
+Refer to the [[http://csantosb.github.io/vhdl-tools/][project]] page for details.
 
 * License
 
