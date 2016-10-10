@@ -11,7 +11,7 @@
 
 ;; Filename: vhdl-tools.el
 ;; Description: Utilities for navigating vhdl sources.
-;; URL: http://csantosb.github.io/vhdl-tools/
+;; URL: https://csantosb.github.io/vhdl-tools/
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs >= 24.5
 ;; Version: 5.3
@@ -40,6 +40,8 @@
 ;; It adds a layer of functionality on top of `ggtags' and relies on and extends
 ;; `imenu' and `outshine' features to ease navigating vhdl sources.  It expects
 ;; a working setup of `ggtags'.
+;;
+;; For details, refer to  https://csantosb.github.io/vhdl-tools/
 
 ;;; Install:
 ;;
