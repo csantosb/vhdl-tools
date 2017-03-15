@@ -3,7 +3,7 @@
 ;; Based on `vhdl-goto-def' at `http://www.emacswiki.org/emacs/vhdl-goto-def.el'
 
 ;; Copyright (C) 2003 Free Software Foundation, Inc.
-;; Copyright (C) 2015-2016 Cayetano Santos
+;; Copyright (C) 2015-2017 Cayetano Santos
 
 ;; Original author:  wandad guscheh <wandad.guscheh@fh-hagenberg.at>
 ;; Author:           Cayetano Santos
@@ -13,9 +13,9 @@
 ;; Description: Utilities for navigating vhdl sources.
 ;; URL: https://csantosb.github.io/vhdl-tools/
 ;; Keywords: convenience
-;; Compatibility: GNU Emacs >= 24.5
-;; Version: 5.3
-;; Package-Requires: ((ggtags "0.8.11") (emacs "24.5") (outshine "2.0") (helm "2.1.0"))
+;; Compatibility: GNU Emacs >= 25.1
+;; Version: 5.4
+;; Package-Requires: ((ggtags "0.8.12") (emacs "25.1") (outshine "2.0") (helm "2.5.3"))
 
 ;;; License:
 ;;
@@ -565,7 +565,7 @@ When no symbol at point, move point to indentation."
   (interactive)
   (smartscan-symbol-go-forward)
   (vhdl-tools--fold)
-  (recenter))
+  (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
 ;;;; Go Backwards
 
@@ -573,7 +573,8 @@ When no symbol at point, move point to indentation."
   (interactive)
   (smartscan-symbol-go-backward)
   (vhdl-tools--fold)
-  (recenter))
+  ;;(recenter)
+  (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
 
 ;;; Org / VHDL
