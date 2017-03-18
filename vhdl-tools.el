@@ -1031,6 +1031,7 @@ Key bindings:
 	  (progn
 	    ;; optional smartscan remapping
 	    (when (and vhdl-tools-remap-smartscan
+		       vhdl-tools-use-outshine
 		       (boundp 'smartscan-mode)
 		       (smartscan-mode 1))
 	      (define-key vhdl-mode-map [remap smartscan-symbol-go-forward]
