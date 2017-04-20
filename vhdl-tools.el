@@ -1105,6 +1105,13 @@ Key bindings:
   (require 'vhdl-tools)
   (if vhdl-tools-vorg-mode
       (progn
+	(when (and vhdl-tools-remap-smartscan
+		   (boundp 'smartscan-mode)
+		   (smartscan-mode 1))
+	  (define-key vhdl-tools-vorg-map [remap smartscan-symbol-go-forward]
+	    #'vhdl-tools-vorg-smcn-next)
+	  (define-key vhdl-tools-vorg-map [remap smartscan-symbol-go-backward]
+	    #'vhdl-tools-vorg-smcn-prev))
 	(message "VHDL Tools Vorg enabled.")
 	(add-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))
     ;; disable
