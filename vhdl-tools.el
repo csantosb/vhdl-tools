@@ -187,26 +187,6 @@ Needed to determine end of name."
 
 ;; Ancillary functions
 
-(defun vhdl-tools-vorg-tangle-header-argument ()
-  "To be used as def argument to `tangle' in source block header."
-  (if (let ((mytags (org-get-tags-at (point) t)))
-	(or (member vhdl-tools-vorg-tangle-header-argument-var mytags)
-	    (null mytags)))
-      (format "%s.vhd" (file-name-base
-			(buffer-file-name))) "no"))
-
-(defun vhdl-tools-vorg-prologue-header-argument ()
-  "To be used as def argument to `prologue' in source block header."
-  (save-excursion
-    (org-back-to-heading nil)
-    (let ((heading (car (cdr (org-element-headline-parser (point))))))
-      (format "\n-- %s %s\n\n"
-	      (if (> (plist-get heading ':level) 1)
-		  (make-string (- (plist-get heading ':level) 1)
-			       ?*)
-		(make-string 1 ?*))
-	      (plist-get heading ':raw-value)))))
-
 (defun vhdl-tools--cleanup-tangled ()
   "Make invisible reference comments after tangling."
   (interactive)
@@ -718,6 +698,29 @@ Beautifies source code blocks before editing."
     (org-edit-src-save)
     (org-edit-src-exit)))
 
+;;;; Vorg Helper
+
+;; Ancillary functions
+
+(defun vhdl-tools-vorg-tangle-header-argument ()
+  "To be used as def argument to `tangle' in source block header."
+  (if (let ((mytags (org-get-tags-at (point) t)))
+	(or (member vhdl-tools-vorg-tangle-header-argument-var mytags)
+	    (null mytags)))
+      (format "%s.vhd" (file-name-base
+			(buffer-file-name))) "no"))
+
+(defun vhdl-tools-vorg-prologue-header-argument ()
+  "To be used as def argument to `prologue' in source block header."
+  (save-excursion
+    (org-back-to-heading nil)
+    (let ((heading (car (cdr (org-element-headline-parser (point))))))
+      (format "\n-- %s %s\n\n"
+	      (if (> (plist-get heading ':level) 1)
+		  (make-string (- (plist-get heading ':level) 1)
+			       ?*)
+		(make-string 1 ?*))
+	      (plist-get heading ':raw-value)))))
 
 ;;; Links
 ;;
