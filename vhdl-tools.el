@@ -553,15 +553,28 @@ When no symbol at point, move point to indentation."
   (vhdl-tools--fold)
   (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
+;;;###autoload
+(defun vhdl-tools-vorg-smcn-next()
+  (interactive)
+  (smartscan-symbol-go-forward)
+  (vhdl-tools--fold)
+  (recenter-top-bottom vhdl-tools-recenter-nb-lines))
+
 ;;;; Go Backwards
 
+;;;###autoload
 (defun vhdl-tools-smcn-prev()
   (interactive)
   (smartscan-symbol-go-backward)
   (vhdl-tools--fold)
-  ;;(recenter)
   (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
+;;;###autoload
+(defun vhdl-tools-vorg-smcn-prev()
+  (interactive)
+  (smartscan-symbol-go-backward)
+  (vhdl-tools--fold)
+  (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
 ;;; Org / VHDL
 
