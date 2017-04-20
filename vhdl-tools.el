@@ -14,8 +14,8 @@
 ;; URL: https://csantosb.github.io/vhdl-tools/
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs >= 25.1
-;; Version: 5.4
-;; Package-Requires: ((ggtags "0.8.12") (emacs "25.1") (outshine "2.0") (helm "2.5.3"))
+;; Version: 5.5
+;; Package-Requires: ((ggtags "0.8.12") (emacs "25.1") (outshine "2.0") (helm "2.6.0"))
 
 ;;; License:
 ;;
