@@ -530,7 +530,7 @@ When no symbol at point, move point to indentation."
 		  (minibuffer-with-setup-hook
 		      (lambda ()
 			;; (insert (format "^.* : \\(entity work.\\)*%s$" ,(vhdl-tools--get-name)))
-			(insert (format "^.*: %s$" ,(vhdl-tools--get-name))))
+			(insert (format "^.*: %s$ vhd" ,(vhdl-tools--get-name))))
 		    (call-interactively 'helm-grep-do-git-grep (vc-find-root (buffer-file-name) ".git") nil))))
       ;; search, when nil, do nothing
       (when vhdl-tools-thing
