@@ -585,54 +585,40 @@ When no symbol at point, move point to indentation."
 
 ;;;; VHDL to VOrg
 
-;; TODO: depending on `vhdl-tools-vorg-tangle-comments-link', jump to vOrg using old strategy
-
-;; (defun vhdl-tools-vorg-jump-to-vorg(arg)
-;;   "From vhdl file, jump to same line in vorg file."
-;;   (interactive "P")
-;;   (let ((myfile (format "%s.vorg" (file-name-base)))
-;; 	(myline (save-excursion
-;; 		  (back-to-indentation)
-;; 		  (set-mark-command nil)
-;; 		  (end-of-line)
-;; 		  (buffer-substring-no-properties (region-beginning)
-;; 						  (region-end)))))
-;;     (when (file-exists-p myfile)
-;;       (if (equal arg '(4))
-;; 	  (progn
-;; 	    (find-file myfile)
-;; 	    (beginning-of-buffer)
-;; 	    (search-forward myline nil t nil))
-;; 	(org-babel-tangle-jump-to-org))
-;;       (org-content 5)
-;;       (org-back-to-heading nil)
-;;       (org-show-subtree)
-;;       (search-forward myline nil t nil)
-;;       (recenter-top-bottom vhdl-tools-recenter-nb-lines)
-;;       (back-to-indentation)
-;;       (when (region-active-p) (keyboard-quit)))))
-
-
 ;;;###autoload
 (defun vhdl-tools-vorg-jump-to-vorg()
   "From `vhdl' file, jump to same line in `vorg' file."
   (interactive)
   (let ((myfile (format "%s.org" (file-name-base)))
-	(myline (save-excursion
-		  (back-to-indentation)
-		  (set-mark-command nil)
-		  (end-of-line)
-		  (buffer-substring-no-properties (region-beginning)
-						  (region-end)))))
-    (when (file-exists-p myfile)
-      (org-babel-tangle-jump-to-org)
-      (org-content 5)
-      (org-back-to-heading nil)
-      (org-show-subtree)
-      (search-forward myline nil t nil)
-      (recenter-top-bottom vhdl-tools-recenter-nb-lines)
-      (back-to-indentation)
-      (when (region-active-p) (keyboard-quit)))))
+	(myline (and (not vhdl-tools-vorg-tangle-comments-link)
+		     (save-excursion
+		       (back-to-indentation)
+		       (set-mark-command nil)
+		       (end-of-line)
+		       (buffer-substring-no-properties (region-beginning)
+						       (region-end))))))
+    (if (file-exists-p myfile)
+	(progn
+	  (if vhdl-tools-vorg-tangle-comments-link
+	      ;; use org feature
+	      (let (;; I avoid scanning too much files: I already know where the
+		    ;; related org file is.
+		    (org-id-search-archives nil)
+		    (org-agenda-files nil))
+		(org-babel-tangle-jump-to-org))
+	    ;; use custom search
+	    (progn
+	      (find-file myfile)
+	      (beginning-of-buffer)
+	      (search-forward myline nil t nil)))
+	  (org-content 5)
+	  (org-back-to-heading nil)
+	  (org-show-subtree)
+	  (search-forward myline nil t nil)
+	  (recenter-top-bottom vhdl-tools-recenter-nb-lines)
+	  (back-to-indentation)
+	  (when (region-active-p) (keyboard-quit)))
+      (message (format "no %s file exists" myfile)))))
 
 ;;;; VOrg to VHDL
 
