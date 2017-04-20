@@ -541,6 +541,7 @@ When no symbol at point, move point to indentation."
 
 ;;;; Go Forward
 
+;;;###autoload
 (defun vhdl-tools-smcn-next()
   (interactive)
   (smartscan-symbol-go-forward)
@@ -831,6 +832,7 @@ Beautifies source code blocks before editing."
   (vhdl-tools--fold)
   (vhdl-tools--post-jump-function))
 
+;;;###autoload
 (defun vhdl-tools-vorg-headings-next()
   "Get to next heading in vorg buffer."
   (interactive)
@@ -853,6 +855,7 @@ Beautifies source code blocks before editing."
   (vhdl-tools--fold)
   (vhdl-tools--post-jump-function))
 
+;;;###autoload
 (defun vhdl-tools-vorg-headings-prev()
   "Get to next heading in vorg buffer."
   (interactive)
