@@ -255,6 +255,11 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   (recenter-top-bottom vhdl-tools-recenter-nb-lines)
   (back-to-indentation))
 
+(defun vhdl-tools-vorg--post-jump-function ()
+  "To be called after jumping to recenter, indent, etc."
+  (recenter-top-bottom vhdl-tools-recenter-nb-lines)
+  (back-to-indentation))
+
 
 ;;; Misc
 
