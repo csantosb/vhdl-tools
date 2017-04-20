@@ -827,7 +827,7 @@ Beautifies source code blocks before editing."
   ;; I move forward one char to force getting to next
   (forward-char)
   (re-search-forward outline-regexp)
-  (beginning-of-line)
+  ;; (beginning-of-line)
   (vhdl-tools--fold)
   (vhdl-tools--post-jump-function))
 
@@ -838,7 +838,7 @@ Beautifies source code blocks before editing."
   (when vhdl-tools-manage-folding
     (outline-hide-sublevels 5)
     (org-show-entry)
-    (vhdl-tools--post-jump-function)))
+    (vhdl-tools-vorg--post-jump-function)))
 
 ;;;; Get to previous
 
@@ -849,7 +849,7 @@ Beautifies source code blocks before editing."
   ;; hack: no necessary in this case
   ;; (see vhdl-tools-headings-next)
   (re-search-backward outline-regexp)
-  (beginning-of-line)
+  ;; (beginning-of-line)
   (vhdl-tools--fold)
   (vhdl-tools--post-jump-function))
 
@@ -860,7 +860,7 @@ Beautifies source code blocks before editing."
   (when vhdl-tools-manage-folding
     (outline-hide-sublevels 5)
     (org-show-entry)
-    (vhdl-tools--post-jump-function)))
+    (vhdl-tools-vorg--post-jump-function)))
 
 
 ;;; Helm-imenu navigation
@@ -874,7 +874,8 @@ Beautifies source code blocks before editing."
     (set-buffer-modified-p t)
     (save-buffer)
     (call-interactively 'imenu)
-    (vhdl-tools--fold)))
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
 
 ;;;; Instances
 
@@ -887,7 +888,8 @@ Beautifies source code blocks before editing."
     (set-buffer-modified-p t)
     (save-buffer)
     (vhdl-tools--imenu-with-initial-minibuffer "^Instance")
-    (vhdl-tools--fold)))
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
 
 ;;;; Processes
 
@@ -900,7 +902,8 @@ Beautifies source code blocks before editing."
     (set-buffer-modified-p t)
     (save-buffer)
     (vhdl-tools--imenu-with-initial-minibuffer "^Process")
-    (vhdl-tools--fold)))
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
 
 ;;;; Components
 
@@ -913,7 +916,8 @@ Beautifies source code blocks before editing."
     (set-buffer-modified-p t)
     (save-buffer)
     (vhdl-tools--imenu-with-initial-minibuffer "^Component")
-    (vhdl-tools--fold)))
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
 
 ;;;; Headings
 
@@ -926,7 +930,8 @@ Beautifies source code blocks before editing."
     (set-buffer-modified-p t)
     (save-buffer)
     (call-interactively 'helm-semantic-or-imenu)
-    (vhdl-tools--fold)))
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
 
 ;;;; Outshine - imenu
 
@@ -936,8 +941,8 @@ Beautifies source code blocks before editing."
   (if (equal arg '(4))
       (outshine-imenu nil)
     (vhdl-tools-imenu-headers))
-  (vhdl-tools--post-jump-function)
-  (vhdl-tools--fold))
+  (vhdl-tools--fold)
+  (vhdl-tools--post-jump-function))
 
 ;;;; All
 
