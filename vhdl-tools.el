@@ -589,13 +589,12 @@ When no symbol at point, move point to indentation."
   "From `vhdl' file, jump to same line in `vorg' file."
   (interactive)
   (let ((myfile (format "%s.org" (file-name-base)))
-	(myline (and (not vhdl-tools-vorg-tangle-comments-link)
-		     (save-excursion
-		       (back-to-indentation)
-		       (set-mark-command nil)
-		       (end-of-line)
-		       (buffer-substring-no-properties (region-beginning)
-						       (region-end))))))
+	(myline (save-excursion
+		  (back-to-indentation)
+		  (set-mark-command nil)
+		  (end-of-line)
+		  (buffer-substring-no-properties (region-beginning)
+						  (region-end)))))
     (if (file-exists-p myfile)
 	(progn
 	  (if vhdl-tools-vorg-tangle-comments-link
