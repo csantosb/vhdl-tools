@@ -622,8 +622,10 @@ When no symbol at point, move point to indentation."
 
 ;;;###autoload
 (defun vhdl-tools-vorg-jump-from-vorg()
-  "From `vorg' file, jump to same line in `vhdl' file."
+  "From `vorg' file, jump to same line in `vhdl' file, tangling the
+code before if necessary."
   (interactive)
+  (call-interactively 'vhdl-tools-vorg-tangle)
   (back-to-indentation)
   (let ((vhdlfile (format "%s.vhd" (file-name-base)))
 	(myline (save-excursion
