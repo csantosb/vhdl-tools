@@ -601,8 +601,10 @@ When no symbol at point, move point to indentation."
 	      ;; use org feature
 	      (let (;; I avoid scanning too much files: I already know where the
 		    ;; related org file is.
+		    ;; TODO: still too many files to scan ...
 		    (org-id-search-archives nil)
-		    (org-agenda-files nil))
+		    (org-agenda-files nil)
+		    (org-id-extra-files nil))
 		(org-babel-tangle-jump-to-org))
 	    ;; use custom search
 	    (progn
