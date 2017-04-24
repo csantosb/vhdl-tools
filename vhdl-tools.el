@@ -625,15 +625,15 @@ When no symbol at point, move point to indentation."
   "From `vorg' file, jump to same line in `vhdl' file."
   (interactive)
   (back-to-indentation)
-  (let ((myfile (format "%s.vhd" (file-name-base)))
+  (let ((vhdlfile (format "%s.vhd" (file-name-base)))
 	(myline (save-excursion
 		  (back-to-indentation)
 		  (set-mark-command nil)
 		  (end-of-line)
 		  (buffer-substring-no-properties (region-beginning)
 						  (region-end)))))
-    (when (file-exists-p myfile)
-      (find-file myfile)
+    (when (file-exists-p vhdlfile)
+      (find-file vhdlfile)
       (goto-char (point-min))
       (when vhdl-tools-use-outshine
 	(outline-next-heading))
