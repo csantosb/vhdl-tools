@@ -726,6 +726,28 @@ Beautifies source code blocks before editing."
 
 ;; Ancillary functions
 
+
+(defun vhdl-tools-vorg-get-current-line ()
+  "Send current line avoiding any comments."
+  (save-excursion
+    (back-to-indentation)
+    (let ((vhdl-tools-vorg-line-beginning (point)))
+      ;; check there is a comment in current line
+      (if (let ((maxposition (save-excursion
+			       (end-of-line)
+			       (point))))
+	    (save-excursion
+	      (re-search-forward "--" maxposition t)))
+	  (progn
+	    (re-search-forward "--")
+	    (re-search-backward " ")
+	    ;; previous non whitespace character
+	    (re-search-backward "\\S-"))
+	(end-of-line))
+      (buffer-substring-no-properties
+       vhdl-tools-vorg-line-beginning
+       (point)))))
+
 (defun vhdl-tools-vorg-tangle-header-argument ()
   "To be used as def argument to `tangle' in source block header."
   (if (let ((mytags (org-get-tags-at (point) t)))
