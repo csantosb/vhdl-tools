@@ -589,12 +589,7 @@ When no symbol at point, move point to indentation."
   "From `vhdl' file, jump to same line in `vorg' file."
   (interactive)
   (let ((myfile (format "%s.org" (file-name-base)))
-	(myline (save-excursion
-		  (back-to-indentation)
-		  (set-mark-command nil)
-		  (end-of-line)
-		  (buffer-substring-no-properties (region-beginning)
-						  (region-end)))))
+	(myline (vhdl-tools-vorg-get-current-line)))
     (if (file-exists-p myfile)
 	(progn
 	  (if vhdl-tools-vorg-tangle-comments-link
@@ -628,14 +623,9 @@ When no symbol at point, move point to indentation."
 code before if necessary."
   (interactive)
   (call-interactively 'vhdl-tools-vorg-tangle)
-  (back-to-indentation)
   (let ((vhdlfile (format "%s.vhd" (file-name-base)))
-	(myline (save-excursion
-		  (back-to-indentation)
-		  (set-mark-command nil)
-		  (end-of-line)
-		  (buffer-substring-no-properties (region-beginning)
-						  (region-end)))))
+	;; store current line
+	(myline (vhdl-tools-vorg-get-current-line)))
     (when (file-exists-p vhdlfile)
       (find-file vhdlfile)
       (goto-char (point-min))
@@ -784,14 +774,10 @@ Beautifies source code blocks before editing."
 ;;;; Link Store
 
 ;;;###autoload
-(defun vhdl-tools-store-link()
+(defun vhdl-tools-store-link ()
   "Store current line as a link."
   (interactive)
-  (let* ((myline (save-excursion
-		   (back-to-indentation)
-		   (set-mark-command nil)
-		   (end-of-line)
-		   (buffer-substring-no-properties (region-beginning) (region-end))))
+  (let* ((myline (vhdl-tools-vorg-get-current-line))
 	 (myentity (save-excursion
 		     (search-backward-regexp "entity")
 		     (forward-word)
