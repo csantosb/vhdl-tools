@@ -611,8 +611,7 @@ When no symbol at point, move point to indentation."
 	  (org-show-subtree)
 	  (search-forward myline nil t nil)
 	  (recenter-top-bottom vhdl-tools-recenter-nb-lines)
-	  (back-to-indentation)
-	  (when (region-active-p) (keyboard-quit)))
+	  (back-to-indentation))
       (message (format "no %s file exists" myfile)))))
 
 ;;;; VOrg to VHDL
@@ -635,8 +634,7 @@ code before if necessary."
 	(vhdl-tools--fold)
 	(search-forward myline nil t nil)
 	(recenter-top-bottom vhdl-tools-recenter-nb-lines)
-	(back-to-indentation))))
-  (when (region-active-p) (keyboard-quit)))
+	(back-to-indentation)))))
 
 ;;;; VOrg tangle
 
@@ -644,7 +642,6 @@ code before if necessary."
 (defun vhdl-tools-vorg-tangle (orgfile)
   "Tangle a `vorg' `ORGFILE' file to its corresponding `vhdl' file."
   (interactive (list (format "%s.org" (file-name-base))))
-  (when (region-active-p) (keyboard-quit))
   (let ((vhdlfile (format "%s.vhd" (file-name-base orgfile))))
     (if (or (file-newer-than-file-p orgfile vhdlfile)
 	    (not (file-exists-p vhdlfile)))
