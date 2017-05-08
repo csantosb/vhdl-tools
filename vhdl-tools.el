@@ -598,6 +598,7 @@ When no symbol at point, move point to indentation."
 		    ;; related org file is.
 		    ;; TODO: still too many files to scan ...
 		    (org-id-search-archives nil)
+		    (org-id-locations nil)
 		    (org-agenda-files nil)
 		    (org-id-extra-files nil))
 		(org-babel-tangle-jump-to-org))
