@@ -637,6 +637,16 @@ code before if necessary."
 	(recenter-top-bottom vhdl-tools-recenter-nb-lines)
 	(back-to-indentation)))))
 
+;;;; VOrg to module
+
+;;;###autoload
+(defun vhdl-tools-vorg-jump-from-vorg-into-module()
+  "From `vorg' file, jump to same line in `vhdl' file, tangling the
+code before if necessary, then jump into module."
+  (interactive)
+  (vhdl-tools-vorg-jump-from-vorg)
+  (vhdl-tools-jump-into-module))
+
 ;;;; VOrg tangle
 
 ;;;###autoload
@@ -1105,6 +1115,7 @@ Key bindings:
 (defvar vhdl-tools-vorg-map
   (let ((m (make-sparse-keymap)))
     (define-key m (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
+    (define-key m (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
     (define-key m [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
     (define-key m (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
     (define-key m (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
