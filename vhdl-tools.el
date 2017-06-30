@@ -686,7 +686,7 @@ code before if necessary."
     (loop for thisfile in (file-expand-wildcards "*.org") do
 	  (unless (or (string-match "readme" thisfile)
 		      (and (file-exists-p (format "%s.el" (file-name-base thisfile)))
-			   (not (file-newer-than-file-p this (format "%s.el" (file-name-base thisfile))))))
+			   (not (file-newer-than-file-p thisfile (format "%s.el" (file-name-base thisfile))))))
 	    (vhdl-tools-vorg-tangle thisfile)))))
 
 ;;;; VOrg source editing beautify
