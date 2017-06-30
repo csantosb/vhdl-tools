@@ -134,6 +134,10 @@
 
 ;;;;; tools
 
+(defcustom vhdl-tools-verbose nil
+  "Make `vhdl-tools' verbose."
+  :type 'boolean :group 'vhdl-tools)
+
 (defcustom vhdl-tools-allowed-chars-in-signal "a-z0-9A-Z_"
   "Regexp with allowed characters in signal, constant or function.
 Needed to determine end of name."
@@ -672,6 +676,8 @@ code before if necessary, then jump into module."
 		       org-babel-tangle-comment-format-end)))
 	  ;; tangle and beautify the tangled file only when there are tangled blocks
 	  (when (org-babel-tangle-file orgfile vhdlfile "vhdl")
+	    (when vhdl-tools-verbose
+	      (message (format "File %s tangled to %s." orgfile vhdlfile)))
 	    ;; When tangling the org file, this code helps to auto set proper
 	    ;; indentation, whitespace fixup, alignment, and case fixing to entire
 	    ;; exported buffer
@@ -691,6 +697,7 @@ code before if necessary, then jump into module."
   "Tangle all `vorg' files in current dir to its corresponding `vhdl' file."
   (interactive)
   (let ((vc-follow-symlinks nil)
+	(vhdl-tools-verbose t)
 	(org-global-properties
 	 '(("header-args:vhdl" . ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (vhdl-tools-vorg-tangle-header-argument)"))))
     (loop for thisfile in (file-expand-wildcards "*.org") do
@@ -1088,9 +1095,11 @@ Key bindings:
 	    (setq vhdl-tools--ggtags-active ggtags-mode)
 	    (ggtags-mode 1)
 	    ;; notify
-	    (message "VHDL Tools enabled."))
+	    (when vhdl-tools-verbose
+	      (message "VHDL Tools enabled.")))
 	;; not gtags files available
-	(message "VHDL Tools NOT enabled."))
+	(when vhdl-tools-verbose
+	  (message "VHDL Tools NOT enabled.")))
     ;; disable
     (progn
       (when vhdl-tools-remap-smartscan
@@ -1105,7 +1114,8 @@ Key bindings:
 	;; custom outline regexp
 	(setq-local outline-regexp vhdl-tools--outline-regexp-old))
       ;; notify
-      (message "VHDL Tools disabled."))))
+      (when vhdl-tools-verbose
+	(message "VHDL Tools disabled.")))))
 
 
 ;;; Minor Mode - vOrg
@@ -1147,11 +1157,13 @@ Key bindings:
 	    #'vhdl-tools-vorg-smcn-next)
 	  (define-key vhdl-tools-vorg-map [remap smartscan-symbol-go-backward]
 	    #'vhdl-tools-vorg-smcn-prev))
-	(message "VHDL Tools Vorg enabled.")
+	(when vhdl-tools-verbose
+	  (message "VHDL Tools Vorg enabled."))
 	(add-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))
     ;; disable
     (progn
-      (message "VHDL Tools Vorg disabled.")
+      (when vhdl-tools-verbose
+	(message "VHDL Tools Vorg disabled."))
       (remove-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))))
 
 (provide 'vhdl-tools)
