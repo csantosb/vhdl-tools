@@ -682,15 +682,12 @@ code before if necessary, then jump into module."
 	    ;; When tangling the org file, this code helps to auto set proper
 	    ;; indentation, whitespace fixup, alignment, and case fixing to entire
 	    ;; exported buffer
-	    (message (format "File %s tangled to %s." orgfile vhdlfile))
 	    (org-babel-with-temp-filebuffer vhdlfile
 	      (vhdl-beautify-buffer)
-	      (save-buffer)))
-	  ;; avoid noise when not called as a command
-	  (when (called-interactively-p 'interactive)
-	    (message (format "File %s NOT tangled to %s." orgfile vhdlfile))))
-      ;; avoid noise when not called as a command
-      (when (called-interactively-p 'interactive)
+	      (vhdl-beautify-buffer)
+	      (save-buffer))))
+      ;; don't tangle
+      (when vhdl-tools-verbose
 	(message (format "File %s NOT tangled to %s." orgfile vhdlfile))))))
 
 ;;;###autoload
