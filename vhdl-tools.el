@@ -660,6 +660,7 @@ code before if necessary, then jump into module."
   (let ((vhdlfile (format "%s.vhd" (file-name-base orgfile))))
     (if (or (file-newer-than-file-p orgfile vhdlfile)
 	    (not (file-exists-p vhdlfile)))
+	;; do tangle
 	(let ((org-babel-tangle-uncomment-comments nil)
 	      ;; sets the "comments:link" header arg
 	      ;; possible as this is constant header arg, not dynamic with code block
@@ -759,7 +760,8 @@ Beautifies source code blocks before editing."
 	(or (member vhdl-tools-vorg-tangle-header-argument-var mytags)
 	    (null mytags)))
       (format "%s.vhd" (file-name-base
-			(buffer-file-name))) "no"))
+			(buffer-file-name)))
+    "no"))
 
 (defun vhdl-tools-vorg-prologue-header-argument ()
   "To be used as def argument to `prologue' in source block header."
