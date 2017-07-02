@@ -619,9 +619,9 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-vorg-jump-to-vorg()
   "From `vhdl' file, jump to same line in `vorg' file."
   (interactive)
-  (let ((myfile (format "%s.org" (file-name-base)))
+  (let ((orgfile (format "%s.org" (file-name-base)))
 	(myline (vhdl-tools-vorg-get-current-line)))
-    (if (file-exists-p myfile)
+    (if (file-exists-p orgfile)
 	(progn
 	  (if vhdl-tools-vorg-tangle-comments-link
 	      ;; use org feature
@@ -635,7 +635,7 @@ When no symbol at point, move point to indentation."
 		(org-babel-tangle-jump-to-org))
 	    ;; use custom search
 	    (progn
-	      (find-file myfile)
+	      (find-file orgfile)
 	      (beginning-of-buffer)
 	      (search-forward myline nil t nil)))
 	  (org-content 5)
@@ -644,7 +644,7 @@ When no symbol at point, move point to indentation."
 	  (search-forward myline nil t nil)
 	  (recenter-top-bottom vhdl-tools-recenter-nb-lines)
 	  (back-to-indentation))
-      (message (format "no %s file exists" myfile)))))
+      (message (format "no %s file exists" orgfile)))))
 
 ;;;; VOrg to VHDL
 
