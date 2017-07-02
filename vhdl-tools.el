@@ -617,7 +617,7 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-vorg-jump-to-vorg()
   "From `vhdl' file, jump to same line in `vorg' file."
   (interactive)
-  (let ((orgfile (format "%s.org" (file-name-base)))
+  (let ((orgfile (vhdl-tools--get-vorg-file (file-name-base)))
 	(myline (vhdl-tools-vorg-get-current-line)))
     (if (file-exists-p orgfile)
 	(progn
