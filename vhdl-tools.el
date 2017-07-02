@@ -682,9 +682,11 @@ code before if necessary, then jump into module."
 
 ;;;###autoload
 (defun vhdl-tools-vorg-tangle (orgfile)
-  "Tangle a `vorg' `ORGFILE' file to its corresponding `vhdl' file."
-  (interactive (list (format "%s.org" (file-name-base))))
-  (let ((vhdlfile (format "%s.vhd" (file-name-base orgfile))))
+  "Tangle a `vorg' `ORGFILE' file to its corresponding `vhdl' file.
+`ORGFILE' is the filename without extension."
+  ;; (interactive (list (format "%s.org" (file-name-base))))
+  (interactive (list (file-name-base)))
+  (let ((vhdlfile (vhdl-tools--get-vhdl-file orgfile)))
     (if (or (file-newer-than-file-p orgfile vhdlfile)
 	    (not (file-exists-p vhdlfile)))
 	;; do tangle
