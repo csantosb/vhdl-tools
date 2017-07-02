@@ -116,6 +116,16 @@
 
 ;;;;; vOrg
 
+(defcustom vhdl-tools-vorg-src-vhdl-dir nil
+  "Stores the relative placement of vhdl code with respect to vorg sources.
+When nil, both share same directory."
+  :type 'string :group 'vhdl-tools-vorg)
+
+(defcustom vhdl-tools-vorg-src-vorg-dir nil
+  "Stores the relative placement of vorg sources with respect to vhdl code.
+When nil, both share same directory."
+  :type 'string :group 'vhdl-tools-vorg)
+
 (defcustom vhdl-tools-vorg-tangle-comment-format-beg "@@@"
   "Variable to assign to `org-babel-tangle-comment-format-beg' during `vorg' tangling."
   :type 'string :group 'vhdl-tools-vorg)
