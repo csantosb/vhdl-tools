@@ -652,7 +652,7 @@ When no symbol at point, move point to indentation."
 code before if necessary."
   (interactive)
   (call-interactively 'vhdl-tools-vorg-tangle)
-  (let ((vhdlfile (vhdl-tools--get-vhdl-file))
+  (let ((vhdlfile (vhdl-tools--get-vhdl-file (file-name-base)))
 	;; store current line
 	(myline (vhdl-tools-vorg-get-current-line)))
     (when (file-exists-p vhdlfile)
@@ -685,7 +685,7 @@ code before if necessary, then jump into module."
   ;; (interactive (list (format "%s.org" (file-name-base))))
   (interactive (list (file-name-base)))
   (let ((vhdlfile (vhdl-tools--get-vhdl-file orgfile)))
-    (if (or (file-newer-than-file-p orgfile vhdlfile)
+    (if (or (file-newer-than-file-p (format "%s.org" orgfile) vhdlfile)
 	    (not (file-exists-p vhdlfile)))
 	;; do tangle
 	(let ((org-babel-tangle-uncomment-comments nil)
@@ -703,9 +703,9 @@ code before if necessary, then jump into module."
 	       (format "%s %s" vhdl-tools-vorg-tangle-comment-format-end
 		       org-babel-tangle-comment-format-end)))
 	  ;; tangle and beautify the tangled file only when there are tangled blocks
-	  (when (org-babel-tangle-file orgfile vhdlfile "vhdl")
+	  (when (org-babel-tangle-file (format "%s.org" orgfile) vhdlfile "vhdl")
 	    (when vhdl-tools-verbose
-	      (message (format "File %s tangled to %s." orgfile vhdlfile)))
+	      (message (format "File %s.org tangled to %s." orgfile vhdlfile)))
 	    ;; When tangling the org file, this code helps to auto set proper
 	    ;; indentation, whitespace fixup, alignment, and case fixing to entire
 	    ;; exported buffer
@@ -783,7 +783,7 @@ Beautifies source code blocks before editing."
   (if (let ((mytags (org-get-tags-at (point) t)))
 	(or (member vhdl-tools-vorg-tangle-header-argument-var mytags)
 	    (null mytags)))
-      (vhdl-tools--get-vhdl-file)
+      (vhdl-tools--get-vhdl-file (file-name-base))
     "no"))
 
 (defun vhdl-tools-vorg-prologue-header-argument ()
