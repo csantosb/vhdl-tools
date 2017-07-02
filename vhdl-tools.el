@@ -287,7 +287,7 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
 `VHDLFILE' is the filename without extension."
   (if (and vhdl-tools-vorg-src-vorg-dir
 	   (file-exists-p vhdl-tools-vorg-src-vorg-dir))
-      (format "%s/%s.org" vhdl-tools-vorg-src-org-dir vhdlfile)
+      (format "%s/%s.org" vhdl-tools-vorg-src-vorg-dir vhdlfile)
     (format "%s.vhd" (file-name-base vhdlfile))))
 
 ;;; Misc
@@ -642,7 +642,7 @@ When no symbol at point, move point to indentation."
 	  (search-forward myline nil t nil)
 	  (recenter-top-bottom vhdl-tools-recenter-nb-lines)
 	  (back-to-indentation))
-      (message (format "no %s file exists" orgfile)))))
+      (message (format "no %s.org file exists" orgfile)))))
 
 ;;;; VOrg to VHDL
 
