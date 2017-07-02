@@ -274,6 +274,23 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   (recenter-top-bottom vhdl-tools-recenter-nb-lines)
   (back-to-indentation))
 
+(defun vhdl-tools--get-vhdl-file(&optional orgfile)
+  "Returns the sibling vhdl code of `ORGFILE'.
+`ORGFILE' is the filename without extension."
+  (interactive (list(file-name-base)))
+  (if (and vhdl-tools-vorg-src-vhdl-dir
+	   (file-exists-p vhdl-tools-vorg-src-vhdl-dir))
+      (format "%s/%s.vhd" vhdl-tools-vorg-src-vhdl-dir orgfile)
+    (format "%s.vhd" orgfile)))
+
+(defun vhdl-tools--get-vorg-file(&optional vhdlfile)
+  "Returns the sibling vorg source file of `VHDLFILE'.
+`VHDLFILE' is the filename without extension."
+  (interactive (list (file-name-base)))
+  (if (and vhdl-tools-vorg-src-vorg-dir
+	   (file-exists-p vhdl-tools-vorg-src-vorg-dir))
+      (format "%s/%s.org" vhdl-tools-vorg-src-org-dir vhdlfile)
+    (format "%s.vhd" (file-name-base vhdlfile))))
 
 ;;; Misc
 
