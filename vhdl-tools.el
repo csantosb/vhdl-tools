@@ -654,7 +654,7 @@ When no symbol at point, move point to indentation."
 code before if necessary."
   (interactive)
   (call-interactively 'vhdl-tools-vorg-tangle)
-  (let ((vhdlfile (format "%s.vhd" (file-name-base)))
+  (let ((vhdlfile (vhdl-tools--get-vhdl-file))
 	;; store current line
 	(myline (vhdl-tools-vorg-get-current-line)))
     (when (file-exists-p vhdlfile)
@@ -729,7 +729,7 @@ code before if necessary, then jump into module."
 	  (unless (or (string-match "readme" thisfile)
 		      (and (file-exists-p (format "%s.el" (file-name-base thisfile)))
 			   (not (file-newer-than-file-p thisfile (format "%s.el" (file-name-base thisfile))))))
-	    (vhdl-tools-vorg-tangle thisfile)))))
+	    (vhdl-tools-vorg-tangle (file-name-base thisfile))))))
 
 ;;;; VOrg source editing beautify
 
@@ -783,8 +783,7 @@ Beautifies source code blocks before editing."
   (if (let ((mytags (org-get-tags-at (point) t)))
 	(or (member vhdl-tools-vorg-tangle-header-argument-var mytags)
 	    (null mytags)))
-      (format "%s.vhd" (file-name-base
-			(buffer-file-name)))
+      (vhdl-tools--get-vhdl-file)
     "no"))
 
 (defun vhdl-tools-vorg-prologue-header-argument ()
