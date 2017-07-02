@@ -1095,7 +1095,10 @@ Key bindings:
   (require 'vc)
   (if vhdl-tools-mode
       ;; activate when gtags files are available
-      (if (file-exists-p (format "%sGTAGS" (vc-find-root (buffer-file-name) ".git")))
+      (if (and (buffer-file-name)
+	       (file-exists-p
+		(format "%sGTAGS"
+			(vc-find-root (buffer-file-name) ".git"))))
 	  (progn
 	    ;; optional smartscan remapping
 	    (when (and vhdl-tools-remap-smartscan
