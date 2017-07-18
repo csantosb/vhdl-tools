@@ -3,22 +3,46 @@
 :VISIBILITY: all
 :END:
 
- - [[#todo][TODO]]
-   - [[#include-here-imenu-related-functions][Include here imenu related functions]]
-   - [[#this][This]]
-   - [[#remove-ugly-line-from-vorg-files][Remove ugly line from =vOrg= files]]
-   - [[#vhdl-tools-vorg-src-block-beautify][vhdl-tools-vorg-src-block-beautify]]
+- [[#57][5.7]]
+  - [[#relative-feature-implement][Relative feature: implement]]
+  - [[#relative-feature-document][Relative feature: document]]
+  - [[#better-jump-to-src-after-tangling][Better jump to src after tangling]]
+  - [[#document-verbose-variable][Document verbose variable]]
+  - [[#jump-from-vorg-to-vorg][Jump from vorg to vorg]]
+  - [[#include-here-imenu-related-functions][Include here imenu related functions]]
+  - [[#this][This]]
+  - [[#remove-ugly-line-from-vorg-files][Remove ugly line from =vOrg= files]]
+  - [[#vhdl-tools-vorg-src-block-beautify][vhdl-tools-vorg-src-block-beautify]]
+  - [[#document-vhdl-tools-vorg-jump-from-vorg-into-module][Document ’vhdl-tools-vorg-jump-from-vorg-into-module’]]
+  - [[#use-org-babel-post-tangle-hook][Use 'org-babel-post-tangle-hook’]]
 
-* TODO
+* 5.7
 
-** Include here imenu related functions
+** TODO Relative feature: implement
 
-** This
+Give a chance to store source code in different folders.
+
+** TODO Relative feature: document
+
+** TODO Better jump to src after tangling
+
+Currently only a search for the line at point. If several identical
+lines, this won’t work.
+
+** TODO Document verbose variable
+
+** TODO Jump from vorg to vorg
+
+Similarly as jumping from vhdl to vhdl
+
+** TODO Include here imenu related functions
+
+** TODO This
 
 In vhdl-tools--prologue-header-argument, replace (org-back-to-heading nil) by
 something to detect i previous element is a header or not; proceed only if its a header
 
-** Remove ugly line from =vOrg= files
+** TODO Remove ugly line from =vOrg= files
 
 #+begin_src org :tangle no
   #+begin_src vhdl :prologue (vhdl-tools--prologue-header-argument)
@@ -37,8 +61,11 @@ Try something like
 
 Unfourtunately, this makes the same header appear on top of all blocks.
 
-
-** vhdl-tools-vorg-src-block-beautify
+** TODO vhdl-tools-vorg-src-block-beautify
 
 vhdl-tools-vorg-src-block-beautify, as a command depending on context,
 similar to the article in endless parantheses
+
+** TODO Document ’vhdl-tools-vorg-jump-from-vorg-into-module’
+
+** TODO Use 'org-babel-post-tangle-hook’
