@@ -1089,6 +1089,7 @@ Beautifies source code blocks before editing."
 Key bindings:
 \\{vhdl-tools-map}"
   :lighter " #vtool"
+  :init-value nil
   :keymap vhdl-tools-map
   :group 'vhdl-tools
   :global nil
@@ -1171,6 +1172,7 @@ Key bindings:
 Key bindings:
 \\{vhdl-tools-map}"
   :lighter " vOrg"
+  :init-value nil
   :keymap vhdl-tools-vorg-map
   :group 'vhdl-tools-vorg
   :global nil
