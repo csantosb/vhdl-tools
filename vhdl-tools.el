@@ -98,8 +98,6 @@
 
 (require 'vhdl-mode)
 (require 'ggtags)
-(require 'imenu)
-(require 'outshine)
 (require 'helm-grep)
 
 ;;; Groups
@@ -183,14 +181,14 @@ Needed to determine end of name."
 
 (defvar vhdl-tools--store-link-link nil)
 
-(defvar vhdl-tools--outline-active nil
-  "Stores state of variable `outline-minor-mode' prior to activating the minor mode.")
+;; (defvar vhdl-tools--outline-active nil
+;;   "Stores state of variable `outline-minor-mode' prior to activating the minor mode.")
 
-(defvar vhdl-tools--ggtags-active nil
-  "Stores state of `ggtags-mode' prior to activating the minor mode.")
+;; (defvar vhdl-tools--ggtags-active nil
+;;   "Stores state of `ggtags-mode' prior to activating the minor mode.")
 
-(defvar vhdl-tools--outline-regexp-old nil
-  "Stores state of `outline-regexp' prior to activating the minor mode.")
+;; (defvar vhdl-tools--outline-regexp-old nil
+;;   "Stores state of `outline-regexp' prior to activating the minor mode.")
 
 (defvar vhdl-tools--follow-links-tag nil)
 
@@ -1083,68 +1081,130 @@ Beautifies source code blocks before editing."
 ;;;; Mode
 
 ;;;###autoload
-(define-minor-mode vhdl-tools-mode
+(define-derived-mode vhdl-tools-mode vhdl-mode "vtool"
   "Utilities for navigating vhdl sources.
 
 Key bindings:
-\\{vhdl-tools-map}"
-  :lighter " #vtool"
-  :init-value nil
-  :keymap vhdl-tools-map
-  :group 'vhdl-tools
-  :global nil
-  (require 'vc)
-  (if vhdl-tools-mode
-      ;; activate when gtags files are available
-      (if (and (buffer-file-name)
-	       (file-exists-p
-		(format "%sGTAGS"
-			(vc-find-root (buffer-file-name) ".git"))))
-	  (progn
-	    ;; optional smartscan remapping
-	    (when (and vhdl-tools-remap-smartscan
-		       vhdl-tools-use-outshine
-		       (boundp 'smartscan-mode)
-		       (smartscan-mode 1))
-	      (define-key vhdl-mode-map [remap smartscan-symbol-go-forward]
-		#'vhdl-tools-smcn-next)
-	      (define-key vhdl-mode-map [remap smartscan-symbol-go-backward]
-		#'vhdl-tools-smcn-prev))
-	    ;;
-	    (when vhdl-tools-use-outshine
-	      ;; try to keep things as they were
-	      (setq vhdl-tools--outline-active outline-minor-mode)
-	      (outline-minor-mode 1)
-	      ;; (outshine-hook-function)
-	      ;; custom outline regexp
-	      (setq-local vhdl-tools--outline-regexp-old outline-regexp)
-	      (setq-local outline-regexp vhdl-tools-outline-regexp)
-	      ;;
-	      (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-outshine-imenu-headers))
-	    (setq vhdl-tools--ggtags-active ggtags-mode)
-	    (ggtags-mode 1)
-	    ;; notify
-	    (when vhdl-tools-verbose
-	      (message "VHDL Tools enabled.")))
-	;; not gtags files available
+\\{vhdl-tools-mode-map}"
+
+  ;; Enable only if requisites met
+  (if (and (require 'ggtags)
+	   (require 'vc)
+	   (buffer-file-name)
+	   (file-exists-p
+	    (format "%sGTAGS"
+		    (vc-find-root (buffer-file-name) ".git"))))
+      (progn
+	;; mode bindings
+	(define-key vhdl-tools-mode-map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
+	(define-key vhdl-tools-mode-map (kbd "C-c M-j") #'vhdl-tools-follow-links)
+	(define-key vhdl-tools-mode-map (kbd "C-c M-w") #'vhdl-tools-store-link)
+	(define-key vhdl-tools-mode-map (kbd "C-c M-y") #'vhdl-tools-paste-link)
+	(define-key vhdl-tools-mode-map (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
+	(define-key vhdl-tools-mode-map (kbd "C-c M-a") #'vhdl-tools-jump-first)
+	(define-key vhdl-tools-mode-map (kbd "C-c M-u") #'vhdl-tools-jump-upper)
+	(define-key vhdl-tools-mode-map (kbd "C-c M-^") #'vhdl-tools-vorg-jump-to-vorg)
+	(define-key vhdl-tools-mode-map (kbd "C-c C-n") #'vhdl-tools-headings-next)
+	(define-key vhdl-tools-mode-map (kbd "C-c C-p") #'vhdl-tools-headings-prev)
+	(define-key vhdl-tools-mode-map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
+	;; mode bindings: imenu related
+	(when (require 'imenu)
+	  (define-prefix-command 'vhdl-tools-imenu-map)
+	  (define-key vhdl-tools-mode-map (kbd "C-x c i") 'vhdl-tools-imenu-map)
+	  (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
+	  (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
+	  (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
+	  (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
+	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-imenu-headers)
+	  (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all))
+	;; optional smartscan remapping
+	(when (and (require 'outshine)
+		   vhdl-tools-use-outshine
+		   (require 'smartscan)
+		   vhdl-tools-remap-smartscan
+		   (smartscan-mode 1))
+	  (define-key vhdl-mode-map [remap smartscan-symbol-go-forward]
+	    #'vhdl-tools-smcn-next)
+	  (define-key vhdl-mode-map [remap smartscan-symbol-go-backward]
+	    #'vhdl-tools-smcn-prev))
+	;; optional outshine use
+	(when (and (require 'outshine)
+		   vhdl-tools-use-outshine)
+	  (outline-minor-mode 1)
+	  ;; (outshine-hook-function)
+	  ;; custom outline regexp
+	  (setq-local outline-regexp vhdl-tools-outline-regexp)
+	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-outshine-imenu-headers))
+	(ggtags-mode 1)
 	(when vhdl-tools-verbose
-	  (message "VHDL Tools NOT enabled.")))
-    ;; disable
-    (progn
-      (when vhdl-tools-remap-smartscan
-	(define-key vhdl-tools-map [remap smartscan-symbol-go-forward] nil)
-	(define-key vhdl-tools-map [remap smartscan-symbol-go-backward] nil))
-      (when (not vhdl-tools--ggtags-active)
-	(ggtags-mode -1))
-      (when vhdl-tools-use-outshine
-	;; try to keep things as they were
-	(when (not vhdl-tools--outline-active)
-	  (outline-minor-mode -1))
-	;; custom outline regexp
-	(setq-local outline-regexp vhdl-tools--outline-regexp-old))
-      ;; notify
-      (when vhdl-tools-verbose
-	(message "VHDL Tools disabled.")))))
+	  (message "VHDL Tools enabled.")))
+    (when vhdl-tools-verbose
+      (message "VHDL Tools NOT enabled."))))
+
+
+;;;###autoload
+;; (define-minor-mode vhdl-tools-mode
+;; "Utilities for navigating vhdl sources.
+
+;; Key bindings:
+;; \\{vhdl-tools-mode-map}"
+;;   :lighter " #vtool"
+;;   :init-value nil
+;;   :keymap vhdl-tools-mode-map
+;;   :group 'vhdl-tools
+;;   :global nil
+;;   (require 'vc)
+;;   (if vhdl-tools-mode
+;;       ;; activate when gtags files are available
+;;       (if (and (buffer-file-name)
+;; 	       (file-exists-p
+;; 		(format "%sGTAGS"
+;; 			(vc-find-root (buffer-file-name) ".git"))))
+;; 	  (progn
+;; 	    ;; optional smartscan remapping
+;; 	    (when (and vhdl-tools-remap-smartscan
+;; 		       vhdl-tools-use-outshine
+;; 		       (boundp 'smartscan-mode)
+;; 		       (smartscan-mode 1))
+;; 	      (define-key vhdl-mode-map [remap smartscan-symbol-go-forward]
+;; 		#'vhdl-tools-smcn-next)
+;; 	      (define-key vhdl-mode-map [remap smartscan-symbol-go-backward]
+;; 		#'vhdl-tools-smcn-prev))
+;; 	    ;;
+;; 	    (when vhdl-tools-use-outshine
+;; 	      ;; try to keep things as they were
+;; 	      (setq vhdl-tools--outline-active outline-minor-mode)
+;; 	      (outline-minor-mode 1)
+;; 	      ;; (outshine-hook-function)
+;; 	      ;; custom outline regexp
+;; 	      (setq-local vhdl-tools--outline-regexp-old outline-regexp)
+;; 	      (setq-local outline-regexp vhdl-tools-outline-regexp)
+;; 	      ;;
+;; 	      (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-outshine-imenu-headers))
+;; 	    (setq vhdl-tools--ggtags-active ggtags-mode)
+;; 	    (ggtags-mode 1)
+;; 	    ;; notify
+;; 	    (when vhdl-tools-verbose
+;; 	      (message "VHDL Tools enabled.")))
+;; 	;; not gtags files available
+;; 	(when vhdl-tools-verbose
+;; 	  (message "VHDL Tools NOT enabled.")))
+;;     ;; disable
+;;     (progn
+;;       (when vhdl-tools-remap-smartscan
+;; 	(define-key vhdl-tools-mode-map [remap smartscan-symbol-go-forward] nil)
+;; 	(define-key vhdl-tools-mode-map [remap smartscan-symbol-go-backward] nil))
+;;       (when (not vhdl-tools--ggtags-active)
+;; 	(ggtags-mode -1))
+;;       (when vhdl-tools-use-outshine
+;; 	;; try to keep things as they were
+;; 	(when (not vhdl-tools--outline-active)
+;; 	  (outline-minor-mode -1))
+;; 	;; custom outline regexp
+;; 	(setq-local outline-regexp vhdl-tools--outline-regexp-old))
+;;       ;; notify
+;;       (when vhdl-tools-verbose
+;; 	(message "VHDL Tools disabled.")))))
 
 
 ;;; Minor Mode - vOrg
