@@ -1098,9 +1098,14 @@ Key bindings:
 	  ;; custom outline regexp
 	  (setq-local outline-regexp vhdl-tools-outline-regexp)
 	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-outshine-imenu-headers))
+	;; required
 	(ggtags-mode 1)
+	;; inheritate prog mode hooks: vhdl-mode doesn't
+	(run-hook-with-args 'prog-mode-hook)
+        ;; a bit of feedback
 	(when vhdl-tools-verbose
 	  (message "VHDL Tools enabled.")))
+    ;; a bit of feedback
     (when vhdl-tools-verbose
       (message "VHDL Tools NOT enabled."))))
 
