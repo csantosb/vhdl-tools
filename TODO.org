@@ -69,3 +69,5 @@ similar to the article in endless parantheses
 ** TODO Document ’vhdl-tools-vorg-jump-from-vorg-into-module’
 
 ** TODO Use 'org-babel-post-tangle-hook’
+
+** TODO Document publish a project
