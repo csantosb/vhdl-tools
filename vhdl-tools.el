@@ -1041,34 +1041,6 @@ Beautifies source code blocks before editing."
 
 ;;; Minor Mode - Tools
 
-;;;; Keybindings
-
-;; (defvar vhdl-tools-map
-;;   (let ((m (make-sparse-keymap)))
-;;     (define-key m (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
-;;     (define-key m (kbd "C-c M-j") #'vhdl-tools-follow-links)
-;;     (define-key m (kbd "C-c M-w") #'vhdl-tools-store-link)
-;;     (define-key m (kbd "C-c M-y") #'vhdl-tools-paste-link)
-;;     (define-key m (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
-;;     (define-key m (kbd "C-c M-a") #'vhdl-tools-jump-first)
-;;     (define-key m (kbd "C-c M-u") #'vhdl-tools-jump-upper)
-;;     (define-key m (kbd "C-c M-^") #'vhdl-tools-vorg-jump-to-vorg)
-;;     (define-key m (kbd "C-c C-n") #'vhdl-tools-headings-next)
-;;     (define-key m (kbd "C-c C-p") #'vhdl-tools-headings-prev)
-;;     (define-key m (kbd "C-c M-b") #'vhdl-tools-beautify-region)
-;;     ;;
-;;     ;; imenu related
-;;     (define-prefix-command 'vhdl-tools-imenu-map)
-;;     (define-key m (kbd "C-x c i") 'vhdl-tools-imenu-map)
-;;     (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
-;;     (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
-;;     (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
-;;     (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
-;;     (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-imenu-headers)
-;;     (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all)
-;;     m)
-;;   "Keymap for `vhdl-tools'.")
-
 ;;;; Mode
 
 ;;;###autoload
