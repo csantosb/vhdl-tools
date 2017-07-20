@@ -255,12 +255,14 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
 
 (defun vhdl-tools--post-jump-function ()
   "To be called after jumping to recenter, indent, etc."
-  (recenter-top-bottom vhdl-tools-recenter-nb-lines)
+  (when vhdl-tools-manage-folding
+    (recenter-top-bottom vhdl-tools-recenter-nb-lines))
   (back-to-indentation))
 
 (defun vhdl-tools-vorg--post-jump-function ()
   "To be called after jumping to recenter, indent, etc."
-  (recenter-top-bottom vhdl-tools-recenter-nb-lines)
+  (when vhdl-tools-manage-folding
+    (recenter-top-bottom vhdl-tools-recenter-nb-lines))
   (back-to-indentation))
 
 (defun vhdl-tools--get-vhdl-file (orgfile)
