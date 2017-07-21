@@ -1112,20 +1112,6 @@ Key bindings:
 
 ;;; Derived Mode - vOrg
 
-;; ;;;; Keybindings
-
-;; (defvar vhdl-tools-vorg-map
-;;   (let ((m (make-sparse-keymap)))
-;;     (define-key m (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
-;;     (define-key m (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
-;;     (define-key m [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
-;;     (define-key m (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
-;;     (define-key m (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
-;;     (define-key m (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
-;;     (define-key m (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
-;;     m)
-;;   "Keymap for `vhdl-tools-vorg'.")
-
 ;;;###autoload
 (define-derived-mode vhdl-tools-vorg-mode org-mode "vOrg"
   "Utilities for navigating vhdl sources in vorg files.
