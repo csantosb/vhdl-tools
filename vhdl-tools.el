@@ -722,9 +722,7 @@ code before if necessary, then jump into module."
 	(org-global-properties
 	 '(("header-args:vhdl" . ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (vhdl-tools-vorg-tangle-header-argument)"))))
     (loop for thisfile in (file-expand-wildcards "*.org") do
-	  (unless (or (string-match "readme" thisfile)
-		      (and (file-exists-p (format "%s.el" (file-name-base thisfile)))
-			   (not (file-newer-than-file-p thisfile (format "%s.el" (file-name-base thisfile))))))
+	  (unless (string-match "readme" thisfile)
 	    (vhdl-tools-vorg-tangle (file-name-base thisfile))))))
 
 ;;;; VOrg source editing beautify
