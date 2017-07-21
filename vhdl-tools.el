@@ -1041,9 +1041,7 @@ Beautifies source code blocks before editing."
     (vhdl-tools--fold)))
 
 
-;;; Minor Mode - Tools
-
-;;;; Mode
+;;; Derived Mode - Tools
 
 ;;;###autoload
 (define-derived-mode vhdl-tools-mode vhdl-mode "vtool"
@@ -1060,7 +1058,7 @@ Key bindings:
 	    (format "%sGTAGS"
 		    (vc-find-root (buffer-file-name) ".git"))))
       (progn
-	;; mode bindings
+        ;; mode bindings
 	(define-key vhdl-tools-mode-map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
 	(define-key vhdl-tools-mode-map (kbd "C-c M-j") #'vhdl-tools-follow-links)
 	(define-key vhdl-tools-mode-map (kbd "C-c M-w") #'vhdl-tools-store-link)
@@ -1082,10 +1080,10 @@ Key bindings:
 	  (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
 	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-imenu-headers)
 	  (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all))
-	;; optional smartscan remapping
+        ;; optional smartscan remapping
 	(when (and (require 'outshine)
 		   vhdl-tools-use-outshine
-		   (require 'smartscan)
+                   (require 'smartscan)
 		   vhdl-tools-remap-smartscan
 		   (smartscan-mode 1))
 	  (define-key vhdl-mode-map [remap smartscan-symbol-go-forward]
@@ -1112,54 +1110,83 @@ Key bindings:
       (message "VHDL Tools NOT enabled."))))
 
 
-;;; Minor Mode - vOrg
+;;; Derived Mode - vOrg
 
-;;;; Keybindings
+;; ;;;; Keybindings
 
-(defvar vhdl-tools-vorg-map
-  (let ((m (make-sparse-keymap)))
-    (define-key m (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
-    (define-key m (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
-    (define-key m [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
-    (define-key m (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
-    (define-key m (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
-    (define-key m (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
-    (define-key m (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
-    m)
-  "Keymap for `vhdl-tools-vorg'.")
-
-;;;; Mode
+;; (defvar vhdl-tools-vorg-map
+;;   (let ((m (make-sparse-keymap)))
+;;     (define-key m (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
+;;     (define-key m (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
+;;     (define-key m [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
+;;     (define-key m (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
+;;     (define-key m (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
+;;     (define-key m (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
+;;     (define-key m (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
+;;     m)
+;;   "Keymap for `vhdl-tools-vorg'.")
 
 ;;;###autoload
-(define-minor-mode vhdl-tools-vorg-mode
+(define-derived-mode vhdl-tools-vorg-mode org-mode "vOrg"
   "Utilities for navigating vhdl sources in vorg files.
 
 Key bindings:
-\\{vhdl-tools-map}"
-  :lighter " vOrg"
-  :init-value nil
-  :keymap vhdl-tools-vorg-map
-  :group 'vhdl-tools-vorg
-  :global nil
-  (require 'vc)
-  (require 'vhdl-tools)
-  (if vhdl-tools-vorg-mode
-      (progn
-	(when (and vhdl-tools-remap-smartscan
-		   (boundp 'smartscan-mode)
-		   (smartscan-mode 1))
-	  (define-key vhdl-tools-vorg-map [remap smartscan-symbol-go-forward]
-	    #'vhdl-tools-vorg-smcn-next)
-	  (define-key vhdl-tools-vorg-map [remap smartscan-symbol-go-backward]
-	    #'vhdl-tools-vorg-smcn-prev))
-	(when vhdl-tools-verbose
-	  (message "VHDL Tools Vorg enabled."))
-	(add-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))
-    ;; disable
-    (progn
-      (when vhdl-tools-verbose
-	(message "VHDL Tools Vorg disabled."))
-      (remove-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))))
+\\{vhdl-tools-vorg-mode-map}"
+
+  (progn
+    ;; optional smartscan remapping
+    (when (and (require 'smartscan)
+	       vhdl-tools-remap-smartscan
+	       (smartscan-mode 1))
+      (define-key vhdl-tools-vorg-mode-map [remap smartscan-symbol-go-forward]
+	#'vhdl-tools-vorg-smcn-next)
+      (define-key vhdl-tools-vorg-mode-map [remap smartscan-symbol-go-backward]
+	#'vhdl-tools-vorg-smcn-prev))
+    ;; mode bindings
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
+    (define-key vhdl-tools-vorg-mode-map [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
+    ;; make the hook local and complete it
+    (add-to-list (make-local-variable 'org-src-mode-hook)
+		 'vhdl-tools-vorg-src-edit-beautify)
+    ;; a bit of feedback
+    (when vhdl-tools-verbose
+      (message "VHDL Tools Vorg enabled."))))
+
+;; ;;;###autoload
+;; (define-minor-mode vhdl-tools-vorg-mode
+;;   "Utilities for navigating vhdl sources in vorg files.
+
+;; Key bindings:
+;; \\{vhdl-tools-map}"
+;;   :lighter " vOrg"
+;;   :init-value nil
+;;   :keymap vhdl-tools-vorg-map
+;;   :group 'vhdl-tools-vorg
+;;   :global nil
+;;   (require 'vc)
+;;   (require 'vhdl-tools)
+;;   (if vhdl-tools-vorg-mode
+;;       (progn
+;; 	(when (and vhdl-tools-remap-smartscan
+;; 		   (boundp 'smartscan-mode)
+;; 		   (smartscan-mode 1))
+;; 	  (define-key vhdl-tools-vorg-map [remap smartscan-symbol-go-forward]
+;; 	    #'vhdl-tools-vorg-smcn-next)
+;; 	  (define-key vhdl-tools-vorg-map [remap smartscan-symbol-go-backward]
+;; 	    #'vhdl-tools-vorg-smcn-prev))
+;; 	(when vhdl-tools-verbose
+;; 	  (message "VHDL Tools Vorg enabled."))
+;; 	(add-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))
+;;     ;; disable
+;;     (progn
+;;       (when vhdl-tools-verbose
+;; 	(message "VHDL Tools Vorg disabled."))
+;;       (remove-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))))
 
 (provide 'vhdl-tools)
 
