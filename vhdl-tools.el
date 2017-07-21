@@ -1105,6 +1105,9 @@ Key bindings:
 	(ggtags-mode 1)
 	;; inheritate prog mode hooks: vhdl-mode doesn't
 	(run-hook-with-args 'prog-mode-hook)
+	;; puts the reference comments around in the source
+	;; vhdl file out of sight
+	(vhdl-tools--cleanup-tangled)
         ;; a bit of feedback
 	(when vhdl-tools-verbose
 	  (message "VHDL Tools enabled.")))
