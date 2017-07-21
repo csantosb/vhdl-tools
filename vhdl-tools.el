@@ -675,11 +675,16 @@ code before if necessary, then jump into module."
 `ORGFILE' is the filename without extension."
   ;; (interactive (list (format "%s.org" (file-name-base))))
   (interactive (list (file-name-base)))
-  (let ((vhdlfile (vhdl-tools--get-vhdl-file orgfile)))
-    (if (or (file-newer-than-file-p (format "%s.org" orgfile) vhdlfile)
+  (let ((vhdlfile (vhdl-tools--get-vhdl-file orgfile))
+	(orgfilefull (format "%s.org" orgfile)))
+    (if (or (file-newer-than-file-p orgfilefull vhdlfile)
 	    (not (file-exists-p vhdlfile)))
 	;; do tangle
 	(let ((org-babel-tangle-uncomment-comments nil)
+	      ;; list of property/value pairs that can be inherited by any entry.
+	      (org-global-properties
+	       '(("header-args:vhdl" .
+		  ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (vhdl-tools-vorg-tangle-header-argument)")))
 	      ;; sets the "comments:link" header arg
 	      ;; possible as this is constant header arg, not dynamic with code block
 	      (org-babel-default-header-args
@@ -694,9 +699,9 @@ code before if necessary, then jump into module."
 	       (format "%s %s" vhdl-tools-vorg-tangle-comment-format-end
 		       org-babel-tangle-comment-format-end)))
 	  ;; tangle and beautify the tangled file only when there are tangled blocks
-	  (when (org-babel-tangle-file (format "%s.org" orgfile) vhdlfile "vhdl")
+	  (when (org-babel-tangle-file orgfilefull vhdlfile "vhdl")
 	    (when vhdl-tools-verbose
-	      (message (format "File %s.org tangled to %s." orgfile vhdlfile)))
+	      (message (format "File %s tangled to %s." orgfilefull vhdlfile)))
 	    ;; When tangling the org file, this code helps to auto set proper
 	    ;; indentation, whitespace fixup, alignment, and case fixing to entire
 	    ;; exported buffer
