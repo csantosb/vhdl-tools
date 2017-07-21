@@ -1157,37 +1157,6 @@ Key bindings:
     (when vhdl-tools-verbose
       (message "VHDL Tools Vorg enabled."))))
 
-;; ;;;###autoload
-;; (define-minor-mode vhdl-tools-vorg-mode
-;;   "Utilities for navigating vhdl sources in vorg files.
-
-;; Key bindings:
-;; \\{vhdl-tools-map}"
-;;   :lighter " vOrg"
-;;   :init-value nil
-;;   :keymap vhdl-tools-vorg-map
-;;   :group 'vhdl-tools-vorg
-;;   :global nil
-;;   (require 'vc)
-;;   (require 'vhdl-tools)
-;;   (if vhdl-tools-vorg-mode
-;;       (progn
-;; 	(when (and vhdl-tools-remap-smartscan
-;; 		   (boundp 'smartscan-mode)
-;; 		   (smartscan-mode 1))
-;; 	  (define-key vhdl-tools-vorg-map [remap smartscan-symbol-go-forward]
-;; 	    #'vhdl-tools-vorg-smcn-next)
-;; 	  (define-key vhdl-tools-vorg-map [remap smartscan-symbol-go-backward]
-;; 	    #'vhdl-tools-vorg-smcn-prev))
-;; 	(when vhdl-tools-verbose
-;; 	  (message "VHDL Tools Vorg enabled."))
-;; 	(add-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))
-;;     ;; disable
-;;     (progn
-;;       (when vhdl-tools-verbose
-;; 	(message "VHDL Tools Vorg disabled."))
-;;       (remove-hook 'org-src-mode-hook 'vhdl-tools-vorg-src-edit-beautify))))
-
 (provide 'vhdl-tools)
 
 ;;; vhdl-tools.el ends here
