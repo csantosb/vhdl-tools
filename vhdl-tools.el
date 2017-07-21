@@ -1145,6 +1145,13 @@ Key bindings:
     ;; make the hook local and complete it
     (add-to-list (make-local-variable 'org-src-mode-hook)
 		 'vhdl-tools-vorg-src-edit-beautify)
+    ;; This auto removes any mode line on top of the vorg file before exporting
+    (add-hook 'org-export-before-processing-hook
+	      (lambda (arg) (save-excursion
+			 (beginning-of-buffer)
+			 (re-search-forward "-\\*- mode: vhdl-tools-vorg -\\*-")
+			 (delete-region (point-min) (point))))
+	      nil t)
     ;; a bit of feedback
     (when vhdl-tools-verbose
       (message "VHDL Tools Vorg enabled."))))
