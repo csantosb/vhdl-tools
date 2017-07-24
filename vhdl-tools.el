@@ -625,7 +625,7 @@ When no symbol at point, move point to indentation."
 	    ;; use custom search
 	    (progn
 	      (find-file orgfile)
-	      (beginning-of-buffer)
+	      (goto-char (point-min))
 	      (search-forward myline nil t nil)))
 	  (org-content 5)
 	  (org-back-to-heading nil)
@@ -1148,7 +1148,7 @@ Key bindings:
     ;; This auto removes any mode line on top of the vorg file before exporting
     (add-hook 'org-export-before-processing-hook
 	      (lambda (arg) (save-excursion
-			 (beginning-of-buffer)
+			 (goto-char (point-min))
 			 (re-search-forward "-\\*- mode: vhdl-tools-vorg -\\*-")
 			 (delete-region (point-min) (point))))
 	      nil t)
