@@ -683,7 +683,7 @@ code before if necessary, then jump into module."
 	(let ((org-babel-tangle-uncomment-comments nil)
 	      ;; list of property/value pairs that can be inherited by any entry.
 	      (org-global-properties
-	       '(("header-args:vhdl" .
+	       '(("header-args:vhdl-tools" .
 		  ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (vhdl-tools-vorg-tangle-header-argument)")))
 	      ;; sets the "comments:link" header arg
 	      ;; possible as this is constant header arg, not dynamic with code block
