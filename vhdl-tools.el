@@ -699,7 +699,7 @@ code before if necessary, then jump into module."
 	       (format "%s %s" vhdl-tools-vorg-tangle-comment-format-end
 		       org-babel-tangle-comment-format-end)))
 	  ;; tangle and beautify the tangled file only when there are tangled blocks
-	  (when (org-babel-tangle-file orgfilefull vhdlfile "vhdl")
+	  (when (org-babel-tangle-file orgfilefull vhdlfile "vhdl-tools")
 	    (when vhdl-tools-verbose
 	      (message (format "File %s tangled to %s." orgfilefull vhdlfile)))
 	    ;; When tangling the org file, this code helps to auto set proper
