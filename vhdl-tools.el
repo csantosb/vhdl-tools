@@ -730,7 +730,7 @@ code before if necessary, then jump into module."
 (defun vhdl-tools-vorg-src-edit-beautify ()
   "To be added to `org-src-mode-hook' when `vorg' mode is active.
 Beautifies source code blocks before editing."
-  (when (string= major-mode "vhdl-mode")
+  (when (string= major-mode "vhdl-tools-mode")
     (require 'vhdl-mode)
     (vhdl-beautify-buffer)))
 
