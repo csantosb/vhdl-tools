@@ -716,16 +716,21 @@ With an argument `FORCE', force tangling regardless of files status.
 	(message (format "File %s NOT tangled to %s." orgfile vhdlfile))))))
 
 ;;;###autoload
-(defun vhdl-tools-vorg-tangle-all ()
-  "Tangle all `vorg' files in current dir to its corresponding `vhdl' file."
-  (interactive)
+(defun vhdl-tools-vorg-tangle-all (arg)
+  "Tangle all `vorg' files in current dir to its corresponding `vhdl' file.
+With a prefix argument `ARG' force tangling regardless of files status."
+  (interactive "P")
   (let ((vc-follow-symlinks nil)
 	(vhdl-tools-verbose t)
 	(org-global-properties
 	 '(("header-args:vhdl" . ":prologue (vhdl-tools-vorg-prologue-header-argument) :tangle (vhdl-tools-vorg-tangle-header-argument)"))))
     (loop for thisfile in (file-expand-wildcards "*.org") do
 	  (unless (string-match "readme" thisfile)
-	    (vhdl-tools-vorg-tangle (file-name-base thisfile))))))
+	    (vhdl-tools-vorg-tangle
+	     (file-name-base thisfile)
+	     (if (equal arg '(4))
+		 t
+	       nil))))))
 
 ;;;; VOrg source editing beautify
 
