@@ -670,14 +670,16 @@ code before if necessary, then jump into module."
 ;;;; VOrg tangle
 
 ;;;###autoload
-(defun vhdl-tools-vorg-tangle (orgfile)
+(defun vhdl-tools-vorg-tangle (orgfile &optional force)
   "Tangle a `vorg' `ORGFILE' file to its corresponding `vhdl' file.
-`ORGFILE' is the filename without extension."
+With an argument `FORCE', force tangling regardless of files status.
+`ORGFILE' must be the filename without extension."
   ;; (interactive (list (format "%s.org" (file-name-base))))
   (interactive (list (file-name-base)))
   (let ((vhdlfile (vhdl-tools--get-vhdl-file orgfile))
 	(orgfilefull (format "%s.org" orgfile)))
-    (if (or (file-newer-than-file-p orgfilefull vhdlfile)
+    (if (or force
+	    (file-newer-than-file-p orgfilefull vhdlfile)
 	    (not (file-exists-p vhdlfile)))
 	;; do tangle
 	(let ((org-babel-tangle-uncomment-comments nil)
