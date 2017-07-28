@@ -1038,28 +1038,6 @@ Key bindings:
 	    (format "%sGTAGS"
 		    (vc-find-root (buffer-file-name) ".git"))))
       (progn
-        ;; mode bindings
-	(define-key vhdl-tools-mode-map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
-	(define-key vhdl-tools-mode-map (kbd "C-c M-j") #'vhdl-tools-follow-links)
-	(define-key vhdl-tools-mode-map (kbd "C-c M-w") #'vhdl-tools-store-link)
-	(define-key vhdl-tools-mode-map (kbd "C-c M-y") #'vhdl-tools-paste-link)
-	(define-key vhdl-tools-mode-map (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
-	(define-key vhdl-tools-mode-map (kbd "C-c M-a") #'vhdl-tools-jump-first)
-	(define-key vhdl-tools-mode-map (kbd "C-c M-u") #'vhdl-tools-jump-upper)
-	(define-key vhdl-tools-mode-map (kbd "C-c M-^") #'vhdl-tools-vorg-jump-to-vorg)
-	(define-key vhdl-tools-mode-map (kbd "C-c C-n") #'vhdl-tools-headings-next)
-	(define-key vhdl-tools-mode-map (kbd "C-c C-p") #'vhdl-tools-headings-prev)
-	(define-key vhdl-tools-mode-map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
-	;; mode bindings: imenu related
-	(when (require 'imenu)
-	  (define-prefix-command 'vhdl-tools-imenu-map)
-	  (define-key vhdl-tools-mode-map (kbd "C-x c i") 'vhdl-tools-imenu-map)
-	  (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
-	  (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
-	  (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
-	  (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
-	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-imenu-headers)
-	  (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all))
         ;; optional smartscan remapping
 	(when (and (require 'outshine)
 		   vhdl-tools-use-outshine
@@ -1092,6 +1070,30 @@ Key bindings:
     (when vhdl-tools-verbose
       (message "VHDL Tools NOT enabled."))))
 
+;;;; Mode bindings
+
+(with-eval-after-load 'vhdl-tools
+  (define-key vhdl-tools-mode-map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
+  (define-key vhdl-tools-mode-map (kbd "C-c M-j") #'vhdl-tools-follow-links)
+  (define-key vhdl-tools-mode-map (kbd "C-c M-w") #'vhdl-tools-store-link)
+  (define-key vhdl-tools-mode-map (kbd "C-c M-y") #'vhdl-tools-paste-link)
+  (define-key vhdl-tools-mode-map (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
+  (define-key vhdl-tools-mode-map (kbd "C-c M-a") #'vhdl-tools-jump-first)
+  (define-key vhdl-tools-mode-map (kbd "C-c M-u") #'vhdl-tools-jump-upper)
+  (define-key vhdl-tools-mode-map (kbd "C-c M-^") #'vhdl-tools-vorg-jump-to-vorg)
+  (define-key vhdl-tools-mode-map (kbd "C-c C-n") #'vhdl-tools-headings-next)
+  (define-key vhdl-tools-mode-map (kbd "C-c C-p") #'vhdl-tools-headings-prev)
+  (define-key vhdl-tools-mode-map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
+  ;; mode bindings: imenu related
+  (when (require 'imenu)
+    (define-prefix-command 'vhdl-tools-imenu-map)
+    (define-key vhdl-tools-mode-map (kbd "C-x c i") 'vhdl-tools-imenu-map)
+    (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
+    (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
+    (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
+    (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
+    (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-imenu-headers)
+    (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all)))
 
 ;;; Derived Mode - vOrg
 
@@ -1111,14 +1113,6 @@ Key bindings:
 	#'vhdl-tools-vorg-smcn-next)
       (define-key vhdl-tools-vorg-mode-map [remap smartscan-symbol-go-backward]
 	#'vhdl-tools-vorg-smcn-prev))
-    ;; mode bindings
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
-    (define-key vhdl-tools-vorg-mode-map [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
     ;; make the hook local and complete it
     (add-to-list (make-local-variable 'org-src-mode-hook)
 		 'vhdl-tools-vorg-src-edit-beautify)
@@ -1132,6 +1126,16 @@ Key bindings:
     ;; a bit of feedback
     (when vhdl-tools-verbose
       (message "VHDL Tools Vorg enabled."))))
+
+;;;; Mode bindings
+(with-eval-after-load 'vhdl-tools
+  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
+  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
+  (define-key vhdl-tools-vorg-mode-map [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
+  (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
+  (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
+  (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
+  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify))
 
 (provide 'vhdl-tools)
 
