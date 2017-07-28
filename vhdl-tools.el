@@ -185,7 +185,6 @@ Needed to determine end of name."
 
 (defvar vhdl-tools--follow-links-tosearch nil)
 
-
 ;;; Helper
 
 ;; Ancillary functions
@@ -283,7 +282,6 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
 
 ;;; Misc
 
-;;;###autoload
 (defun vhdl-tools-beautify-region (arg)
   "Call beautify-region but auto activate region first.
 With a prefix ARG, fall back to previous behaviour."
@@ -295,12 +293,10 @@ With a prefix ARG, fall back to previous behaviour."
 	(mark-paragraph))
       (call-interactively 'vhdl-beautify-region))))
 
-
 ;;; Jumping
 
 ;;;; Get definition
 
-;;;###autoload
 (defun vhdl-tools-get-buffer (entity-or-package-name)
   "Return buffer where ENTITY-OR-PACKAGE-NAME is found."
   (save-excursion
@@ -453,7 +449,6 @@ displayed.  To go back to original vhdl file press."
 
 ;;;; Jump into module
 
-;;;###autoload
 (defun vhdl-tools-jump-into-module()
   "When point is at an instance, jump into the module.
 Additionally, move point to signal at point.
@@ -508,7 +503,6 @@ Declare a key-bind to get back to the original point."
 
 ;; Utility to jump to first time a symbol appears on file
 
-;;;###autoload
 (defun vhdl-tools-jump-first ()
   "Jump to first occurrence of symbol at point.
 When no symbol at point, move point to indentation."
@@ -529,7 +523,6 @@ When no symbol at point, move point to indentation."
 
 ;; Utility to jump to upper level
 
-;;;###autoload
 (defun vhdl-tools-jump-upper ()
   "Get to upper level module and move point to signal at point.
 When no symbol at point, move point to indentation."
@@ -566,14 +559,12 @@ When no symbol at point, move point to indentation."
 
 ;;;; Go Forward
 
-;;;###autoload
 (defun vhdl-tools-smcn-next()
   (interactive)
   (smartscan-symbol-go-forward)
   (vhdl-tools--fold)
   (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
-;;;###autoload
 (defun vhdl-tools-vorg-smcn-next()
   (interactive)
   (smartscan-symbol-go-forward)
@@ -582,14 +573,12 @@ When no symbol at point, move point to indentation."
 
 ;;;; Go Backwards
 
-;;;###autoload
 (defun vhdl-tools-smcn-prev()
   (interactive)
   (smartscan-symbol-go-backward)
   (vhdl-tools--fold)
   (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
-;;;###autoload
 (defun vhdl-tools-vorg-smcn-prev()
   (interactive)
   (smartscan-symbol-go-backward)
@@ -604,7 +593,6 @@ When no symbol at point, move point to indentation."
 
 ;;;; VHDL to VOrg
 
-;;;###autoload
 (defun vhdl-tools-vorg-jump-to-vorg()
   "From `vhdl' file, jump to same line in `vorg' file."
   (interactive)
@@ -637,7 +625,6 @@ When no symbol at point, move point to indentation."
 
 ;;;; VOrg to VHDL
 
-;;;###autoload
 (defun vhdl-tools-vorg-jump-from-vorg()
   "From `vorg' file, jump to same line in `vhdl' file, tangling the
 code before if necessary."
@@ -659,7 +646,6 @@ code before if necessary."
 
 ;;;; VOrg to module
 
-;;;###autoload
 (defun vhdl-tools-vorg-jump-from-vorg-into-module()
   "From `vorg' file, jump to same line in `vhdl' file, tangling the
 code before if necessary, then jump into module."
@@ -669,7 +655,6 @@ code before if necessary, then jump into module."
 
 ;;;; VOrg tangle
 
-;;;###autoload
 (defun vhdl-tools-vorg-tangle (orgfile &optional force)
   "Tangle a `vorg' `ORGFILE' file to its corresponding `vhdl' file.
 With an argument `FORCE', force tangling regardless of files status.
@@ -715,7 +700,6 @@ With an argument `FORCE', force tangling regardless of files status.
       (when vhdl-tools-verbose
 	(message (format "File %s NOT tangled to %s." orgfile vhdlfile))))))
 
-;;;###autoload
 (defun vhdl-tools-vorg-tangle-all (arg)
   "Tangle all `vorg' files in current dir to its corresponding `vhdl' file.
 With a prefix argument `ARG' force tangling regardless of files status."
@@ -743,7 +727,6 @@ Beautifies source code blocks before editing."
 
 ;;;; VOrg source block beautify
 
-;;;###autoload
 (defun vhdl-tools-vorg-src-block-beautify ()
   "Beautify of source code block at point."
   (interactive)
@@ -756,7 +739,6 @@ Beautifies source code blocks before editing."
 ;;;; Vorg Helper
 
 ;; Ancillary functions
-
 
 (defun vhdl-tools-vorg-get-current-line ()
   "Send current line avoiding any comments."
@@ -814,7 +796,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Link Store
 
-;;;###autoload
 (defun vhdl-tools-store-link ()
   "Store current line as a link."
   (interactive)
@@ -830,7 +811,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Link Paste
 
-;;;###autoload
 (defun vhdl-tools-paste-link()
   "Paste previous stored link."
   (interactive)
@@ -838,7 +818,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Link Follow
 
-;;;###autoload
 (defun vhdl-tools-follow-links(arg)
   "Follow links in the form of Tag:ToSearch'."
   (interactive "P")
@@ -892,7 +871,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Get to next
 
-;;;###autoload
 (defun vhdl-tools-headings-next()
   "Get to next heading."
   (interactive)
@@ -904,7 +882,6 @@ Beautifies source code blocks before editing."
   (vhdl-tools--fold)
   (vhdl-tools--post-jump-function))
 
-;;;###autoload
 (defun vhdl-tools-vorg-headings-next()
   "Get to next heading in vorg buffer."
   (interactive)
@@ -916,7 +893,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Get to previous
 
-;;;###autoload
 (defun vhdl-tools-headings-prev()
   "Get to previous heading."
   (interactive)
@@ -927,7 +903,6 @@ Beautifies source code blocks before editing."
   (vhdl-tools--fold)
   (vhdl-tools--post-jump-function))
 
-;;;###autoload
 (defun vhdl-tools-vorg-headings-prev()
   "Get to next heading in vorg buffer."
   (interactive)
@@ -942,7 +917,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Standard Imenu
 
-;;;###autoload
 (defun vhdl-tools-imenu()
   (interactive)
   (let ((imenu-generic-expression vhdl-imenu-generic-expression))
@@ -954,7 +928,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Instances
 
-;;;###autoload
 (defun vhdl-tools-imenu-instance()
   (interactive)
   (let ((imenu-generic-expression vhdl-imenu-generic-expression)
@@ -968,7 +941,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Processes
 
-;;;###autoload
 (defun vhdl-tools-imenu-processes()
   (interactive)
   (let ((imenu-generic-expression vhdl-imenu-generic-expression)
@@ -982,7 +954,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Components
 
-;;;###autoload
 (defun vhdl-tools-imenu-component()
   (interactive)
   (let ((imenu-generic-expression vhdl-imenu-generic-expression)
@@ -996,7 +967,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Headings
 
-;;;###autoload
 (defun vhdl-tools-imenu-headers()
   (interactive)
   (let ((imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1)))
@@ -1010,7 +980,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Outshine - imenu
 
-;;;###autoload
 (defun vhdl-tools-outshine-imenu-headers(arg)
   (interactive "P")
   (if (equal arg '(4))
@@ -1021,7 +990,6 @@ Beautifies source code blocks before editing."
 
 ;;;; All
 
-;;;###autoload
 (defun vhdl-tools-imenu-all()
   "In a vhdl buffer, call `helm-semantic-or-imenu', show all items.
   Processes, instances and doc headers are shown in order of appearance."
@@ -1050,8 +1018,10 @@ Beautifies source code blocks before editing."
     (call-interactively 'helm-semantic-or-imenu)
     (vhdl-tools--fold)))
 
-
 ;;; Derived Mode - Tools
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.vhd" . vhdl-tools-mode))
 
 ;;;###autoload
 (define-derived-mode vhdl-tools-mode vhdl-mode "vtool"
