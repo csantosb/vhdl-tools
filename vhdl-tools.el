@@ -600,8 +600,13 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-vorg-jump-to-vorg()
   "From `vhdl' file, jump to same line in `vorg' file."
   (interactive)
-  (let ((orgfile (vhdl-tools--get-vorg-file (file-name-base)))
-	(myline (vhdl-tools-vorg-get-current-line)))
+  (let* ((orgfile (vhdl-tools--get-vorg-file (file-name-base)))
+	 ;; store current line
+	 (myline_tmp
+	  (replace-regexp-in-string "+" "\\\\+"
+				    (vhdl-tools-vorg-get-current-line)))
+	 (myline_tmp2 (replace-regexp-in-string " +" " +" myline_tmp))
+	 (myline (format "^ *%s" myline_tmp2)))
     (if (file-exists-p orgfile)
 	(progn
 	  (if vhdl-tools-vorg-tangle-comments-link
@@ -618,7 +623,7 @@ When no symbol at point, move point to indentation."
 	    (progn
 	      (find-file orgfile)
 	      (goto-char (point-min))
-	      (search-forward myline nil t nil)))
+	      (re-search-forward myline nil t nil)))
 	  (org-content 5)
 	  (org-back-to-heading nil)
 	  (org-show-subtree)
@@ -648,7 +653,7 @@ code before if necessary."
 	(outline-next-heading))
       (when (re-search-forward myline nil t nil)
 	(vhdl-tools--fold)
-	(search-forward myline nil t nil)
+	(re-search-forward myline nil t nil)
 	(recenter-top-bottom vhdl-tools-recenter-nb-lines)
 	(back-to-indentation)))))
 
