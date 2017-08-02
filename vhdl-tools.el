@@ -627,7 +627,7 @@ When no symbol at point, move point to indentation."
 	  (org-content 5)
 	  (org-back-to-heading nil)
 	  (org-show-subtree)
-	  (search-forward myline nil t nil)
+	  (re-search-forward myline nil t nil)
 	  (recenter-top-bottom vhdl-tools-recenter-nb-lines)
 	  (back-to-indentation))
       (message (format "no %s.org file exists" orgfile)))))
