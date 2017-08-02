@@ -562,12 +562,14 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-smcn-next()
   (interactive)
   (smartscan-symbol-go-forward)
+  (backward-char 1)
   (vhdl-tools--fold)
   (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
 (defun vhdl-tools-vorg-smcn-next()
   (interactive)
   (smartscan-symbol-go-forward)
+  (backward-char 1)
   (vhdl-tools--fold)
   (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
@@ -576,12 +578,14 @@ When no symbol at point, move point to indentation."
 (defun vhdl-tools-smcn-prev()
   (interactive)
   (smartscan-symbol-go-backward)
+  (forward-char 1)
   (vhdl-tools--fold)
   (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
 (defun vhdl-tools-vorg-smcn-prev()
   (interactive)
   (smartscan-symbol-go-backward)
+  (forward-char 1)
   (vhdl-tools--fold)
   (recenter-top-bottom vhdl-tools-recenter-nb-lines))
 
