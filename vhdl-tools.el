@@ -630,15 +630,19 @@ When no symbol at point, move point to indentation."
 code before if necessary."
   (interactive)
   (call-interactively 'vhdl-tools-vorg-tangle)
-  (let ((vhdlfile (vhdl-tools--get-vhdl-file (file-name-base)))
-	;; store current line
-	(myline (vhdl-tools-vorg-get-current-line)))
+  (let* ((vhdlfile (vhdl-tools--get-vhdl-file (file-name-base)))
+	 ;; store current line
+	 (myline_tmp
+	  (replace-regexp-in-string "+" "\\\\+"
+				    (vhdl-tools-vorg-get-current-line)))
+	 (myline_tmp2 (replace-regexp-in-string " +" " +" myline_tmp))
+	 (myline (format "^ *%s" myline_tmp2)))
     (when (file-exists-p vhdlfile)
       (find-file vhdlfile)
       (goto-char (point-min))
       (when vhdl-tools-use-outshine
 	(outline-next-heading))
-      (when (search-forward myline nil t nil)
+      (when (re-search-forward myline nil t nil)
 	(vhdl-tools--fold)
 	(search-forward myline nil t nil)
 	(recenter-top-bottom vhdl-tools-recenter-nb-lines)
