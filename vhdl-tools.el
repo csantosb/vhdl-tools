@@ -185,6 +185,9 @@ Needed to determine end of name."
 
 (defvar vhdl-tools--follow-links-tosearch nil)
 
+(defvar vhdl-tools--currently-publishing nil
+  "To be set to t when publishing to avoid problems.")
+
 ;;; Helper
 
 ;; Ancillary functions
@@ -729,12 +732,22 @@ With a prefix argument `ARG' force tangling regardless of files status."
 		 t
 	       nil))))))
 
+;;;; VOrg source block beautify
+
+(defun vhdl-tools-vorg-publish ()
+  "Publish project."
+  (interactive)
+  (let ((vhdl-tools--currently-publishing t)
+	(current-prefix-arg '(4)))
+    (call-interactively 'org-publish)))
+
 ;;;; VOrg source editing beautify
 
 (defun vhdl-tools-vorg-src-edit-beautify ()
   "To be added to `org-src-mode-hook' when `vorg' mode is active.
 Beautifies source code blocks before editing."
-  (when (string= major-mode "vhdl-tools-mode")
+  (when (and (string= major-mode "vhdl-tools-mode")
+	     (not vhdl-tools--currently-publishing))
     (require 'vhdl-mode)
     (vhdl-beautify-buffer)))
 
@@ -1148,7 +1161,8 @@ Key bindings:
   (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
   (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
   (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
-  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify))
+  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
+  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-P") #'vhdl-tools-vorg-publish))
 
 (provide 'vhdl-tools)
 
