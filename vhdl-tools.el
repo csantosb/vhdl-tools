@@ -798,7 +798,7 @@ Beautifies source code blocks before editing."
   (save-excursion
     (org-back-to-heading nil)
     (let ((heading (car (cdr (org-element-headline-parser (point))))))
-      (format "\n-- %s %s\n\n"
+      (format "\n-- %s %s\n"
 	      (if (> (plist-get heading ':level) 1)
 		  (make-string (- (plist-get heading ':level) 1)
 			       ?*)
