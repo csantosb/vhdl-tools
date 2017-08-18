@@ -731,6 +731,21 @@ With a prefix argument `ARG' force tangling regardless of files status."
 
 ;;;; Vorg detangle
 
+;; (defun vhdl-tools-vorg-detangle ()
+;;   "Detangle current `vorg' file to its corresponding `vhdl' file."
+;;   (interactive)
+;;   (let ((old-buffer (current-buffer)))
+;;       ;; TODO: replace `flet', obsolete
+;;       (flet ((org-id-update-id-locations (&optional files silent) nil))
+;; 	(org-babel-with-temp-filebuffer (buffer-file-name)
+;;           (goto-char (point-min))
+;;           (delete-matching-lines "^--\s\\*+\s.*$")
+;; 	  (delete-matching-lines "^$")
+;; 	  (org-babel-detangle)
+;; 	  (save-buffer))))
+;;   (vhdl-tools-vorg-jump-to-vorg)
+;;   (save-buffer))
+
 (defun vhdl-tools-vorg-detangle ()
   "Detangle current `vorg' file to its corresponding `vhdl' file."
   (interactive)
