@@ -614,13 +614,11 @@ When no symbol at point, move point to indentation."
 	(progn
 	  (if vhdl-tools-vorg-tangle-comments-link
 	      ;; use org feature
-	      (let (;; I avoid scanning too much files: I already know where the
-		    ;; related org file is.
-		    ;; TODO: still too many files to scan ...
-		    (org-id-search-archives nil)
-		    (org-id-locations nil)
-		    (org-agenda-files nil)
-		    (org-id-extra-files nil))
+	      ;; I disable `org-id-update-id-locations' to speed-up things
+	      ;; TODO: replace `flet', obsolete
+	      (flet ((org-id-update-id-locations
+		      (&optional files silent)
+		      nil))
 		(org-babel-tangle-jump-to-org))
 	    ;; use custom search
 	    (progn
