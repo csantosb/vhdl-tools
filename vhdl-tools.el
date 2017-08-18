@@ -615,7 +615,7 @@ When no symbol at point, move point to indentation."
 	  (if vhdl-tools-vorg-tangle-comments-link
 	      ;; use org feature
 	      ;; I disable `org-id-update-id-locations' to speed-up things
-	      ;; TODO: replace `flet', obsolete
+              ;; TODO: replace `flet', obsolete
 	      (flet ((org-id-update-id-locations
 		      (&optional files silent)
 		      nil))
@@ -737,6 +737,7 @@ With a prefix argument `ARG' force tangling regardless of files status."
   (interactive)
   (save-window-excursion
     (let ((old-buffer (current-buffer)))
+      ;; TODO: replace `flet', obsolete
       (flet ((org-id-update-id-locations (&optional files silent) nil))
 	(with-temp-buffer
 	  (insert-buffer-substring old-buffer)
