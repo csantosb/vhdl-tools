@@ -681,7 +681,13 @@ With an argument `FORCE', force tangling regardless of files status.
 	    (file-newer-than-file-p orgfilefull vhdlfile)
 	    (not (file-exists-p vhdlfile)))
 	;; do tangle
-	(let ((org-babel-tangle-uncomment-comments nil)
+	(let (;; When tangling the org file, this code helps to auto set proper
+	      ;; indentation, whitespace fixup, alignment, and case fixing to
+	      ;; entire exported buffer
+	      (org-babel-post-tangle-hook (lambda()
+					    (vhdl-beautify-buffer)
+					    (save-buffer)))
+	      (org-babel-tangle-uncomment-comments nil)
 	      ;; list of property/value pairs that can be inherited by any entry.
 	      (org-global-properties
 	       '(("header-args:vhdl-tools" .
@@ -702,14 +708,7 @@ With an argument `FORCE', force tangling regardless of files status.
 	  ;; tangle and beautify the tangled file only when there are tangled blocks
 	  (when (org-babel-tangle-file orgfilefull vhdlfile "vhdl-tools")
 	    (when vhdl-tools-verbose
-	      (message (format "File %s tangled to %s." orgfilefull vhdlfile)))
-	    ;; When tangling the org file, this code helps to auto set proper
-	    ;; indentation, whitespace fixup, alignment, and case fixing to entire
-	    ;; exported buffer
-	    (org-babel-with-temp-filebuffer vhdlfile
-	      (vhdl-beautify-buffer)
-	      (vhdl-beautify-buffer)
-	      (save-buffer))))
+	      (message (format "File %s tangled to %s." orgfilefull vhdlfile)))))
       ;; don't tangle
       (when vhdl-tools-verbose
 	(message (format "File %s NOT tangled to %s." orgfile vhdlfile))))))
