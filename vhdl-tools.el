@@ -732,9 +732,9 @@ With a prefix argument `ARG' force tangling regardless of files status."
 
 ;;;; Vorg detangle
 
-(defun vhdl-tools-vorg-detangle (orgfile)
-  "Detangle a `vorg' `ORGFILE' file to its corresponding `vhdl' file."
-  (interactive (list (file-name-base)))
+(defun vhdl-tools-vorg-detangle ()
+  "Detangle current `vorg' file to its corresponding `vhdl' file."
+  (interactive)
   (save-window-excursion
     (let ((old-buffer (current-buffer)))
       (flet ((org-id-update-id-locations (&optional files silent) nil))
@@ -746,6 +746,7 @@ With a prefix argument `ARG' force tangling regardless of files status."
 	  (org-babel-detangle)))))
   (vhdl-tools-vorg-jump-to-vorg)
   (save-buffer))
+
 ;;;; VOrg source block beautify
 
 (defun vhdl-tools-vorg-publish ()
