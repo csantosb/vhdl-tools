@@ -1036,13 +1036,15 @@ Beautifies source code blocks before editing."
 
 ;;;; Outshine - imenu
 
-(defun vhdl-tools-outshine-imenu-headers(arg)
-  (interactive "P")
-  (if (equal arg '(4))
-      (outshine-imenu nil)
-    (vhdl-tools-imenu-headers))
+(defun vhdl-tools-outshine-imenu-headers()
+  (interactive)
+  (let ((helm-split-window-default-side
+	 (if (> (window-width) 100)
+	     'right
+	   'below )))
+    (helm-navi-headings)
   (vhdl-tools--fold)
-  (vhdl-tools--post-jump-function))
+    (vhdl-tools--post-jump-function)))
 
 ;;;; All
 
