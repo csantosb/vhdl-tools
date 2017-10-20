@@ -1111,7 +1111,8 @@ Key bindings:
 	  ;; (outshine-hook-function)
 	  ;; custom outline regexp
 	  (setq-local outline-regexp vhdl-tools-outline-regexp)
-	  (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-outshine-imenu-headers))
+	  (define-key vhdl-tools-imenu-map (kbd "h")
+	    #'vhdl-tools-outshine-imenu-headers))
 	;; required
 	(ggtags-mode 1)
 	;; inheritate prog mode hooks: vhdl-mode doesn't
@@ -1152,7 +1153,7 @@ Key bindings:
     (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
     (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
     (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
-    (define-key vhdl-tools-imenu-map (kbd "SPC") #'vhdl-tools-imenu-headers)
+    (define-key vhdl-tools-imenu-map (kbd "h") #'vhdl-tools-imenu-headers)
     (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all)))
 
 ;;; Derived Mode - vOrg
