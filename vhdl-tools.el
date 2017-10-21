@@ -197,20 +197,19 @@ Needed to determine end of name."
 (defun vhdl-tools--cleanup-tangled ()
   "Make invisible reference comments after tangling."
   (interactive)
-  (when vhdl-tools-vorg-tangle-comments-link
-    (save-excursion
-      (when vhdl-tools-use-outshine
-	(outline-show-all)
-	(goto-char (point-min)))
-      (while (re-search-forward (format "^-- %s.*$" vhdl-tools-vorg-tangle-comment-format-beg) nil t nil)
-	(let ((endp (point))
-	      (begp (progn (beginning-of-line) (point))))
-	  (overlay-put (make-overlay begp endp)
-		       'invisible
-		       (intern "vhdl-tangled")))
-	(forward-line))
-      (add-to-invisibility-spec 'vhdl-tangled)
-      (vhdl-tools--fold))))
+  (save-excursion
+    (when vhdl-tools-use-outshine
+      (outline-show-all)
+      (goto-char (point-min)))
+    (while (re-search-forward (format "^-- %s.*$" vhdl-tools-vorg-tangle-comment-format-beg) nil t nil)
+      (let ((endp (point))
+	    (begp (progn (beginning-of-line) (point))))
+	(overlay-put (make-overlay begp endp)
+		     'invisible
+		     (intern "vhdl-tangled")))
+      (forward-line))
+    (add-to-invisibility-spec 'vhdl-tangled)
+    (vhdl-tools--fold)))
 
 (defun vhdl-tools--fold ()
   "Fold to current heading level."
@@ -1123,7 +1122,8 @@ Key bindings:
 	(run-hook-with-args 'prog-mode-hook)
 	;; puts the reference comments around in the source
 	;; vhdl file out of sight
-	(vhdl-tools--cleanup-tangled)
+	(when vhdl-tools-vorg-tangle-comments-link
+	  (vhdl-tools--cleanup-tangled))
         ;; a bit of feedback
 	(when vhdl-tools-verbose
 	  (message "VHDL Tools enabled.")))
