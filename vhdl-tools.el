@@ -1044,7 +1044,7 @@ Beautifies source code blocks before editing."
 	     'right
 	   'below )))
     (helm-navi-headings)
-  (vhdl-tools--fold)
+    (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
 
 ;;;; All
