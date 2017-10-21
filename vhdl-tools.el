@@ -1178,9 +1178,9 @@ Key bindings:
 	#'vhdl-tools-vorg-smcn-next)
       (define-key vhdl-tools-vorg-mode-map [remap smartscan-symbol-go-backward]
 	#'vhdl-tools-vorg-smcn-prev))
-    ;; make the hook local and complete it
+    ;; make the hook local and add defun
     (add-to-list (make-local-variable 'org-src-mode-hook)
-		 'vhdl-tools-vorg-src-edit-beautify)
+    		 'vhdl-tools-vorg-src-edit-beautify)
     ;; This auto removes any mode line on top of the vorg file before exporting
     (add-hook 'org-export-before-processing-hook
 	      (lambda (arg) (save-excursion
