@@ -1093,6 +1093,7 @@ Key bindings:
   (if (and (require 'ggtags)
 	   (require 'vc)
 	   (buffer-file-name)
+	   (executable-find "global")
 	   (file-exists-p
 	    (format "%sGTAGS"
 		    (vc-find-root (buffer-file-name) ".git"))))
