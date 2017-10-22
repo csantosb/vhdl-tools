@@ -1125,6 +1125,25 @@ Key bindings:
 	(when vhdl-tools-vorg-tangle-comments-link
 	  (vhdl-tools--cleanup-tangled))
         ;; a bit of feedback
+
+	;; I need to redefine the variable `vhdl-align-alist' as it expects a
+	;; hard-coded vhdl-mode major mode. I am just replacing here `vhdl-mode' by
+	;; `vhdl-tools-mode'.
+	(setq-local vhdl-align-alist
+		    (reverse
+		     (let ((orig-alist (copy-alist vhdl-align-alist))
+			   (new-vhdl-align-alist nil))
+		       ;;(message (format "\n\n" ))
+		       (while orig-alist
+			 (let* ((element (nth 0 orig-alist))
+				(element-content (cons 'vhdl-tools-mode
+						       (cdr element))))
+			   (setq new-vhdl-align-alist
+				 (push element-content new-vhdl-align-alist))
+			   (setq orig-alist (cdr orig-alist))))
+		       new-vhdl-align-alist)))
+
+	;; a bit of feedback
 	(when vhdl-tools-verbose
 	  (message "VHDL Tools enabled.")))
     ;; a bit of feedback
