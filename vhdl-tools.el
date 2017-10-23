@@ -829,14 +829,15 @@ Beautifies source code blocks before editing."
 (defun vhdl-tools-vorg-prologue-header-argument ()
   "To be used as def argument to `prologue' in source block header."
   (save-excursion
-    (org-back-to-heading nil)
-    (let ((heading (car (cdr (org-element-headline-parser (point))))))
-      (format "\n-- %s %s\n"
-	      (if (> (plist-get heading ':level) 1)
-		  (make-string (- (plist-get heading ':level) 1)
-			       ?*)
-		(make-string 1 ?*))
-	      (plist-get heading ':raw-value)))))
+    (let ((debug-on-error nil))
+      (when (org-back-to-heading nil)
+	(let ((heading (car (cdr (org-element-headline-parser (point))))))
+	  (format "\n-- %s %s\n"
+		  (if (> (plist-get heading ':level) 1)
+		      (make-string (- (plist-get heading ':level) 1)
+				   ?*)
+		    (make-string 1 ?*))
+		  (plist-get heading ':raw-value)))))))
 
 ;;; Links
 ;;
