@@ -551,11 +551,16 @@ When no symbol at point, move point to indentation."
 			;; (insert (format "^.* : \\(entity work.\\)*%s$" ,(vhdl-tools--get-name)))
 			(insert (format "^.*: %s$ vhd" ,(vhdl-tools--get-name))))
 		    (call-interactively 'helm-grep-do-git-grep (vc-find-root (buffer-file-name) ".git") nil))))
-      ;; search, when nil, do nothing
+      ;; search except if nil
       (when vhdl-tools-thing
-	(search-forward-regexp (format "%s " vhdl-tools-thing) nil t)
-	(vhdl-tools--fold)
-	(vhdl-tools--post-jump-function)))))
+	;; limit the search to end of paragraph (end of instance)
+	(let ((max-point (save-excursion
+			   (end-of-paragraph-text)
+			   (point))))
+	  (search-forward-regexp
+	   (format "%s " vhdl-tools-thing) max-point t)
+	  (vhdl-tools--fold)
+	  (vhdl-tools--post-jump-function))))))
 
 ;;; SmartScan
 
