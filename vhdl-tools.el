@@ -538,9 +538,11 @@ When no symbol at point, move point to indentation."
   (let ((vhdl-tools-thing (vhdl-tools--get-name)))
     (vhdl-tools--push-marker)
     (save-excursion
-      ;; get back to entity
-      (search-backward-regexp "^entity")
-      (forward-word)
+      ;; first, try to search forward
+      (when (not (search-forward-regexp "^entity" nil t))
+	;; if not found, try to search backward
+	(search-backward-regexp "^entity")
+	(forward-word))
       (forward-char 2)
       ;; Jump by searching with prefilling minubuffer
       (funcall `(lambda ()
