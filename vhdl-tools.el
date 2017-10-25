@@ -179,6 +179,20 @@ Needed to determine end of name."
 
 ;;;; Internal Variables
 
+(defconst vhdl-tools-vorg-vhdl-align-alist
+  (reverse
+   (let ((orig-alist (copy-alist vhdl-align-alist))
+	 (new-vhdl-align-alist nil))
+     ;;(message (format "\n\n" ))
+     (while orig-alist
+       (let* ((element (nth 0 orig-alist))
+	      (element-content (cons 'vhdl-tools-mode
+				     (cdr element))))
+	 (setq new-vhdl-align-alist
+	       (push element-content new-vhdl-align-alist))
+	 (setq orig-alist (cdr orig-alist))))
+     new-vhdl-align-alist)))
+
 (defvar vhdl-tools--jump-into-module-name nil)
 
 (defvar vhdl-tools--store-link-link nil)
@@ -1090,6 +1104,11 @@ Beautifies source code blocks before editing."
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.vhd" . vhdl-tools-mode))
 
+;; I need to redefine the variable `vhdl-align-alist' as it expects a
+;; hard-coded vhdl-mode major mode. I am just replacing here `vhdl-mode' by
+;; `vhdl-tools-mode'.
+(setq vhdl-align-alist vhdl-tools-vorg-vhdl-align-alist)
+
 ;;;###autoload
 (define-derived-mode vhdl-tools-mode vhdl-mode "vtool"
   "Utilities for navigating vhdl sources.
@@ -1138,23 +1157,6 @@ Key bindings:
 	;; vhdl file out of sight
 	(when vhdl-tools-vorg-tangle-comments-link
 	  (vhdl-tools--cleanup-tangled))
-
-	;; I need to redefine the variable `vhdl-align-alist' as it expects a
-	;; hard-coded vhdl-mode major mode. I am just replacing here `vhdl-mode' by
-	;; `vhdl-tools-mode'.
-	(setq-local vhdl-align-alist
-		    (reverse
-		     (let ((orig-alist (copy-alist vhdl-align-alist))
-			   (new-vhdl-align-alist nil))
-		       ;;(message (format "\n\n" ))
-		       (while orig-alist
-			 (let* ((element (nth 0 orig-alist))
-				(element-content (cons 'vhdl-tools-mode
-						       (cdr element))))
-			   (setq new-vhdl-align-alist
-				 (push element-content new-vhdl-align-alist))
-			   (setq orig-alist (cdr orig-alist))))
-		       new-vhdl-align-alist)))
 
 	;; a bit of feedback
 	(when vhdl-tools-verbose
