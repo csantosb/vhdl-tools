@@ -637,10 +637,8 @@ When no symbol at point, move point to indentation."
 	  (if vhdl-tools-vorg-tangle-comments-link
 	      ;; use org feature
 	      ;; I disable `org-id-update-id-locations' to speed-up things
-              ;; TODO: replace `flet', obsolete
-	      (flet ((org-id-update-id-locations
-		      (&optional files silent)
-		      nil))
+	      (cl-letf (((symbol-function 'org-id-update-id-locations)
+			 (lambda (&optional files silent) nil)))
 		(org-babel-tangle-jump-to-org))
 	    ;; use custom search
 	    (progn
@@ -757,14 +755,14 @@ With a prefix argument `ARG' force tangling regardless of files status."
 ;;   "Detangle current `vorg' file to its corresponding `vhdl' file."
 ;;   (interactive)
 ;;   (let ((old-buffer (current-buffer)))
-;;       ;; TODO: replace `flet', obsolete
-;;       (flet ((org-id-update-id-locations (&optional files silent) nil))
-;; 	(org-babel-with-temp-filebuffer (buffer-file-name)
-;;           (goto-char (point-min))
-;;           (delete-matching-lines "^--\s\\*+\s.*$")
-;; 	  (delete-matching-lines "^$")
-;; 	  (org-babel-detangle)
-;; 	  (save-buffer))))
+;;     (cl-letf (((symbol-function 'org-id-update-id-locations)
+;; 	       (lambda (&optional files silent) nil)))
+;;       (org-babel-with-temp-filebuffer (buffer-file-name)
+;; 	(goto-char (point-min))
+;; 	(delete-matching-lines "^--\s\\*+\s.*$")
+;; 	(delete-matching-lines "^$")
+;; 	(org-babel-detangle)
+;; 	(save-buffer))))
 ;;   (vhdl-tools-vorg-jump-to-vorg)
 ;;   (save-buffer))
 
@@ -773,8 +771,8 @@ With a prefix argument `ARG' force tangling regardless of files status."
   (interactive)
   (save-window-excursion
     (let ((old-buffer (current-buffer)))
-      ;; TODO: replace `flet', obsolete
-      (flet ((org-id-update-id-locations (&optional files silent) nil))
+      (cl-letf (((symbol-function 'org-id-update-id-locations)
+		 (lambda (&optional files silent) nil)))
 	(with-temp-buffer
 	  (insert-buffer-substring old-buffer)
 	  (goto-char (point-min))
