@@ -3,6 +3,7 @@
 :VISIBILITY: all
 :END:
 
+- [[#58][5.8]]
 - [[#57][5.7]]
   - [[#relative-feature-implement][Relative feature: implement]]
   - [[#remove-ugly-line-from-vorg-files][Remove ugly line from =vOrg= files]]
@@ -18,6 +19,20 @@
   - [[#document-publish-a-project][Document publish a project]]
   - [[#document-new-major-modes][Document new major modes]]
 
+* 6.0
+
+** TODO Jump from vorg to vorg
+
+Similarly as jumping from vhdl to vhdl
+
+
+* 5.8
+
+** TODO Better jump to src after tangling
+
+Currently only a search for the line at point. If several identical
+lines, this won’t work.
+
 * 5.7
 
 ** DONE Relative feature: implement
@@ -25,7 +40,7 @@ CLOSED: [2017-07-21 ven. 15:52]
 
 - CLOSING NOTE
 
-  Done starting from this [[orgit-rev:~/Projects/perso/vhdl-tools/::c48c3a1][commit]]
+  Done starting from this [[orgit-rev:~/Projects/perso/vhdl-tools/::c48c3a1][commilt]]
   ----------------------------------------------------------------
 
 Give a chance to store source code in different folders.
@@ -55,36 +70,3 @@ Try something like
 #+end_src
 
 Unfourtunately, this makes the same header appear on top of all blocks.
-
-** TODO Better jump to src after tangling
-
-Currently only a search for the line at point. If several identical
-lines, this won’t work.
-
-** TODO Jump from vorg to vorg
-
-Similarly as jumping from vhdl to vhdl
-
-** TODO Include here imenu related functions
-
-** TODO This
-
-In vhdl-tools--prologue-header-argument, replace (org-back-to-heading nil) by
-something to detect i previous element is a header or not; proceed only if its a header
-
-** TODO vhdl-tools-vorg-src-block-beautify
-
-vhdl-tools-vorg-src-block-beautify, as a command depending on context,
-similar to the article in endless parenthèses
-
-** TODO Use 'org-babel-post-tangle-hook’
-
-** TODO Document relative feature
-
-** TODO Document verbose variable
-
-** TODO Document ’vhdl-tools-vorg-jump-from-vorg-into-module’
-
-** TODO Document publish a project
-
-** TODO Document new major modes
