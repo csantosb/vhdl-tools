@@ -549,7 +549,8 @@ When no symbol at point, move point to indentation."
   ;; when no symbol at point, move forward to next symbol
   (when (not (vhdl-tools--get-name))
     (back-to-indentation))
-  (let ((vhdl-tools-thing (vhdl-tools--get-name)))
+  (let ((vhdl-tools-thing (vhdl-tools--get-name))
+	(helm-execute-action-at-once-if-one t))
     (vhdl-tools--push-marker)
     (save-excursion
       ;; first, try to search forward
