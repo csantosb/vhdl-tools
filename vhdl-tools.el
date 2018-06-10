@@ -12,7 +12,7 @@
 ;; Description: Utilities for navigating vhdl sources.
 ;; URL: https://github.com/csantosb/vhdl-tools/wiki
 ;; Compatibility: GNU Emacs >= 25.2
-;; Version: 5.8
+;; Version: 5.9
 ;; Package-Requires: ((ggtags "0.8.12") (emacs "26.1") (outshine "2.0") (helm "2.9.6"))
 
 ;;; License:
@@ -584,8 +584,7 @@ When no symbol at point, move point to indentation."
 ;;;; VOrg to VHDL
 
 (defun vhdl-tools-vorg-jump-from-vorg()
-  "From `vorg' file, jump to same line in `vhdl' file, tangling the
-code before if necessary."
+  "From `vorg' file, jump to `vhdl' file, tangling before if necessary."
   (interactive)
   (call-interactively 'vhdl-tools-vorg-tangle)
   (let* ((vhdlfile (vhdl-tools--get-vhdl-file (file-name-base)))
@@ -609,8 +608,8 @@ code before if necessary."
 ;;;; VOrg to module
 
 (defun vhdl-tools-vorg-jump-from-vorg-into-module()
-  "From `vorg' file, jump to same line in `vhdl' file, tangling the
-code before if necessary, then jump into module."
+  "From `vorg' file, jump to same line in `vhdl' file.
+Tangle the code before if necessary, then jump into module."
   (interactive)
   (vhdl-tools-vorg-jump-from-vorg)
   (vhdl-tools-jump-into-module))
@@ -923,6 +922,7 @@ Beautifies source code blocks before editing."
 ;;;; Standard Imenu
 
 (defun vhdl-tools-imenu()
+  "Bla."
   (interactive)
   (let ((imenu-generic-expression vhdl-imenu-generic-expression))
     (set-buffer-modified-p t)
@@ -934,6 +934,7 @@ Beautifies source code blocks before editing."
 ;;;; Instances
 
 (defun vhdl-tools-imenu-instance()
+  "."
   (interactive)
   (let ((imenu-generic-expression vhdl-imenu-generic-expression)
 	(helm-autoresize-max-height 100)
@@ -947,6 +948,7 @@ Beautifies source code blocks before editing."
 ;;;; Processes
 
 (defun vhdl-tools-imenu-processes()
+  "."
   (interactive)
   (let ((imenu-generic-expression vhdl-imenu-generic-expression)
 	(helm-autoresize-max-height 100)
@@ -960,6 +962,7 @@ Beautifies source code blocks before editing."
 ;;;; Components
 
 (defun vhdl-tools-imenu-component()
+  "."
   (interactive)
   (let ((imenu-generic-expression vhdl-imenu-generic-expression)
 	(helm-autoresize-max-height 100)
@@ -973,6 +976,7 @@ Beautifies source code blocks before editing."
 ;;;; Headings
 
 (defun vhdl-tools-imenu-headers()
+  "."
   (interactive)
   (let ((imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1)))
 	(helm-autoresize-max-height 100)
@@ -986,6 +990,7 @@ Beautifies source code blocks before editing."
 ;;;; Outshine - imenu
 
 (defun vhdl-tools-outshine-imenu-headers()
+  "."
   (interactive)
   (let ((helm-split-window-default-side
 	 (if (> (window-width) 100)
@@ -999,7 +1004,7 @@ Beautifies source code blocks before editing."
 
 (defun vhdl-tools-imenu-all()
   "In a vhdl buffer, call `helm-semantic-or-imenu', show all items.
-  Processes, instances and doc headers are shown in order of appearance."
+Processes, instances and doc headers are shown in order of appearance."
   (interactive)
   (let ((imenu-generic-expression
 	 `(;; process
