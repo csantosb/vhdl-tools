@@ -40,8 +40,6 @@
 ;; `imenu' and `outshine' features to ease navigating vhdl
 ;; sources.  Additionally, it provides `vOrg' mode too, which benefits of all
 ;; `Org' features.
-;;
-;; For details, refer to  https://github.com/csantosb/vhdl-tools/wiki
 
 ;;; Install:
 ;;
@@ -63,34 +61,9 @@
 
 ;;; Use:
 ;;
-;; The minor mode provide utilities to ease navigating vhdl sources beyond what
-;; is available with plain `ggtags'.
+;; Have a look at customization possibilities with \M-x customize-group `vhdl-tools'.
 ;;
-;;   - Jumping into instances
-;;   - Jump to upper level
-;;   - Searching for references
-;;   - Link management
-;;   - Custom use of imenu
-;;
-;; Open any vhdl file and invoke the following keybinds
-;;
-;;   C-c M-D     jumps to the definition of symbol at point
-;;   C-c M-j     follows the link at point
-;;   C-c M-w     stores a link
-;;   C-c M-y     pastes a link
-;;   C-c M-.     jumps into the instance at point
-;;   C-c M-a     moves point to first appearance of symbol at point
-;;   C-c M-u     jumps to upper hierarchy level
-;;
-;; Cursor will jump to the target if there is one, searching packages
-;; too. The ring mark is push after jumping, so to get back, press \C-c\C-p
-;; or \M-, (default binds under `ggtags') if corresponding definition has been
-;; found. Works better for files with correct syntax: think
-;; `vhdl-beautify-buffer' before using `vhdl-tools'.
-;;
-;; Also have a look at customization possibilities with \M-x customize-group `vhdl-tools'.
-;;
-;; See README for details
+;; For details, refer to  https://github.com/csantosb/vhdl-tools/wiki
 
 ;;; Todo:
 
