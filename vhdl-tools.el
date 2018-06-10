@@ -3,7 +3,7 @@
 ;; Based on `vhdl-goto-def' at `http://www.emacswiki.org/emacs/vhdl-goto-def.el'
 
 ;; Copyright (C) 2003 Free Software Foundation, Inc.
-;; Copyright (C) 2015-2017 Cayetano Santos
+;; Copyright (C) 2015-2018 Cayetano Santos
 
 ;; Original author:  wandad guscheh <wandad.guscheh@fh-hagenberg.at>
 ;; Author:           Cayetano Santos
@@ -11,7 +11,7 @@
 
 ;; Filename: vhdl-tools.el
 ;; Description: Utilities for navigating vhdl sources.
-;; URL: https://csantosb.github.io/vhdl-tools/
+;; URL: https://github.com/csantosb/vhdl-tools/wiki
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs >= 25.2
 ;; Version: 5.8
