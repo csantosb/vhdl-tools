@@ -439,9 +439,7 @@ displayed.  To go back to original vhdl file press."
 Additionally, move point to signal at point.
 Declare a key-bind to get back to the original point."
   (interactive)
-  ;; when no symbol at point, move forward to next symbol
-  (when (not (vhdl-tools--get-name))
-    (back-to-indentation))
+  (back-to-indentation)
   ;; when nil, do nothing
   (when (vhdl-tools--get-name)
     ;; necessary during hook (see later)
