@@ -7,7 +7,7 @@
 
 ;; Original author:  wandad guscheh <wandad.guscheh@fh-hagenberg.at>
 ;; Author:           Cayetano Santos
-;; Keywords: vhdl
+;; Keywords: languages
 
 ;; Filename: vhdl-tools.el
 ;; Description: Utilities for navigating vhdl sources.
