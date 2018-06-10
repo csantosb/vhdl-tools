@@ -1085,7 +1085,7 @@ Key bindings:
 
 (with-eval-after-load 'vhdl-tools
   (define-key vhdl-tools-mode-map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
-  (define-key vhdl-tools-mode-map (kbd "C-c M-j") #'vhdl-tools-follow-links)
+  (define-key vhdl-tools-mode-map (kbd "C-c M-l") #'vhdl-tools-follow-links)
   (define-key vhdl-tools-mode-map (kbd "C-c M-w") #'vhdl-tools-store-link)
   (define-key vhdl-tools-mode-map (kbd "C-c M-y") #'vhdl-tools-paste-link)
   (define-key vhdl-tools-mode-map (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
