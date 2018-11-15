@@ -515,32 +515,34 @@ When no symbol at point, move point to indentation."
   (when (not (vhdl-tools--get-name))
     (back-to-indentation))
   (let ((vhdl-tools-thing (vhdl-tools--get-name))
-	(helm-execute-action-at-once-if-one t))
+	(helm-execute-action-at-once-if-one t)
+	(vhdl-tools-name
+	 (save-excursion
+	   ;; first, try to search forward
+	   (when (not (search-forward-regexp "^entity" nil t))
+	     ;; if not found, try to search backward
+	     (search-backward-regexp "^entity")
+	     (forward-word))
+	   (forward-char 2)
+	   (vhdl-tools--get-name)))
+	(helm-rg-default-directory 'git-root)
+	(helm-rg-prepend-file-name-line-at-top-of-matches nil)
+	(helm-rg-include-file-on-every-match-line t)
+	(helm-rg-default-glob-string "*.vhd"))
     (vhdl-tools--push-marker)
-    (save-excursion
-      ;; first, try to search forward
-      (when (not (search-forward-regexp "^entity" nil t))
-	;; if not found, try to search backward
-	(search-backward-regexp "^entity")
-	(forward-word))
-      (forward-char 2)
-      ;; Jump by searching with prefilling minubuffer
-      (funcall `(lambda ()
-		  (minibuffer-with-setup-hook
-		      (lambda ()
-			;; (insert (format "^.* : \\(entity work.\\)*%s$" ,(vhdl-tools--get-name)))
-			(insert (format "^.*: %s$ vhd" ,(vhdl-tools--get-name))))
-		    (call-interactively 'helm-grep-do-git-grep (vc-find-root (buffer-file-name) ".git") nil))))
-      ;; search except if nil
-      (when vhdl-tools-thing
-	;; limit the search to end of paragraph (end of instance)
-	(let ((max-point (save-excursion
-			   (end-of-paragraph-text)
-			   (point))))
-	  (search-forward-regexp
-	   (format "%s " vhdl-tools-thing) max-point t)
-	  (vhdl-tools--fold)
-	  (vhdl-tools--post-jump-function))))))
+    ;; Jump by searching using helm-rg
+    (helm-rg
+     (format "^.* : [entity\\swork.]*%s\\s+" vhdl-tools-name))
+    ;; search except if nil
+    (when vhdl-tools-thing
+      ;; limit the search to end of paragraph (end of instance)
+      (let ((max-point (save-excursion
+			 (end-of-paragraph-text)
+			 (point))))
+	(search-forward-regexp
+	 (format "%s " vhdl-tools-thing) max-point t)
+	(vhdl-tools--fold)
+	(vhdl-tools--post-jump-function)))))
 
 ;;; Org / VHDL
 
