@@ -1072,9 +1072,6 @@ Key bindings:
 	;; required
 	(ggtags-mode 1)
 
-	;; inheritate prog mode hooks: vhdl-mode doesn't
-	(run-hook-with-args 'prog-mode-hook)
-
 	;; puts the reference comments around in the source
 	;; vhdl file out of sight
 	(when vhdl-tools-vorg-tangle-comments-link
