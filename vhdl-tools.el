@@ -532,7 +532,7 @@ When no symbol at point, move point to indentation."
     (vhdl-tools--push-marker)
     ;; Jump by searching using helm-rg
     (helm-rg
-     (format "[^\\s]\\s: [entity\\swork.]?%s$" vhdl-tools-name))
+     (format "\\s*.+ : (entity work.)?%s(\\(.*\\))?$" vhdl-tools-name))
     ;; search except if nil
     (when vhdl-tools-thing
       ;; limit the search to end of paragraph (end of instance)
