@@ -450,11 +450,9 @@ Declare a key-bind to get back to the original point."
       ;; locate component name to jump into
       (if (search-backward-regexp "\\(?:\\(?:generic\\|port\\) map\\)" nil t)
 	  (progn
-	    (search-backward-regexp "\\s-*:\\s-"  nil t)
-	    ;; in case there is a comment at the end of the entity line
+	    (search-backward-regexp " +: +" nil t)
 	    (back-to-indentation)
-	    (search-forward-regexp "  " nil t)
- 	    (backward-char 3))
+	    (search-forward-regexp " +: +\\(entity work.\\)?" nil t))
 	;; case of component declaration
 	(progn
 	  (search-backward-regexp " component ")
