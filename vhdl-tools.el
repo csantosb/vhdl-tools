@@ -1070,7 +1070,8 @@ Key bindings:
       (progn
 
 	;; optional outshine use
-	(when (and (require 'outshine)
+	(when (and (not (get-buffer "*compilation*"))
+                   (require 'outshine)
 		   vhdl-tools-use-outshine)
 	  (outline-minor-mode 1)
 	  ;; (outshine-hook-function)
