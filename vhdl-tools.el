@@ -144,6 +144,10 @@ Needed to determine end of name."
   "Number of lines from top of scren to recenter point after jumping to new location."
   :type 'boolean :group 'vhdl-tools)
 
+(defcustom vhdl-tools-save-before-imenu t
+  "Save current buffer before calling imenu."
+  :type 'boolean :group 'vhdl-tools)
+
 ;;;; Internal Variables
 
 (defconst vhdl-tools-vorg-vhdl-align-alist
@@ -927,8 +931,9 @@ Beautifies source code blocks before editing."
   "Bla."
   (interactive)
   (let ((imenu-generic-expression vhdl-imenu-generic-expression))
-    (set-buffer-modified-p t)
-    (save-buffer)
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
     (call-interactively 'imenu)
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
@@ -941,8 +946,9 @@ Beautifies source code blocks before editing."
   (let ((imenu-generic-expression vhdl-imenu-generic-expression)
 	(helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50))
-    (set-buffer-modified-p t)
-    (save-buffer)
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
     (vhdl-tools--imenu-with-initial-minibuffer "^Instance")
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
@@ -955,8 +961,9 @@ Beautifies source code blocks before editing."
   (let ((imenu-generic-expression vhdl-imenu-generic-expression)
 	(helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50))
-    (set-buffer-modified-p t)
-    (save-buffer)
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
     (vhdl-tools--imenu-with-initial-minibuffer "^Process")
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
@@ -969,8 +976,9 @@ Beautifies source code blocks before editing."
   (let ((imenu-generic-expression vhdl-imenu-generic-expression)
 	(helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50))
-    (set-buffer-modified-p t)
-    (save-buffer)
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
     (vhdl-tools--imenu-with-initial-minibuffer "^Component")
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
@@ -983,8 +991,9 @@ Beautifies source code blocks before editing."
   (let ((imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1)))
 	(helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50))
-    (set-buffer-modified-p t)
-    (save-buffer)
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
     (call-interactively 'helm-semantic-or-imenu)
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
@@ -1027,8 +1036,9 @@ Processes, instances and doc headers are shown in order of appearance."
 	   ("Context" "^\\s-*\\(context\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)))
 	(helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50))
-    (set-buffer-modified-p t)
-    (save-buffer)
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
     (call-interactively 'helm-semantic-or-imenu)
     (vhdl-tools--fold)))
 
