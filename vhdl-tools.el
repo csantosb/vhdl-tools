@@ -13,7 +13,7 @@
 ;; URL: https://github.com/csantosb/vhdl-tools/wiki
 ;; Compatibility: GNU Emacs >= 25.2
 ;; Version: 5.9
-;; Package-Requires: ((ggtags "0.8.12") (emacs "26.1") (outshine "2.0") (helm "2.9.6"))
+;; Package-Requires: ((ggtags "0.8.12") (emacs "26.1") (outshine "2.0") (helm "2.9.6") (helm-rg "0.1"))
 
 ;;; License:
 ;;
@@ -71,7 +71,7 @@
 
 (require 'vhdl-mode)
 (require 'ggtags)
-(require 'helm-grep)
+(require 'helm-rg)
 
 ;;; Groups
 
@@ -529,9 +529,7 @@ When no symbol at point, move point to indentation."
 	     (forward-word))
 	   (forward-char 2)
 	   (vhdl-tools--get-name)))
-	(helm-rg-default-directory 'git-root)
-	(helm-rg-prepend-file-name-line-at-top-of-matches nil)
-	(helm-rg-include-file-on-every-match-line t)
+	(helm-rg--current-dir (vc-find-root (buffer-file-name) ".git"))
 	(helm-rg-default-glob-string "*.vhd"))
     (vhdl-tools--push-marker)
     ;; Jump by searching using helm-rg
