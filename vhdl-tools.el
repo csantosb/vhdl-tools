@@ -1072,8 +1072,7 @@ Key bindings:
 	(when (and (not (get-buffer "*compilation*"))
                    (require 'outshine)
 		   vhdl-tools-use-outshine)
-	  (outline-minor-mode 1)
-	  ;; (outshine-hook-function)
+	  (outshine-mode 1)
 	  ;; custom outline regexp
 	  (setq-local outline-regexp vhdl-tools-outline-regexp)
 	  ;; (define-key vhdl-tools-imenu-map (kbd "h")
