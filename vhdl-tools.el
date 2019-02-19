@@ -475,6 +475,7 @@ Declare a key-bind to get back to the original point."
 			   (search-forward-regexp
 			    (format "^ *%s " vhdl-tools--jump-into-module-name)
 			    nil t))
+		     (vhdl-tools--fold)
 		     (vhdl-tools--post-jump-function)
 		     ;; erase modified hook
 		     (setq vhdl-tools--jump-into-module-name nil)
