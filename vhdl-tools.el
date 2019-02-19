@@ -999,16 +999,16 @@ Beautifies source code blocks before editing."
 
 ;;;; Outshine - imenu
 
-(defun vhdl-tools-outshine-imenu-headers()
-  "."
-  (interactive)
-  (let ((helm-split-window-default-side
-	 (if (> (window-width) 100)
-	     'right
-	   'below )))
-    (helm-navi-headings)
-    (vhdl-tools--fold)
-    (vhdl-tools--post-jump-function)))
+;; (defun vhdl-tools-outshine-imenu-headers()
+;;   "."
+;;   (interactive)
+;;   (let ((helm-split-window-default-side
+;; 	 (if (> (window-width) 100)
+;; 	     'right
+;; 	   'below )))
+;;     (helm-navi-headings)
+;;     (vhdl-tools--fold)
+;;     (vhdl-tools--post-jump-function)))
 
 ;;;; All
 
@@ -1076,8 +1076,9 @@ Key bindings:
 	  ;; (outshine-hook-function)
 	  ;; custom outline regexp
 	  (setq-local outline-regexp vhdl-tools-outline-regexp)
-	  (define-key vhdl-tools-imenu-map (kbd "h")
-	    #'vhdl-tools-outshine-imenu-headers))
+	  ;; (define-key vhdl-tools-imenu-map (kbd "h")
+	  ;;   #'vhdl-tools-outshine-imenu-headers)
+	  )
 
 	;; required
 	(ggtags-mode 1)
