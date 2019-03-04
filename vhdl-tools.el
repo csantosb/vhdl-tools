@@ -773,7 +773,7 @@ Beautifies source code blocks before editing."
 (defun vhdl-tools-vorg-tangle-header-argument ()
   "To be used as def argument to `tangle' in source block header."
   ;; TODO: replace org-get-tags-at by org-get-tags
-  (if (let ((mytags (org-get-tags-at (point) t)))
+  (if (let ((mytags (org-get-tags (point) t)))
 	(or (member vhdl-tools-vorg-tangle-header-argument-var mytags)
 	    (null mytags)))
       (vhdl-tools--get-vhdl-file (file-name-base))
@@ -1125,7 +1125,7 @@ Key bindings:
 
     ;; This auto removes any mode line on top of the vorg file before exporting
     (add-hook 'org-export-before-processing-hook
-	      (lambda (arg)
+	      (lambda ()
 		(save-excursion
 		  (goto-char (point-min))
 		  (re-search-forward "-\\*- mode: vhdl-tools-vorg -\\*-")
