@@ -124,15 +124,15 @@ When nil, both share same directory."
 Needed to determine end of name."
   :type 'string :group 'vhdl-tools)
 
-(defcustom vhdl-tools-outline-regexp "^--\\s-\\([*]\\{1,8\\}\\)\\s-\\(.*\\)$"
-  "Regexp to be used as `outline-regexp' when `vhdl-tools' minor mode is active."
-  :type 'string :group 'vhdl-tools)
+;; (defcustom vhdl-tools-outline-regexp "^--\\s-\\([*]\\{1,8\\}\\)\\s-\\(.*\\)$"
+;;   "Regexp to be used as `outline-regexp' when `vhdl-tools' minor mode is active."
+;;   :type 'string :group 'vhdl-tools)
 
 (defcustom vhdl-tools-imenu-regexp "^\\s-*--\\s-\\([*]\\{1,8\\}\\s-.+\\)"
   "Regexp ..."
   :type 'string :group 'vhdl-tools)
 
-(defcustom vhdl-tools-use-outshine nil
+(defcustom vhdl-tools-use-outshine t
   "Flag to activate `outshine' when `vhdl-tools' minor mode in active."
   :type 'boolean :group 'vhdl-tools)
 
