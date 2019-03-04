@@ -1042,25 +1042,52 @@ Processes, instances and doc headers are shown in order of appearance."
     (call-interactively 'helm-semantic-or-imenu)
     (vhdl-tools--fold)))
 
-;;; Derived Mode - Tools
+;;; Minor Mode - Tools
+
+;;;; Mode bindings
+
+(defvar vhdl-tools-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
+    (define-key map (kbd "C-c M-l") #'vhdl-tools-follow-links)
+    (define-key map (kbd "C-c M-w") #'vhdl-tools-store-link)
+    (define-key map (kbd "C-c M-y") #'vhdl-tools-paste-link)
+    (define-key map (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
+    (define-key map (kbd "C-c M-a") #'vhdl-tools-jump-first)
+    (define-key map (kbd "C-c M-u") #'vhdl-tools-jump-upper)
+    (define-key map (kbd "C-c M-^") (lambda(&optional arg)
+				      (interactive "P")
+				      (if (equal arg '(4))
+					  (vhdl-tools-vorg-detangle)
+					(vhdl-tools-vorg-jump-to-vorg))))
+    (define-key map (kbd "C-c C-n") #'vhdl-tools-headings-next)
+    (define-key map (kbd "C-c C-p") #'vhdl-tools-headings-prev)
+    (define-key map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
+    ;; mode bindings: imenu related
+    (define-prefix-command 'vhdl-tools-imenu-map)
+    (define-key map (kbd "C-x c i") 'vhdl-tools-imenu-map)
+    (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
+    (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
+    (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
+    (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
+    (define-key vhdl-tools-imenu-map (kbd "h") #'vhdl-tools-imenu-headers)
+    (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all)
+    map))
+
+;;;; Mode
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.vhd" . vhdl-tools-mode))
-
-;; I need to redefine the variable `vhdl-align-alist' as it expects a
-;; hard-coded vhdl-mode major mode. I am just replacing here `vhdl-mode' by
-;; `vhdl-tools-mode'.
-(setq vhdl-align-alist vhdl-tools-vorg-vhdl-align-alist)
-
-;;;###autoload
-(define-derived-mode vhdl-tools-mode vhdl-mode "vtool"
+(define-minor-mode vhdl-tools-mode
   "Utilities for navigating vhdl sources.
 
 Key bindings:
-\\{vhdl-tools-mode-map}"
-
-  ;; Enable only if requisites met
-  (if (and (require 'ggtags)
+\\{map}"
+  :init-value nil
+  :lighter " vtool"
+  :global nil
+  :keymap vhdl-tools-mode-map
+  (if (and vhdl-tools-mode
+	   (require 'ggtags)
 	   (require 'vc)
 	   (buffer-file-name)
 	   (executable-find "global")
@@ -1068,62 +1095,18 @@ Key bindings:
 	    (format "%sGTAGS"
 		    (vc-find-root (buffer-file-name) ".git"))))
       (progn
-
-	;; optional outshine use
-	(when (and (not (get-buffer "*compilation*"))
-                   (require 'outshine)
-		   vhdl-tools-use-outshine)
-	  (outshine-mode 1)
-	  ;; custom outline regexp
-	  (setq-local outline-regexp vhdl-tools-outline-regexp)
-	  ;; (define-key vhdl-tools-imenu-map (kbd "h")
-	  ;;   #'vhdl-tools-outshine-imenu-headers)
-	  )
-
 	;; required
 	(ggtags-mode 1)
-
 	;; puts the reference comments around in the source
 	;; vhdl file out of sight
 	(when vhdl-tools-vorg-tangle-comments-link
 	  (vhdl-tools--cleanup-tangled))
-
 	;; a bit of feedback
 	(when vhdl-tools-verbose
 	  (message "VHDL Tools enabled.")))
-
     ;; a bit of feedback
     (when vhdl-tools-verbose
       (message "VHDL Tools NOT enabled."))))
-
-;;;; Mode bindings
-
-(with-eval-after-load 'vhdl-tools
-  (define-key vhdl-tools-mode-map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
-  (define-key vhdl-tools-mode-map (kbd "C-c M-l") #'vhdl-tools-follow-links)
-  (define-key vhdl-tools-mode-map (kbd "C-c M-w") #'vhdl-tools-store-link)
-  (define-key vhdl-tools-mode-map (kbd "C-c M-y") #'vhdl-tools-paste-link)
-  (define-key vhdl-tools-mode-map (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
-  (define-key vhdl-tools-mode-map (kbd "C-c M-a") #'vhdl-tools-jump-first)
-  (define-key vhdl-tools-mode-map (kbd "C-c M-u") #'vhdl-tools-jump-upper)
-  (define-key vhdl-tools-mode-map (kbd "C-c M-^") (lambda(&optional arg)
-						    (interactive "P")
-						    (if (equal arg '(4))
-							(vhdl-tools-vorg-detangle)
-						      (vhdl-tools-vorg-jump-to-vorg))))
-  (define-key vhdl-tools-mode-map (kbd "C-c C-n") #'vhdl-tools-headings-next)
-  (define-key vhdl-tools-mode-map (kbd "C-c C-p") #'vhdl-tools-headings-prev)
-  (define-key vhdl-tools-mode-map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
-  ;; mode bindings: imenu related
-  (when (require 'imenu)
-    (define-prefix-command 'vhdl-tools-imenu-map)
-    (define-key vhdl-tools-mode-map (kbd "C-x c i") 'vhdl-tools-imenu-map)
-    (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
-    (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
-    (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
-    (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
-    (define-key vhdl-tools-imenu-map (kbd "h") #'vhdl-tools-imenu-headers)
-    (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all)))
 
 ;;; Derived Mode - vOrg
 
