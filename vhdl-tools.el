@@ -56,8 +56,8 @@
 ;; Then, activate the minor mode by completing the `vhdl-mode' hook.
 ;;
 ;; (add-hook 'vhdl-mode-hook
-;; 	  (lambda ()
-;; 	    (vhdl-tools-mode 1)))
+;;	  (lambda ()
+;;	    (vhdl-tools-mode 1)))
 
 ;;; Use:
 ;;
@@ -231,7 +231,7 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "^ *\\(entity\\|package\\) +" nil t nil)
-        (vhdl-tools--get-name)
+	(vhdl-tools--get-name)
       "")))
 
 (defun vhdl-tools--imenu-with-initial-minibuffer (str)
@@ -322,7 +322,7 @@ Only use the form work.NAME.something."
       ;; search for packages in current buffer
       (goto-char (point-min))
       (while (re-search-forward "^ *use  *work\." nil t nil)
-        (forward-char)
+	(forward-char)
 	(when (not (member (vhdl-tools--get-name) packages))
 	  (push (vhdl-tools--get-name) packages)))
       ;; search in all open buffers
@@ -361,37 +361,37 @@ Test if it is a type definition or not."
 	    (re-search-forward
 	     (concat "^[ \t]*entity[ \n\t]+[" vhdl-tools-allowed-chars-in-signal "]+[ \n\t]+is") nil t nil))
       (if beginning-of-entity-port
-          (progn
-            (setq end-of-entity (save-excursion (re-search-forward "^[ \t]*end")))
-            (re-search-forward "port[ \n\t]*(" nil t nil)
-            (setq end-of-entity-port (progn (up-list) (point)))
-            (goto-char (point-min))
-            (setq should-be-in-entity (re-search-forward (concat " +" name "[ \n\t]+") nil t nil))
-            (if (and should-be-in-entity
+	  (progn
+	    (setq end-of-entity (save-excursion (re-search-forward "^[ \t]*end")))
+	    (re-search-forward "port[ \n\t]*(" nil t nil)
+	    (setq end-of-entity-port (progn (up-list) (point)))
+	    (goto-char (point-min))
+	    (setq should-be-in-entity (re-search-forward (concat " +" name "[ \n\t]+") nil t nil))
+	    (if (and should-be-in-entity
 		     (< beginning-of-entity-port should-be-in-entity)
 		     (> end-of-entity-port should-be-in-entity)
-                     (< (save-excursion (re-search-forward ":" nil t nil))
+		     (< (save-excursion (re-search-forward ":" nil t nil))
 			(save-excursion (re-search-forward "\n" nil t nil)))
-                     (< (point)
+		     (< (point)
 			(save-excursion (re-search-forward ":" nil t nil)))
-                     (< end-of-entity-port
+		     (< end-of-entity-port
 			end-of-entity))
-                (setq found (point)))))
+		(setq found (point)))))
       (goto-char (point-min))
       (while (and (not found)
 		  (re-search-forward "^ *\\(component\\|function\\|procedure\\|constant\\|file\\|type\\|subtype\\)[ \n\t]+" nil t nil))
-        (if (equal name (vhdl-tools--get-name))
-            (setq found (point))))
+	(if (equal name (vhdl-tools--get-name))
+	    (setq found (point))))
       (goto-char (point-min))
       (while (and (not found)
 		  (re-search-forward "^[ \t]*signal[ \n\t]+" nil t nil))
-        (if (equal name (vhdl-tools--get-name))
-            (setq found (point))
-          (while (> (save-excursion (search-forward ":" nil t nil))
+	(if (equal name (vhdl-tools--get-name))
+	    (setq found (point))
+	  (while (> (save-excursion (search-forward ":" nil t nil))
 		    (if (setq apoint (save-excursion (search-forward "," nil t nil))) apoint 0))
-            (search-forward "," nil t nil)
-            (if (equal name (vhdl-tools--get-name))
-                (setq found (point)))))))
+	    (search-forward "," nil t nil)
+	    (if (equal name (vhdl-tools--get-name))
+		(setq found (point)))))))
     (if found found nil)))
 
 (defun vhdl-tools-goto-type-def ()
@@ -689,13 +689,13 @@ With a prefix argument `ARG' force tangling regardless of files status."
 ;;   (interactive)
 ;;   (let ((old-buffer (current-buffer)))
 ;;     (cl-letf (((symbol-function 'org-id-update-id-locations)
-;; 	       (lambda (&optional files silent) nil)))
+;;	       (lambda (&optional files silent) nil)))
 ;;       (org-babel-with-temp-filebuffer (buffer-file-name)
-;; 	(goto-char (point-min))
-;; 	(delete-matching-lines "^--\s\\*+\s.*$")
-;; 	(delete-matching-lines "^$")
-;; 	(org-babel-detangle)
-;; 	(save-buffer))))
+;;	(goto-char (point-min))
+;;	(delete-matching-lines "^--\s\\*+\s.*$")
+;;	(delete-matching-lines "^$")
+;;	(org-babel-detangle)
+;;	(save-buffer))))
 ;;   (vhdl-tools-vorg-jump-to-vorg)
 ;;   (save-buffer))
 
@@ -1005,9 +1005,9 @@ Beautifies source code blocks before editing."
 ;;   "."
 ;;   (interactive)
 ;;   (let ((helm-split-window-default-side
-;; 	 (if (> (window-width) 100)
-;; 	     'right
-;; 	   'below )))
+;;	 (if (> (window-width) 100)
+;;	     'right
+;;	   'below )))
 ;;     (helm-navi-headings)
 ;;     (vhdl-tools--fold)
 ;;     (vhdl-tools--post-jump-function)))
