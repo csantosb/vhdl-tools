@@ -882,17 +882,6 @@ Beautifies source code blocks before editing."
 
 ;;;; Get to next
 
-(defun vhdl-tools-headings-next()
-  "Get to next heading."
-  (interactive)
-  ;; hack: when already in outline-regexp, point will stay
-  ;; I move forward one char to force getting to next
-  (forward-char)
-  (re-search-forward outline-regexp)
-  ;; (beginning-of-line)
-  (vhdl-tools--fold)
-  (vhdl-tools--post-jump-function))
-
 (defun vhdl-tools-vorg-headings-next()
   "Get to next heading in vorg buffer."
   (interactive)
@@ -903,16 +892,6 @@ Beautifies source code blocks before editing."
     (vhdl-tools-vorg--post-jump-function)))
 
 ;;;; Get to previous
-
-(defun vhdl-tools-headings-prev()
-  "Get to previous heading."
-  (interactive)
-  ;; hack: no necessary in this case
-  ;; (see vhdl-tools-headings-next)
-  (re-search-backward outline-regexp)
-  ;; (beginning-of-line)
-  (vhdl-tools--fold)
-  (vhdl-tools--post-jump-function))
 
 (defun vhdl-tools-vorg-headings-prev()
   "Get to next heading in vorg buffer."
@@ -1050,8 +1029,8 @@ Processes, instances and doc headers are shown in order of appearance."
 				      (if (equal arg '(4))
 					  (vhdl-tools-vorg-detangle)
 					(vhdl-tools-vorg-jump-to-vorg))))
-    (define-key map (kbd "C-c C-n") #'vhdl-tools-headings-next)
-    (define-key map (kbd "C-c C-p") #'vhdl-tools-headings-prev)
+    ;; (define-key map (kbd "C-c C-n") #'vhdl-tools-headings-next)
+    ;; (define-key map (kbd "C-c C-p") #'vhdl-tools-headings-prev)
     (define-key map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
     ;; mode bindings: imenu related
     (define-prefix-command 'vhdl-tools-imenu-map)
