@@ -1104,14 +1104,15 @@ Key bindings:
 
 (defvar vhdl-tools-vorg-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
-    (define-key vhdl-tools-vorg-mode-map [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
-    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-P") #'vhdl-tools-vorg-publish)))
+    (define-key map (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
+    (define-key map (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
+    (define-key map [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
+    (define-key map (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
+    (define-key map (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
+    (define-key map (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
+    (define-key map (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
+    (define-key map (kbd "C-c M-P") #'vhdl-tools-vorg-publish)
+    map))
 
 ;;;; Mode
 
