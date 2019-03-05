@@ -999,19 +999,6 @@ Beautifies source code blocks before editing."
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
 
-;;;; Outshine - imenu
-
-;; (defun vhdl-tools-outshine-imenu-headers()
-;;   "."
-;;   (interactive)
-;;   (let ((helm-split-window-default-side
-;;	 (if (> (window-width) 100)
-;;	     'right
-;;	   'below )))
-;;     (helm-navi-headings)
-;;     (vhdl-tools--fold)
-;;     (vhdl-tools--post-jump-function)))
-
 ;;;; All
 
 (defun vhdl-tools-imenu-all()
