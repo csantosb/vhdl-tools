@@ -1111,6 +1111,21 @@ Key bindings:
 
 ;;; Derived Mode - vOrg
 
+;;;; Mode bindings
+
+(defvar vhdl-tools-vorg-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
+    (define-key vhdl-tools-vorg-mode-map [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
+    (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-P") #'vhdl-tools-vorg-publish)))
+
+;;;; Mode
+
 ;;;###autoload
 (define-derived-mode vhdl-tools-vorg-mode org-mode "vOrg"
   "Utilities for navigating vhdl sources in vorg files.
@@ -1135,17 +1150,6 @@ Key bindings:
     ;; a bit of feedback
     (when vhdl-tools-verbose
       (message "VHDL Tools Vorg enabled."))))
-
-;;;; Mode bindings
-(with-eval-after-load 'vhdl-tools
-  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-,") #'vhdl-tools-vorg-jump-from-vorg)
-  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-.") #'vhdl-tools-vorg-jump-from-vorg-into-module)
-  (define-key vhdl-tools-vorg-mode-map [remap org-babel-tangle] #'vhdl-tools-vorg-tangle)
-  (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-v _") #'vhdl-tools-vorg-tangle-all)
-  (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-n") #'vhdl-tools-vorg-headings-next)
-  (define-key vhdl-tools-vorg-mode-map (kbd "C-c C-p") #'vhdl-tools-vorg-headings-prev)
-  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-b") #'vhdl-tools-vorg-src-block-beautify)
-  (define-key vhdl-tools-vorg-mode-map (kbd "C-c M-P") #'vhdl-tools-vorg-publish))
 
 (provide 'vhdl-tools)
 
