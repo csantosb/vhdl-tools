@@ -931,7 +931,9 @@ Beautifies source code blocks before editing."
 (defun vhdl-tools-imenu()
   "Call native imenu, setting generic expression first."
   (interactive)
-  (let ((imenu-generic-expression vhdl-imenu-generic-expression))
+  (let ((imenu-generic-expression vhdl-imenu-generic-expression)
+	(helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
