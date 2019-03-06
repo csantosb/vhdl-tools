@@ -1029,8 +1029,6 @@ Processes, instances and doc headers are shown in order of appearance."
 				      (if (equal arg '(4))
 					  (vhdl-tools-vorg-detangle)
 					(vhdl-tools-vorg-jump-to-vorg))))
-    ;; (define-key map (kbd "C-c C-n") #'vhdl-tools-headings-next)
-    ;; (define-key map (kbd "C-c C-p") #'vhdl-tools-headings-prev)
     (define-key map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
     ;; mode bindings: imenu related
     (define-prefix-command 'vhdl-tools-imenu-map)
