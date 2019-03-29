@@ -910,8 +910,7 @@ Beautifies source code blocks before editing."
 (defun vhdl-tools-imenu()
   "Call native imenu, setting generic expression first."
   (interactive)
-  (let ((imenu-generic-expression vhdl-imenu-generic-expression)
-	(helm-autoresize-max-height 100)
+  (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
@@ -925,8 +924,7 @@ Beautifies source code blocks before editing."
 (defun vhdl-tools-imenu-instance()
   "Call imenu for instances, setting generic expression first."
   (interactive)
-  (let ((imenu-generic-expression vhdl-imenu-generic-expression)
-	(helm-autoresize-max-height 100)
+  (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
@@ -940,8 +938,7 @@ Beautifies source code blocks before editing."
 (defun vhdl-tools-imenu-processes()
   "Call imenu for processes, setting generic expression first."
   (interactive)
-  (let ((imenu-generic-expression vhdl-imenu-generic-expression)
-	(helm-autoresize-max-height 100)
+  (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
@@ -955,8 +952,7 @@ Beautifies source code blocks before editing."
 (defun vhdl-tools-imenu-component()
   "Call imenu for components, setting generic expression first."
   (interactive)
-  (let ((imenu-generic-expression vhdl-imenu-generic-expression)
-	(helm-autoresize-max-height 100)
+  (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
