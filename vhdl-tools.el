@@ -915,7 +915,7 @@ Beautifies source code blocks before editing."
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
-    (call-interactively 'imenu)
+    (call-interactively 'helm-semantic-or-imenu)
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
 
