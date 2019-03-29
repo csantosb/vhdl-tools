@@ -3,7 +3,7 @@
 ;; Based on `vhdl-goto-def' at `http://www.emacswiki.org/emacs/vhdl-goto-def.el'
 
 ;; Copyright (C) 2003 Free Software Foundation, Inc.
-;; Copyright (C) 2015-2018 Cayetano Santos
+;; Copyright (C) 2015-2019 Cayetano Santos
 
 ;; Original author:  wandad guscheh <wandad.guscheh@fh-hagenberg.at>
 ;; Author:           Cayetano Santos
@@ -11,9 +11,9 @@
 ;; Filename: vhdl-tools.el
 ;; Description: Utilities for navigating vhdl sources.
 ;; URL: https://github.com/csantosb/vhdl-tools/wiki
-;; Compatibility: GNU Emacs >= 25.2
-;; Version: 5.9
-;; Package-Requires: ((ggtags "0.8.12") (emacs "26.1") (helm "2.9.6") (helm-rg "0.1"))
+;; Compatibility: GNU Emacs >= 26.1
+;; Version: 6.0
+;; Package-Requires: ((ggtags "0.8.13") (emacs "26.1") (helm "3.1") (helm-rg "0.1"))
 
 ;;; License:
 ;;
@@ -34,9 +34,9 @@
 
 ;;; Commentary:
 ;;
-;; `Vhdl-tools' provide a derived major mode based on the great `vhdl-mode'.
+;; `vhdl-tools' provide a minor mode based intended to complete the great `vhdl-mode'.
 ;; It adds an extra layer of functionality on top of the later, extensively
-;; using `ggtags' to manage a vhdl project.  `Vhdl-tools' relies on `projectile',
+;; using `ggtags' to manage a vhdl project.  `vhdl-tools' relies on `projectile',
 ;; `imenu' and `outshine' features to ease navigating vhdl
 ;; sources.  Additionally, it provides `vOrg' mode too, which benefits of all
 ;; `Org' features.
