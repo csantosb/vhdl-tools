@@ -72,9 +72,7 @@
 ;;; Code:
 
 (require 'vhdl-mode)
-(require 'ggtags)
 (require 'helm-rg)
-(require 'imenu)
 
 ;;; Groups
 
