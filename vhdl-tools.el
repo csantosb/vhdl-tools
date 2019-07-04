@@ -13,7 +13,7 @@
 ;; URL: https://github.com/csantosb/vhdl-tools/wiki
 ;; Compatibility: GNU Emacs >= 26.2
 ;; Version: 6.0
-;; Package-Requires: ((ggtags "0.8.13") (emacs "26.2") (helm "3.2") (helm-rg "0.1") outshine)
+;; Package-Requires: ((ggtags "0.8.13") (emacs "26.2") (helm-rg "0.1") outshine)
 
 ;;; License:
 ;;
