@@ -142,7 +142,7 @@ Needed to determine end of name."
 
 (defcustom vhdl-tools-recenter-nb-lines 10
   "Number of lines from top of scren to recenter point after jumping to new location."
-  :type 'boolean :group 'vhdl-tools)
+  :type 'integer :group 'vhdl-tools)
 
 (defcustom vhdl-tools-save-before-imenu t
   "Save current buffer before calling imenu."
