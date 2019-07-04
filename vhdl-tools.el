@@ -1079,27 +1079,62 @@ Key bindings:
   :lighter " vtool"
   :global nil
   :keymap vhdl-tools-mode-map
-  (if (and vhdl-tools-mode
-	   (require 'ggtags)
-	   (require 'vc)
-	   (buffer-file-name)
-	   (executable-find "global")
-	   (file-exists-p
-	    (format "%sGTAGS"
-		    (vc-find-root (buffer-file-name) ".git"))))
+
+  ;; Enable mode global features
+  (if vhdl-tools-mode
       (progn
-	;; required
-	(ggtags-mode 1)
-	;; puts the reference comments around in the source
-	;; vhdl file out of sight
+	;; puts the reference comments around in the source file out of sight
 	(when vhdl-tools-vorg-tangle-comments-link
 	  (vhdl-tools--cleanup-tangled))
 	;; a bit of feedback
 	(when vhdl-tools-verbose
-	  (message "VHDL Tools enabled.")))
+	  (message "[VHDL Tools] enabled.")))
     ;; a bit of feedback
     (when vhdl-tools-verbose
-      (message "VHDL Tools NOT enabled."))))
+      (message "[VHDL Tools] NOT enabled.")))
+  ;; optionally enable links handling related features
+
+  ;; optionally enable imenu related features
+  (if (and vhdl-tools-mode
+	   vhdl-tools--imenu-available)
+      (progn
+	;; a bit of feedback
+	(when vhdl-tools-verbose
+	  (message "[VHDL Tools] imenu feature enabled.")))
+    ;; a bit of feedback
+    (when vhdl-tools-verbose
+      (message "[VHDL Tools] imenu feature not enabled.")))
+
+  ;; optionally enable ggtags related features
+  (if (and vhdl-tools-mode
+	   vhdl-tools--ggtags-available
+	   (buffer-file-name)
+	   (vc-find-root (buffer-file-name) ".git")
+	   (file-exists-p
+	    (format "%sGTAGS"
+		    (vc-find-root (buffer-file-name) ".git"))))
+      (progn
+	(ggtags-mode 1)
+	;; a bit of feedback
+	(when vhdl-tools-verbose
+	  (message "[VHDL Tools] ggtags feature enabled.")))
+    ;; a bit of feedback
+    (when vhdl-tools-verbose
+      (message "[VHDL Tools] ggtags feature not enabled.")))
+
+  ;; optionally enable outshine related features
+  (if (and vhdl-tools-mode
+	   vhdl-tools--outshine-available
+	   vhdl-tools-manage-folding)
+      (progn
+	(outshine-mode 1)
+	(setq-local outline-regexp vhdl-tools-outline-regexp)
+	;; a bit of feedback
+	(when vhdl-tools-verbose
+	  (message "[VHDL Tools] feature outshine enabled.")))
+    ;; a bit of feedback
+    (when vhdl-tools-verbose
+      (message "[VHDL Tools] feature outshine not enabled."))))
 
 ;;; Derived Mode - vOrg
 
