@@ -72,7 +72,6 @@
 ;;; Code:
 
 (require 'vhdl-mode)
-(require 'helm-rg)
 
 ;;; Groups
 
@@ -182,6 +181,7 @@ Needed to determine end of name."
 
 (defvar vhdl-tools--ggtags-available (and (require 'ggtags)
 					  (require 'vc)
+					  (require 'helm-rg)
 					  (executable-find "global")
 					  t)
   "Bla.")
