@@ -1033,28 +1033,38 @@ Processes, instances and doc headers are shown in order of appearance."
 
 (defvar vhdl-tools-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
+
+    ;; mode bindings: links related
     (define-key map (kbd "C-c M-l") #'vhdl-tools-follow-links)
     (define-key map (kbd "C-c M-w") #'vhdl-tools-store-link)
     (define-key map (kbd "C-c M-y") #'vhdl-tools-paste-link)
-    (define-key map (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
+
+    ;; mode bindings: ggtags related
+    (when vhdl-tools--ggtags-available
+      (define-key map (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
+      (define-key map (kbd "C-c M-u") #'vhdl-tools-jump-upper))
+
+    ;; mode bindings: misc
     (define-key map (kbd "C-c M-a") #'vhdl-tools-jump-first)
-    (define-key map (kbd "C-c M-u") #'vhdl-tools-jump-upper)
+    (define-key map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
+    (define-key map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
+
     (define-key map (kbd "C-c M-^") (lambda(&optional arg)
 				      (interactive "P")
 				      (if (equal arg '(4))
 					  (vhdl-tools-vorg-detangle)
 					(vhdl-tools-vorg-jump-to-vorg))))
-    (define-key map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
+
     ;; mode bindings: imenu related
-    (define-prefix-command 'vhdl-tools-imenu-map)
-    (define-key map (kbd "C-x c i") 'vhdl-tools-imenu-map)
-    (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
-    (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
-    (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
-    (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
-    (define-key vhdl-tools-imenu-map (kbd "h") #'vhdl-tools-imenu-headers)
-    (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all)
+    (when vhdl-tools--imenu-available
+      (define-prefix-command 'vhdl-tools-imenu-map)
+      (define-key map (kbd "C-x c i") 'vhdl-tools-imenu-map)
+      (define-key vhdl-tools-imenu-map (kbd "m") #'vhdl-tools-imenu)
+      (define-key vhdl-tools-imenu-map (kbd "i") #'vhdl-tools-imenu-instance)
+      (define-key vhdl-tools-imenu-map (kbd "p") #'vhdl-tools-imenu-processes)
+      (define-key vhdl-tools-imenu-map (kbd "c") #'vhdl-tools-imenu-component)
+      (define-key vhdl-tools-imenu-map (kbd "h") #'vhdl-tools-imenu-headers)
+      (define-key vhdl-tools-imenu-map (kbd "a") #'vhdl-tools-imenu-all))
     map))
 
 ;;;; Mode
