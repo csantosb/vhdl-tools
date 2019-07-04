@@ -124,16 +124,12 @@ When nil, both share same directory."
 Needed to determine end of name."
   :type 'string :group 'vhdl-tools)
 
-;; (defcustom vhdl-tools-outline-regexp "^--\\s-\\([*]\\{1,8\\}\\)\\s-\\(.*\\)$"
-;;   "Regexp to be used as `outline-regexp' when `vhdl-tools' minor mode is active."
-;;   :type 'string :group 'vhdl-tools)
-
 (defcustom vhdl-tools-imenu-regexp "^\\s-*--\\s-\\([*]\\{1,8\\}\\s-.+\\)"
   "Regexp ..."
   :type 'string :group 'vhdl-tools)
 
 (defcustom vhdl-tools-outline-regexp "^\\s-*--\\s-\\([*]\\{1,8\\}\\)\\s-\\(.*\\)$"
-  "Regexp ..."
+  "Regexp to be used as `outline-regexp' when `vhdl-tools' minor mode is active."
   :type 'string :group 'vhdl-tools)
 
 (defcustom vhdl-tools-use-outshine t
@@ -184,15 +180,15 @@ Needed to determine end of name."
 					  (require 'helm-rg)
 					  (executable-find "global")
 					  t)
-  "Bla.")
+  "Stores availability of ggtags feature following installed packages.")
 
 (defvar vhdl-tools--imenu-available (and (require 'imenu)
 					 t)
-  "Bla.")
+  "Stores availability of imenu feature following installed packages.")
 
 (defvar vhdl-tools--outshine-available (and (require 'outshine)
 					    t)
-  "Bla.")
+  "Stores availability of outshine feature following installed packages.")
 
 ;;; Helper
 
