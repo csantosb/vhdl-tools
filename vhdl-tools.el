@@ -133,6 +133,10 @@ Needed to determine end of name."
   "Regexp ..."
   :type 'string :group 'vhdl-tools)
 
+(defcustom vhdl-tools-outline-regexp "^\\s-*--\\s-\\([*]\\{1,8\\}\\)\\s-\\(.*\\)$"
+  "Regexp ..."
+  :type 'string :group 'vhdl-tools)
+
 (defcustom vhdl-tools-use-outshine t
   "Flag to activate `outshine' when `vhdl-tools' minor mode in active."
   :type 'boolean :group 'vhdl-tools)
@@ -175,6 +179,20 @@ Needed to determine end of name."
 
 (defvar vhdl-tools--currently-publishing nil
   "To be set to t when publishing to avoid problems.")
+
+(defvar vhdl-tools--ggtags-available (and (require 'ggtags)
+					  (require 'vc)
+					  (executable-find "global")
+					  t)
+  "Bla.")
+
+(defvar vhdl-tools--imenu-available (and (require 'imenu)
+					 t)
+  "Bla.")
+
+(defvar vhdl-tools--outshine-available (and (require 'outshine)
+					    t)
+  "Bla.")
 
 ;;; Helper
 
