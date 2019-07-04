@@ -64,6 +64,8 @@
 ;; Have a look at customization possibilities with \M-x customize-group `vhdl-tools'.
 ;;
 ;; For details, refer to  https://github.com/csantosb/vhdl-tools/wiki
+;;
+;; An example configuration file may be found at https://github.com/csantosb/vhdl-tools/wiki/Setup#example-configuration-file
 
 ;;; Todo:
 
