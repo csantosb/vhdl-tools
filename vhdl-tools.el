@@ -148,10 +148,6 @@ Needed to determine end of name."
   "Save current buffer before calling imenu."
   :type 'boolean :group 'vhdl-tools)
 
-(defcustom vhdl-tools-vc-find-root-witness ".git"
-  "Determines root of current project, as used by `vc-find-root'."
-  :type 'string :group 'vhdl-tools)
-
 ;;;; Internal Variables
 
 (defconst vhdl-tools-vorg-vhdl-align-alist
@@ -549,7 +545,7 @@ When no symbol at point, move point to indentation."
 	     (forward-word))
 	   (forward-char 2)
 	   (vhdl-tools--get-name)))
-	(helm-rg--current-dir (vc-find-root (buffer-file-name) vhdl-tools-vc-find-root-witness))
+	(helm-rg--current-dir (vc-root-dir))
 	(helm-rg-default-glob-string "*.vhd"))
     (vhdl-tools--push-marker)
     ;; Jump by searching using helm-rg
@@ -1109,10 +1105,9 @@ Key bindings:
   (if (and vhdl-tools-mode
 	   vhdl-tools--ggtags-available
 	   (buffer-file-name)
-	   (vc-find-root (buffer-file-name) vhdl-tools-vc-find-root-witness)
+	   (vc-root-dir)
 	   (file-exists-p
-	    (format "%sGTAGS"
-		    (vc-find-root (buffer-file-name) vhdl-tools-vc-find-root-witness))))
+	    (format "%sGTAGS" (vc-root-dir))))
       (progn
 	(ggtags-mode 1)
 	;; a bit of feedback
