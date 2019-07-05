@@ -1,24 +1,22 @@
 #+TITLE: Emacs VHDL Tools
 
-This project provides support under Emacs in terms of navigation of
-VHDL sources.
+This project provides support under Emacs in terms of navigation of VHDL
+sources.
 
 [[https://github.com/csantosb/vhdl-tools/blob/master/LICENSE][file:http://img.shields.io/badge/license-GNU%20GPLv3-blue.svg]]
 [[http://stable.melpa.org/#/vhdl-tools][file:http://stable.melpa.org/packages/vhdl-tools-badge.svg]]
 [[http://melpa.org/#/vhdl-tools][file:http://melpa.org/packages/vhdl-tools-badge.svg]]
 
-[[https://csantosb.pw/blog/posts/vhdl-tools/index.html][Vhdl-tools]] provides an extra layer in the form of a minor mode
-intended to be used along with emacs [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]]. It adds specific
-functionality on top of [[https://github.com/leoliu/ggtags][ggtags]], [[http://batsov.com/projectile/][projectile]], [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html][imenu]] and [[https://github.com/alphapapa/outshine][outshine]] to ease
-navigating vhdl sources. It expects a working setup of =ggtags=,
-completing it with
+[[https://csantosb.pw/blog/posts/vhdl-tools/index.html][Vhdl-tools]] provides an extra layer in the form of a minor mode intended to be
+used along with emacs [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]]. It adds specific functionality on top of
+[[https://github.com/leoliu/ggtags][ggtags]], [[https://emacs-helm.github.io/helm/][helm]], [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html][imenu]] and [[https://github.com/alphapapa/outshine][outshine]] to ease navigating vhdl sources. It expects a
+working setup of =ggtags=, completing it with
 
   - Jumping into instances
   - Jump to upper level
   - Searching for references
   - Link and headings management
   - Custom use of =imenu=
-  - Custom =smartscan=
   - Org / vhdl coupling
 
 Refer to the project [[https://github.com/csantosb/vhdl-tools/wiki][page]] for details.
