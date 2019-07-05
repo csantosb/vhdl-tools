@@ -132,7 +132,7 @@ Needed to determine end of name."
   "Regexp to be used as `outline-regexp' when `vhdl-tools' minor mode is active."
   :type 'string :group 'vhdl-tools)
 
-(defcustom vhdl-tools-use-outshine t
+(defcustom vhdl-tools-use-outshine nil
   "Flag to activate `outshine' when `vhdl-tools' minor mode in active."
   :type 'boolean :group 'vhdl-tools)
 
