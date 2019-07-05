@@ -1120,7 +1120,7 @@ Key bindings:
   ;; optionally enable outshine related features
   (if (and vhdl-tools-mode
 	   vhdl-tools--outshine-available
-	   vhdl-tools-manage-folding)
+	   vhdl-tools-use-outshine)
       (progn
 	(outshine-mode 1)
 	(setq-local outline-regexp vhdl-tools-outline-regexp)
