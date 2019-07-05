@@ -12,7 +12,7 @@
 ;; Description: Utilities for navigating vhdl sources.
 ;; URL: https://github.com/csantosb/vhdl-tools/wiki
 ;; Compatibility: GNU Emacs >= 26.2
-;; Version: 6.0
+;; Version: 6.1
 ;; Package-Requires: ((ggtags "0.8.13") (emacs "26.2") (helm-rg "0.1") outshine)
 
 ;;; License:
