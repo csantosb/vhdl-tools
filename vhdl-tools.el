@@ -565,6 +565,91 @@ When no symbol at point, move point to indentation."
 	(vhdl-tools--fold)
 	(vhdl-tools--post-jump-function)))))
 
+;;; Feature: Links
+;;
+;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
+;; follow links in comments.
+;;
+;; For example, in the form of =tag@tosearch=
+;;
+;; "TM_IO_Sequencer@Pixel"
+;;
+;; will get to the definition of ~TM_IO_Sequencer~, and then forward search for
+;; ~Pixel~. To achieve this, I update a hook before switching buffers with
+;; ~find-tag~.
+
+;;;; Link Store
+
+(defun vhdl-tools-store-link ()
+  "Store current line as a link."
+  (interactive)
+  (let* ((myline (vhdl-tools-vorg-get-current-line))
+	 (myentity (save-excursion
+		     (search-backward-regexp "entity")
+		     (forward-word)
+		     (forward-char 2)
+		     (vhdl-tools--get-name)))
+	 (mylink (format "%s\@%s" myentity myline)))
+    (message mylink)
+    (setq vhdl-tools--store-link-link mylink)))
+
+;;;; Link Paste
+
+(defun vhdl-tools-paste-link()
+  "Paste previous stored link."
+  (interactive)
+  (insert (format "`%s`" vhdl-tools--store-link-link)))
+
+;;;; Link Follow
+
+(defun vhdl-tools-follow-links(arg)
+  "Follow links in the form of Tag:ToSearch'."
+  (interactive "P")
+  ;; get item in the form of tag@tosearch
+  (save-excursion
+    (let* ((tmp-point-min (progn  ;; beginning of item
+			    (search-backward-regexp "\`" )
+			    (+ 1 (point))))
+	   (tmp-point-max (progn ;; end of item
+			    (forward-char 1)
+			    (search-forward-regexp "\`" )
+			    (- (point) 1)))
+	   (vhdl-tools-follow-links-item ;; item
+	    (buffer-substring-no-properties
+	     tmp-point-min tmp-point-max)))
+      ;; tag
+      (setq vhdl-tools--follow-links-tag
+	    (substring vhdl-tools-follow-links-item 0
+		       (string-match "@" vhdl-tools-follow-links-item)))
+      ;; tosearch
+      (setq vhdl-tools--follow-links-tosearch
+	    ;; with a prefix argument, ignore tosearch
+	    (when (not (equal arg '(4)))
+	      nil
+	      (if (string-match "@" vhdl-tools-follow-links-item)
+		  (substring
+		   vhdl-tools-follow-links-item
+		   (+ 1 (string-match "@" vhdl-tools-follow-links-item)) nil)
+		nil)))))
+  ;; when tosearch non nil, update hook to execute an action
+  (when vhdl-tools--follow-links-tosearch
+    ;; empty old content in hook
+    (setq ggtags-find-tag-hook nil)
+    (vhdl-tools--push-marker)
+    ;; declare action after jumping to new buffer
+    (add-hook 'ggtags-find-tag-hook
+	      '(lambda()
+		 ;; action: forward search
+		 ;; if no tosearch is found, do nothing
+		 (when (search-forward vhdl-tools--follow-links-tosearch nil t)
+		   ;; otherwise, do this
+		   (vhdl-tools--post-jump-function))
+		 ;; erase modified hook
+		 (setq vhdl-tools--follow-links-tosearch nil)
+		 (setq ggtags-find-tag-hook nil)))
+    ;; jump !
+    (ggtags-find-definition vhdl-tools--follow-links-tag)))
+
 ;;; Org / VHDL
 
 ;; Following the literate programming paradigm, here we intend to provide some
@@ -832,91 +917,6 @@ Beautifies source code blocks before editing."
     (outline-hide-sublevels 5)
     (org-show-entry)
     (vhdl-tools-vorg--post-jump-function)))
-
-;;; Feature: Links
-;;
-;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
-;; follow links in comments.
-;;
-;; For example, in the form of =tag@tosearch=
-;;
-;; "TM_IO_Sequencer@Pixel"
-;;
-;; will get to the definition of ~TM_IO_Sequencer~, and then forward search for
-;; ~Pixel~. To achieve this, I update a hook before switching buffers with
-;; ~find-tag~.
-
-;;;; Link Store
-
-(defun vhdl-tools-store-link ()
-  "Store current line as a link."
-  (interactive)
-  (let* ((myline (vhdl-tools-vorg-get-current-line))
-	 (myentity (save-excursion
-		     (search-backward-regexp "entity")
-		     (forward-word)
-		     (forward-char 2)
-		     (vhdl-tools--get-name)))
-	 (mylink (format "%s\@%s" myentity myline)))
-    (message mylink)
-    (setq vhdl-tools--store-link-link mylink)))
-
-;;;; Link Paste
-
-(defun vhdl-tools-paste-link()
-  "Paste previous stored link."
-  (interactive)
-  (insert (format "`%s`" vhdl-tools--store-link-link)))
-
-;;;; Link Follow
-
-(defun vhdl-tools-follow-links(arg)
-  "Follow links in the form of Tag:ToSearch'."
-  (interactive "P")
-  ;; get item in the form of tag@tosearch
-  (save-excursion
-    (let* ((tmp-point-min (progn  ;; beginning of item
-			    (search-backward-regexp "\`" )
-			    (+ 1 (point))))
-	   (tmp-point-max (progn ;; end of item
-			    (forward-char 1)
-			    (search-forward-regexp "\`" )
-			    (- (point) 1)))
-	   (vhdl-tools-follow-links-item ;; item
-	    (buffer-substring-no-properties
-	     tmp-point-min tmp-point-max)))
-      ;; tag
-      (setq vhdl-tools--follow-links-tag
-	    (substring vhdl-tools-follow-links-item 0
-		       (string-match "@" vhdl-tools-follow-links-item)))
-      ;; tosearch
-      (setq vhdl-tools--follow-links-tosearch
-	    ;; with a prefix argument, ignore tosearch
-	    (when (not (equal arg '(4)))
-	      nil
-	      (if (string-match "@" vhdl-tools-follow-links-item)
-		  (substring
-		   vhdl-tools-follow-links-item
-		   (+ 1 (string-match "@" vhdl-tools-follow-links-item)) nil)
-		nil)))))
-  ;; when tosearch non nil, update hook to execute an action
-  (when vhdl-tools--follow-links-tosearch
-    ;; empty old content in hook
-    (setq ggtags-find-tag-hook nil)
-    (vhdl-tools--push-marker)
-    ;; declare action after jumping to new buffer
-    (add-hook 'ggtags-find-tag-hook
-	      '(lambda()
-		 ;; action: forward search
-		 ;; if no tosearch is found, do nothing
-		 (when (search-forward vhdl-tools--follow-links-tosearch nil t)
-		   ;; otherwise, do this
-		   (vhdl-tools--post-jump-function))
-		 ;; erase modified hook
-		 (setq vhdl-tools--follow-links-tosearch nil)
-		 (setq ggtags-find-tag-hook nil)))
-    ;; jump !
-    (ggtags-find-definition vhdl-tools--follow-links-tag)))
 
 ;;; Feature: imenu navigation
 
