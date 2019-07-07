@@ -180,15 +180,15 @@ Needed to determine end of name."
 					  (require 'helm-rg)
 					  (executable-find "global")
 					  t)
-  "Stores availability of ggtags feature following installed packages.")
+  "Sets availability of ggtags feature following installed packages.")
 
 (defvar vhdl-tools--imenu-available (and (require 'imenu)
 					 t)
-  "Stores availability of imenu feature following installed packages.")
+  "Sets availability of imenu feature following installed packages.")
 
 (defvar vhdl-tools--outshine-available (and (require 'outshine)
 					    t)
-  "Stores availability of outshine feature following installed packages.")
+  "Sets availability of outshine feature following installed packages.")
 
 ;;; Helper
 
@@ -289,7 +289,7 @@ Needed to determine end of name."
 
 (defun vhdl-tools-beautify-region (arg)
   "Call beautify-region but auto activate region first.
-With a prefix ARG, fall back to previous behaviour."
+With a prefix ARG, fall back to default behaviour."
   (interactive "P")
   (if (equal arg '(4))
       (call-interactively 'vhdl-beautify-region)
