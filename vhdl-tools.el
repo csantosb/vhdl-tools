@@ -72,6 +72,7 @@
 ;;; Code:
 
 (require 'vhdl-mode)
+(require 'vc)
 
 ;;; Groups
 
@@ -176,7 +177,6 @@ Needed to determine end of name."
   "To be set to t when publishing to avoid problems.")
 
 (defvar vhdl-tools--ggtags-available (and (require 'ggtags)
-					  (require 'vc)
 					  (require 'helm-rg)
 					  (executable-find "global")
 					  t)
@@ -533,7 +533,6 @@ Declare a key-bind to get back to the original point."
   "Get to upper level module and move point to signal at point.
 When no symbol at point, move point to indentation."
   (interactive)
-  (require 'vc)
   ;; when no symbol at point, move forward to next symbol
   (when (not (vhdl-tools--get-name))
     (back-to-indentation))
