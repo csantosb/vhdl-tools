@@ -442,37 +442,40 @@ packages used, and works through all opened buffers to find packages used in
 the vhdl file.  If a definition has been found in a package, package will be
 displayed.  To go back to original vhdl file press."
   (interactive)
-  ;; when no symbol at point, move forward to next symbol
-  (vhdl-tools--push-marker)
-  (when (not (vhdl-tools--get-name))
-    (back-to-indentation))
-  ;; check if found definition in calling file
-  (if (not (setq found (vhdl-tools-process-file (vhdl-tools--get-name))))
-      ;; no definition found in calling file found
-      (let ((to-search-for (vhdl-tools--get-name))
-	    (package-list (vhdl-tools-package-names))
-	    (counter 0)
-	    found
-	    package-buffer)
-	;; loop over all packages _____________________________________
-	(while (and (not found)
-		    (nth counter package-list))
-	  (setq package-buffer
-		(vhdl-tools-get-buffer (nth counter package-list)))
-	  (with-current-buffer package-buffer
-	    (setq found (vhdl-tools-process-file to-search-for)))
-	  (setq counter (1+ counter)))
-	;; loop over ____________________________________________________
-	(if found
-	    (progn
-	      (switch-to-buffer package-buffer)
-	      (goto-char found)
-	      (vhdl-tools--post-jump-function))
-	  (message "sorry, no corresponding definition found")))
-    ;; found in current file
+  (if (not ggtags-mode)
+      (message "[VHDL Tools] ggtags feature not enabled.")
     (progn
-      (goto-char found)
-      (vhdl-tools--post-jump-function))))
+      ;; when no symbol at point, move forward to next symbol
+      (vhdl-tools--push-marker)
+      (when (not (vhdl-tools--get-name))
+	(back-to-indentation))
+      ;; check if found definition in calling file
+      (if (not (setq found (vhdl-tools-process-file (vhdl-tools--get-name))))
+	  ;; no definition found in calling file found
+	  (let ((to-search-for (vhdl-tools--get-name))
+		(package-list (vhdl-tools-package-names))
+		(counter 0)
+		found
+		package-buffer)
+	    ;; loop over all packages _____________________________________
+	    (while (and (not found)
+			(nth counter package-list))
+	      (setq package-buffer
+		    (vhdl-tools-get-buffer (nth counter package-list)))
+	      (with-current-buffer package-buffer
+		(setq found (vhdl-tools-process-file to-search-for)))
+	      (setq counter (1+ counter)))
+	    ;; loop over ____________________________________________________
+	    (if found
+		(progn
+		  (switch-to-buffer package-buffer)
+		  (goto-char found)
+		  (vhdl-tools--post-jump-function))
+	      (message "sorry, no corresponding definition found")))
+	;; found in current file
+	(progn
+	  (goto-char found)
+	  (vhdl-tools--post-jump-function))))))
 
 ;;;; Jump into module
 
@@ -481,49 +484,52 @@ displayed.  To go back to original vhdl file press."
 Additionally, move point to signal at point.
 Declare a key-bind to get back to the original point."
   (interactive)
-  (back-to-indentation)
-  ;; when nil, do nothing
-  (when (vhdl-tools--get-name)
-    ;; necessary during hook (see later)
-    (setq vhdl-tools--jump-into-module-name (vhdl-tools--get-name))
-    (vhdl-tools--push-marker)
-    (save-excursion
-      ;; case of component instantiation
-      ;; locate component name to jump into
-      (if (search-backward-regexp "\\(?:\\(?:generic\\|port\\) map\\)" nil t)
-	  (progn
-	    (search-backward-regexp "[a-zA-Z0-9]+ *: +" nil t)
-	    (back-to-indentation)
-	    (search-forward-regexp " *: +\\(entity work.\\)?" nil t))
-	;; case of component declaration
-	(progn
-	  (search-backward-regexp " component ")
-	  ;; in case there is a comment at the end of the entity line
-	  (back-to-indentation)
-	  (search-forward-regexp "  " nil t)
-	  (backward-char 3)))
-      ;; empty old content in hook
-      (setq ggtags-find-tag-hook nil)
-      ;; update hook to execute an action
-      ;; once jumped to new buffer
-      (add-hook 'ggtags-find-tag-hook
-		'(lambda()
-		   (when (progn
-			   (vhdl-tools--fold)
-			   (search-forward-regexp
-			    (format "^ *%s " vhdl-tools--jump-into-module-name)
-			    nil t))
-		     (vhdl-tools--fold)
-		     (vhdl-tools--post-jump-function)
-		     ;; erase modified hook
-		     (setq vhdl-tools--jump-into-module-name nil)
-		     ;; erase hook
-		     (setq ggtags-find-tag-hook nil))
-		   ;; remove last jump so that `pop-tag-mark' will get to
-		   ;; original position before jumping
-		   (ring-remove find-tag-marker-ring 0)))
-      ;; jump !
-      (call-interactively 'ggtags-find-definition))))
+  (if (not ggtags-mode)
+      (message "[VHDL Tools] ggtags feature not enabled.")
+    (progn
+      (back-to-indentation)
+      ;; when nil, do nothing
+      (when (vhdl-tools--get-name)
+	;; necessary during hook (see later)
+	(setq vhdl-tools--jump-into-module-name (vhdl-tools--get-name))
+	(vhdl-tools--push-marker)
+	(save-excursion
+	  ;; case of component instantiation
+	  ;; locate component name to jump into
+	  (if (search-backward-regexp "\\(?:\\(?:generic\\|port\\) map\\)" nil t)
+	      (progn
+		(search-backward-regexp "[a-zA-Z0-9]+ *: +" nil t)
+		(back-to-indentation)
+		(search-forward-regexp " *: +\\(entity work.\\)?" nil t))
+	    ;; case of component declaration
+	    (progn
+	      (search-backward-regexp " component ")
+	      ;; in case there is a comment at the end of the entity line
+	      (back-to-indentation)
+	      (search-forward-regexp "  " nil t)
+	      (backward-char 3)))
+	  ;; empty old content in hook
+	  (setq ggtags-find-tag-hook nil)
+	  ;; update hook to execute an action
+	  ;; once jumped to new buffer
+	  (add-hook 'ggtags-find-tag-hook
+		    '(lambda()
+		       (when (progn
+			       (vhdl-tools--fold)
+			       (search-forward-regexp
+				(format "^ *%s " vhdl-tools--jump-into-module-name)
+				nil t))
+			 (vhdl-tools--fold)
+			 (vhdl-tools--post-jump-function)
+			 ;; erase modified hook
+			 (setq vhdl-tools--jump-into-module-name nil)
+			 ;; erase hook
+			 (setq ggtags-find-tag-hook nil))
+		       ;; remove last jump so that `pop-tag-mark' will get to
+		       ;; original position before jumping
+		       (ring-remove find-tag-marker-ring 0)))
+	  ;; jump !
+	  (call-interactively 'ggtags-find-definition))))))
 
 ;;;; Jump Upper
 
@@ -533,36 +539,39 @@ Declare a key-bind to get back to the original point."
   "Get to upper level module and move point to signal at point.
 When no symbol at point, move point to indentation."
   (interactive)
-  ;; when no symbol at point, move forward to next symbol
-  (when (not (vhdl-tools--get-name))
-    (back-to-indentation))
-  (let ((vhdl-tools-thing (vhdl-tools--get-name))
-	(helm-execute-action-at-once-if-one t)
-	(vhdl-tools-name
-	 (save-excursion
-	   ;; first, try to search forward
-	   (when (not (search-forward-regexp "^entity" nil t))
-	     ;; if not found, try to search backward
-	     (search-backward-regexp "^entity")
-	     (forward-word))
-	   (forward-char 2)
-	   (vhdl-tools--get-name)))
-	(helm-rg--current-dir (vc-root-dir))
-	(helm-rg-default-glob-string "*.vhd"))
-    (vhdl-tools--push-marker)
-    ;; Jump by searching using helm-rg
-    (helm-rg
-     (format "\\s*.+ : (entity work.)?%s(\\(.*\\))?$" vhdl-tools-name))
-    ;; search except if nil
-    (when vhdl-tools-thing
-      ;; limit the search to end of paragraph (end of instance)
-      (let ((max-point (save-excursion
-			 (end-of-paragraph-text)
-			 (point))))
-	(search-forward-regexp
-	 (format "%s " vhdl-tools-thing) max-point t)
-	(vhdl-tools--fold)
-	(vhdl-tools--post-jump-function)))))
+  (if (not ggtags-mode)
+      (message "[VHDL Tools] ggtags feature not enabled.")
+    (progn
+      ;; when no symbol at point, move forward to next symbol
+      (when (not (vhdl-tools--get-name))
+	(back-to-indentation))
+      (let ((vhdl-tools-thing (vhdl-tools--get-name))
+	    (helm-execute-action-at-once-if-one t)
+	    (vhdl-tools-name
+	     (save-excursion
+	       ;; first, try to search forward
+	       (when (not (search-forward-regexp "^entity" nil t))
+		 ;; if not found, try to search backward
+		 (search-backward-regexp "^entity")
+		 (forward-word))
+	       (forward-char 2)
+	       (vhdl-tools--get-name)))
+	    (helm-rg--current-dir (vc-root-dir))
+	    (helm-rg-default-glob-string "*.vhd"))
+	(vhdl-tools--push-marker)
+	;; Jump by searching using helm-rg
+	(helm-rg
+	 (format "\\s*.+ : (entity work.)?%s(\\(.*\\))?$" vhdl-tools-name))
+	;; search except if nil
+	(when vhdl-tools-thing
+	  ;; limit the search to end of paragraph (end of instance)
+	  (let ((max-point (save-excursion
+			     (end-of-paragraph-text)
+			     (point))))
+	    (search-forward-regexp
+	     (format "%s " vhdl-tools-thing) max-point t)
+	    (vhdl-tools--fold)
+	    (vhdl-tools--post-jump-function)))))))
 
 ;;; Feature: imenu navigation
 
