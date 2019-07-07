@@ -285,6 +285,8 @@ Needed to determine end of name."
 
 ;;; Feature: misc
 
+;;;; Beautify
+
 (defun vhdl-tools-beautify-region (arg)
   "Call beautify-region but auto activate region first.
 With a prefix ARG, fall back to previous behaviour."
@@ -295,6 +297,28 @@ With a prefix ARG, fall back to previous behaviour."
       (when (not (region-active-p))
 	(mark-paragraph))
       (call-interactively 'vhdl-beautify-region))))
+
+;;;; Get to first
+
+;; Utility to jump to first time a symbol appears on file
+
+(defun vhdl-tools-getto-first ()
+  "Jump to first occurrence of symbol at point.
+When no symbol at point, move point to indentation."
+  (interactive)
+  ;; when no symbol at point, just get back to bol
+  (if (not (vhdl-tools--get-name))
+      (back-to-indentation)
+    ;; else, get there
+    (progn
+      (vhdl-tools--push-marker)
+      (let ((vhdl-tools-getto-first-name (vhdl-tools--get-name)))
+	(goto-char (point-min))
+	(search-forward-regexp vhdl-tools-getto-first-name nil t)
+	(backward-word)
+	(vhdl-tools--fold)
+	(when vhdl-tools-manage-folding
+	  (recenter-top-bottom vhdl-tools-recenter-nb-lines))))))
 
 ;;; Feature: Jumping
 
@@ -500,26 +524,6 @@ Declare a key-bind to get back to the original point."
 		   (ring-remove find-tag-marker-ring 0)))
       ;; jump !
       (call-interactively 'ggtags-find-definition))))
-
-;;;; Jump to first
-
-;; Utility to jump to first time a symbol appears on file
-
-(defun vhdl-tools-jump-first ()
-  "Jump to first occurrence of symbol at point.
-When no symbol at point, move point to indentation."
-  (interactive)
-  ;; when no symbol at point, move forward to next symbol
-  (when (not (vhdl-tools--get-name))
-    (back-to-indentation))
-  ;; when nil, do nothing
-  (when (vhdl-tools--get-name)
-    (vhdl-tools--push-marker)
-    (let ((vhdl-tools-jump-first-name (vhdl-tools--get-name)))
-      (goto-char (point-min))
-      (search-forward-regexp vhdl-tools-jump-first-name nil t)
-      (vhdl-tools--fold)
-      (backward-word))))
 
 ;;;; Jump Upper
 
@@ -1038,7 +1042,7 @@ Processes, instances and doc headers are shown in order of appearance."
       (define-key map (kbd "C-c M-u") #'vhdl-tools-jump-upper))
 
     ;; mode bindings: misc
-    (define-key map (kbd "C-c M-a") #'vhdl-tools-jump-first)
+    (define-key map (kbd "C-c M-a") #'vhdl-tools-getto-first)
     (define-key map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
     (define-key map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
 
