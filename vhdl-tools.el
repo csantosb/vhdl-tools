@@ -805,6 +805,30 @@ Beautifies source code blocks before editing."
 		    (make-string 1 ?*))
 		  (plist-get heading ':raw-value)))))))
 
+;;;; Vorg Headings
+
+;;;;; Get to next
+
+(defun vhdl-tools-vorg-headings-next()
+  "Get to next heading in vorg buffer."
+  (interactive)
+  (org-next-visible-heading 1)
+  (when vhdl-tools-manage-folding
+    (outline-hide-sublevels 5)
+    (org-show-entry)
+    (vhdl-tools-vorg--post-jump-function)))
+
+;;;;; Get to previous
+
+(defun vhdl-tools-vorg-headings-prev()
+  "Get to next heading in vorg buffer."
+  (interactive)
+  (org-previous-visible-heading 1)
+  (when vhdl-tools-manage-folding
+    (outline-hide-sublevels 5)
+    (org-show-entry)
+    (vhdl-tools-vorg--post-jump-function)))
+
 ;;; Feature: Links
 ;;
 ;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
@@ -889,32 +913,6 @@ Beautifies source code blocks before editing."
 		 (setq ggtags-find-tag-hook nil)))
     ;; jump !
     (ggtags-find-definition vhdl-tools--follow-links-tag)))
-
-
-;;; Headings
-
-;;;; Get to next
-
-(defun vhdl-tools-vorg-headings-next()
-  "Get to next heading in vorg buffer."
-  (interactive)
-  (org-next-visible-heading 1)
-  (when vhdl-tools-manage-folding
-    (outline-hide-sublevels 5)
-    (org-show-entry)
-    (vhdl-tools-vorg--post-jump-function)))
-
-;;;; Get to previous
-
-(defun vhdl-tools-vorg-headings-prev()
-  "Get to next heading in vorg buffer."
-  (interactive)
-  (org-previous-visible-heading 1)
-  (when vhdl-tools-manage-folding
-    (outline-hide-sublevels 5)
-    (org-show-entry)
-    (vhdl-tools-vorg--post-jump-function)))
-
 
 ;;; Feature: imenu navigation
 
