@@ -565,6 +565,112 @@ When no symbol at point, move point to indentation."
 	(vhdl-tools--fold)
 	(vhdl-tools--post-jump-function)))))
 
+;;; Feature: imenu navigation
+
+;;;; Standard Imenu
+
+(defun vhdl-tools-imenu()
+  "Call native imenu, setting generic expression first."
+  (interactive)
+  (let ((helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
+    (call-interactively 'helm-semantic-or-imenu)
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
+
+;;;; Instances
+
+(defun vhdl-tools-imenu-instance()
+  "Call imenu for instances, setting generic expression first."
+  (interactive)
+  (let ((helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
+    (vhdl-tools--imenu-with-initial-minibuffer "^Instance")
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
+
+;;;; Processes
+
+(defun vhdl-tools-imenu-processes()
+  "Call imenu for processes, setting generic expression first."
+  (interactive)
+  (let ((helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
+    (vhdl-tools--imenu-with-initial-minibuffer "^Process")
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
+
+;;;; Components
+
+(defun vhdl-tools-imenu-component()
+  "Call imenu for components, setting generic expression first."
+  (interactive)
+  (let ((helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50))
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
+    (vhdl-tools--imenu-with-initial-minibuffer "^Component")
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
+
+;;;; Headings
+
+(defun vhdl-tools-imenu-headers()
+  "Call imenu for headings, setting generic expression first."
+  (interactive)
+  (let ((helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50)
+	(imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1))))
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
+    (call-interactively 'helm-semantic-or-imenu)
+    (vhdl-tools--fold)
+    (vhdl-tools--post-jump-function)))
+
+;;;; All
+
+(defun vhdl-tools-imenu-all()
+  "In a vhdl buffer, call `helm-semantic-or-imenu', show all items.
+Processes, instances and doc headers are shown in order of appearance."
+  (interactive)
+  (let ((helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50)
+	(imenu-generic-expression
+	 `(;; process
+	   ("" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(\\(postponed\\s-+\\|\\)process\\)" 1)
+	   ;; instance
+	   ("" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\s-*:\\(\\s-\\|\n\\)*\\(entity\\s-+\\(\\w\\|\\s_\\)+\\.\\)?\\(\\w\\|\\s_\\)+\\)\\(\\s-\\|\n\\)+\\(generic\\|port\\)\\s-+map\\>" 1)
+	   ;; Headings
+	   ("" ,vhdl-tools-imenu-regexp 1)
+	   ("Subprogram" "^\\s-*\\(\\(\\(impure\\|pure\\)\\s-+\\|\\)function\\|procedure\\)\\s-+\\(\"?\\(\\w\\|\\s_\\)+\"?\\)" 4)
+	   ;; ("Instance" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\s-*:\\(\\s-\\|\n\\)*\\(entity\\s-+\\(\\w\\|\\s_\\)+\\.\\)?\\(\\w\\|\\s_\\)+\\)\\(\\s-\\|\n\\)+\\(generic\\|port\\)\\s-+map\\>" 1)
+	   ("Component" "^\\s-*\\(component\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)
+	   ("Procedural" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(procedural\\)" 1)
+	   ;; ("Process" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(\\(postponed\\s-+\\|\\)process\\)" 1)
+	   ("Block" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(block\\)" 1)
+	   ("Package" "^\\s-*\\(package\\( body\\|\\)\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 3)
+	   ("Configuration" "^\\s-*\\(configuration\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\s-+of\\s-+\\(\\w\\|\\s_\\)+\\)" 2)
+	   ;; Architecture
+	   ("" "^\\s-*\\(architecture\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\s-+of\\s-+\\(\\w\\|\\s_\\)+\\)" 2)
+	   ("Entity" "^\\s-*\\(entity\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)
+	   ("Context" "^\\s-*\\(context\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2))))
+    (when vhdl-tools-save-before-imenu
+      (set-buffer-modified-p t)
+      (save-buffer))
+    (call-interactively 'helm-semantic-or-imenu)
+    (vhdl-tools--fold)))
+
 ;;; Feature: Links
 ;;
 ;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
@@ -917,112 +1023,6 @@ Beautifies source code blocks before editing."
     (outline-hide-sublevels 5)
     (org-show-entry)
     (vhdl-tools-vorg--post-jump-function)))
-
-;;; Feature: imenu navigation
-
-;;;; Standard Imenu
-
-(defun vhdl-tools-imenu()
-  "Call native imenu, setting generic expression first."
-  (interactive)
-  (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
-    (when vhdl-tools-save-before-imenu
-      (set-buffer-modified-p t)
-      (save-buffer))
-    (call-interactively 'helm-semantic-or-imenu)
-    (vhdl-tools--fold)
-    (vhdl-tools--post-jump-function)))
-
-;;;; Instances
-
-(defun vhdl-tools-imenu-instance()
-  "Call imenu for instances, setting generic expression first."
-  (interactive)
-  (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
-    (when vhdl-tools-save-before-imenu
-      (set-buffer-modified-p t)
-      (save-buffer))
-    (vhdl-tools--imenu-with-initial-minibuffer "^Instance")
-    (vhdl-tools--fold)
-    (vhdl-tools--post-jump-function)))
-
-;;;; Processes
-
-(defun vhdl-tools-imenu-processes()
-  "Call imenu for processes, setting generic expression first."
-  (interactive)
-  (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
-    (when vhdl-tools-save-before-imenu
-      (set-buffer-modified-p t)
-      (save-buffer))
-    (vhdl-tools--imenu-with-initial-minibuffer "^Process")
-    (vhdl-tools--fold)
-    (vhdl-tools--post-jump-function)))
-
-;;;; Components
-
-(defun vhdl-tools-imenu-component()
-  "Call imenu for components, setting generic expression first."
-  (interactive)
-  (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
-    (when vhdl-tools-save-before-imenu
-      (set-buffer-modified-p t)
-      (save-buffer))
-    (vhdl-tools--imenu-with-initial-minibuffer "^Component")
-    (vhdl-tools--fold)
-    (vhdl-tools--post-jump-function)))
-
-;;;; Headings
-
-(defun vhdl-tools-imenu-headers()
-  "Call imenu for headings, setting generic expression first."
-  (interactive)
-  (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50)
-	(imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1))))
-    (when vhdl-tools-save-before-imenu
-      (set-buffer-modified-p t)
-      (save-buffer))
-    (call-interactively 'helm-semantic-or-imenu)
-    (vhdl-tools--fold)
-    (vhdl-tools--post-jump-function)))
-
-;;;; All
-
-(defun vhdl-tools-imenu-all()
-  "In a vhdl buffer, call `helm-semantic-or-imenu', show all items.
-Processes, instances and doc headers are shown in order of appearance."
-  (interactive)
-  (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50)
-	(imenu-generic-expression
-	 `(;; process
-	   ("" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(\\(postponed\\s-+\\|\\)process\\)" 1)
-	   ;; instance
-	   ("" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\s-*:\\(\\s-\\|\n\\)*\\(entity\\s-+\\(\\w\\|\\s_\\)+\\.\\)?\\(\\w\\|\\s_\\)+\\)\\(\\s-\\|\n\\)+\\(generic\\|port\\)\\s-+map\\>" 1)
-	   ;; Headings
-	   ("" ,vhdl-tools-imenu-regexp 1)
-	   ("Subprogram" "^\\s-*\\(\\(\\(impure\\|pure\\)\\s-+\\|\\)function\\|procedure\\)\\s-+\\(\"?\\(\\w\\|\\s_\\)+\"?\\)" 4)
-	   ;; ("Instance" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\s-*:\\(\\s-\\|\n\\)*\\(entity\\s-+\\(\\w\\|\\s_\\)+\\.\\)?\\(\\w\\|\\s_\\)+\\)\\(\\s-\\|\n\\)+\\(generic\\|port\\)\\s-+map\\>" 1)
-	   ("Component" "^\\s-*\\(component\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)
-	   ("Procedural" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(procedural\\)" 1)
-	   ;; ("Process" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(\\(postponed\\s-+\\|\\)process\\)" 1)
-	   ("Block" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(block\\)" 1)
-	   ("Package" "^\\s-*\\(package\\( body\\|\\)\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 3)
-	   ("Configuration" "^\\s-*\\(configuration\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\s-+of\\s-+\\(\\w\\|\\s_\\)+\\)" 2)
-	   ;; Architecture
-	   ("" "^\\s-*\\(architecture\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\s-+of\\s-+\\(\\w\\|\\s_\\)+\\)" 2)
-	   ("Entity" "^\\s-*\\(entity\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)
-	   ("Context" "^\\s-*\\(context\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2))))
-    (when vhdl-tools-save-before-imenu
-      (set-buffer-modified-p t)
-      (save-buffer))
-    (call-interactively 'helm-semantic-or-imenu)
-    (vhdl-tools--fold)))
 
 ;;; Minor Mode - Tools
 
