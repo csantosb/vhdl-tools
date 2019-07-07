@@ -979,9 +979,9 @@ Beautifies source code blocks before editing."
 (defun vhdl-tools-imenu-headers()
   "Call imenu for headings, setting generic expression first."
   (interactive)
-  (let ((imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1)))
-	(helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
+  (let ((helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50)
+	(imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1))))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
@@ -995,7 +995,9 @@ Beautifies source code blocks before editing."
   "In a vhdl buffer, call `helm-semantic-or-imenu', show all items.
 Processes, instances and doc headers are shown in order of appearance."
   (interactive)
-  (let ((imenu-generic-expression
+  (let ((helm-autoresize-max-height 100)
+	(helm-candidate-number-limit 50)
+	(imenu-generic-expression
 	 `(;; process
 	   ("" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(\\(postponed\\s-+\\|\\)process\\)" 1)
 	   ;; instance
@@ -1013,9 +1015,7 @@ Processes, instances and doc headers are shown in order of appearance."
 	   ;; Architecture
 	   ("" "^\\s-*\\(architecture\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\s-+of\\s-+\\(\\w\\|\\s_\\)+\\)" 2)
 	   ("Entity" "^\\s-*\\(entity\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)
-	   ("Context" "^\\s-*\\(context\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2)))
-	(helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
+	   ("Context" "^\\s-*\\(context\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)" 2))))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
