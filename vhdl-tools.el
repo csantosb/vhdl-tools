@@ -224,7 +224,7 @@ Needed to determine end of name."
 					 nil t)))))
     (save-excursion
       (outline-hide-sublevels 5)
-      (org-back-to-heading nil)
+      (outline-back-to-heading nil)
       (outline-show-entry))))
 
 (defun vhdl-tools--push-marker ()
