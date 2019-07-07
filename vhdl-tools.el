@@ -1039,12 +1039,12 @@ Processes, instances and doc headers are shown in order of appearance."
     ;; mode bindings: ggtags related
     (when vhdl-tools--ggtags-available
       (define-key map (kbd "C-c M-.") #'vhdl-tools-jump-into-module)
-      (define-key map (kbd "C-c M-u") #'vhdl-tools-jump-upper))
+      (define-key map (kbd "C-c M-u") #'vhdl-tools-jump-upper)
+      (define-key map (kbd "C-c M-D") #'vhdl-tools-goto-type-def))
 
     ;; mode bindings: misc
     (define-key map (kbd "C-c M-a") #'vhdl-tools-getto-first)
     (define-key map (kbd "C-c M-b") #'vhdl-tools-beautify-region)
-    (define-key map (kbd "C-c M-D") #'vhdl-tools-goto-type-def)
 
     (define-key map (kbd "C-c M-^") (lambda(&optional arg)
 				      (interactive "P")
