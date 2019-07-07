@@ -192,7 +192,7 @@ Needed to determine end of name."
 
 ;;; Helper
 
-;; Ancillary functions
+;; Ancillary, internal functions
 
 (defun vhdl-tools--cleanup-tangled ()
   "Make invisible reference comments after tangling."
@@ -236,8 +236,7 @@ Needed to determine end of name."
   (setq ggtags-tag-ring-index nil))
 
 (defun vhdl-tools--get-name ()
-  "Extract word at current position DONT-DOWNCASE.
-To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
+  "Extract word at current position."
   (thing-at-point 'symbol t))
 
 (defun vhdl-tools--get-entity-or-package-name ()
@@ -249,7 +248,7 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
       "")))
 
 (defun vhdl-tools--imenu-with-initial-minibuffer (str)
-  "Text `STR'."
+  "Imenu pre filled with `STR'."
   (funcall `(lambda ()
 	      (interactive)
 	      (minibuffer-with-setup-hook
@@ -284,7 +283,7 @@ To determine end of word, vhdl-tools-allowed-chars-in-signal is used."
       (format "%s/%s.org" vhdl-tools-vorg-src-vorg-dir vhdlfile)
     (format "%s.vhd" (file-name-base vhdlfile))))
 
-;;; Misc
+;;; Feature: misc
 
 (defun vhdl-tools-beautify-region (arg)
   "Call beautify-region but auto activate region first.
@@ -297,7 +296,7 @@ With a prefix ARG, fall back to previous behaviour."
 	(mark-paragraph))
       (call-interactively 'vhdl-beautify-region))))
 
-;;; Jumping
+;;; Feature: Jumping
 
 ;;;; Get definition
 
@@ -806,7 +805,7 @@ Beautifies source code blocks before editing."
 		    (make-string 1 ?*))
 		  (plist-get heading ':raw-value)))))))
 
-;;; Links
+;;; Feature: Links
 ;;
 ;; The goal here is, using the ggtags infrastructure, to implement a mechanism to
 ;; follow links in comments.
@@ -917,7 +916,7 @@ Beautifies source code blocks before editing."
     (vhdl-tools-vorg--post-jump-function)))
 
 
-;;; Helm-imenu navigation
+;;; Feature: imenu navigation
 
 ;;;; Standard Imenu
 
