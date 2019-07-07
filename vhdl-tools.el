@@ -267,7 +267,7 @@ Needed to determine end of name."
     (recenter-top-bottom vhdl-tools-recenter-nb-lines))
   (back-to-indentation))
 
-(defun vhdl-tools--get-vhdl-file (orgfile)
+(defun vhdl-tools-vorg--get-vhdl-file (orgfile)
   "Return the sibling vhdl code of `ORGFILE'.
 `ORGFILE' is the filename without extension."
   (if (and vhdl-tools-vorg-src-vhdl-dir
@@ -606,7 +606,7 @@ When no symbol at point, move point to indentation."
   "From `vorg' file, jump to `vhdl' file, tangling before if necessary."
   (interactive)
   (call-interactively 'vhdl-tools-vorg-tangle)
-  (let* ((vhdlfile (vhdl-tools--get-vhdl-file (file-name-base)))
+  (let* ((vhdlfile (vhdl-tools-vorg--get-vhdl-file (file-name-base)))
 	 ;; store current line
 	 (myline_tmp
 	  (replace-regexp-in-string "+" "\\\\+"
@@ -641,7 +641,7 @@ With an argument `FORCE', force tangling regardless of files status.
 `ORGFILE' must be the filename without extension."
   ;; (interactive (list (format "%s.org" (file-name-base))))
   (interactive (list (file-name-base)))
-  (let ((vhdlfile (vhdl-tools--get-vhdl-file orgfile))
+  (let ((vhdlfile (vhdl-tools-vorg--get-vhdl-file orgfile))
 	(orgfilefull (format "%s.org" orgfile)))
     (if (or force
 	    (file-newer-than-file-p orgfilefull vhdlfile)
@@ -789,7 +789,7 @@ Beautifies source code blocks before editing."
   (if (let ((mytags (org-get-tags (point) t)))
 	(or (member vhdl-tools-vorg-tangle-header-argument-var mytags)
 	    (null mytags)))
-      (vhdl-tools--get-vhdl-file (file-name-base))
+      (vhdl-tools-vorg--get-vhdl-file (file-name-base))
     "no"))
 
 (defun vhdl-tools-vorg-prologue-header-argument ()
