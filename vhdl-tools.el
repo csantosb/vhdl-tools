@@ -71,6 +71,11 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (require 'ggtags)
+  (require 'helm-rg)
+  (require 'outshine))
+
 (require 'vhdl-mode)
 (require 'vc)
 
