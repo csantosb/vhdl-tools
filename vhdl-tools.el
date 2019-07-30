@@ -121,6 +121,10 @@ When nil, both share same directory."
 
 ;;;;; tools
 
+(defcustom vhdl-tools-max-lines-disable-features 1500
+  "Disable slower `vhdl-tools' features in buffers beyond this number of lines."
+  :type 'boolean :group 'vhdl-tools)
+
 (defcustom vhdl-tools-verbose nil
   "Make `vhdl-tools' verbose."
   :type 'boolean :group 'vhdl-tools)
