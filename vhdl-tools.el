@@ -232,7 +232,8 @@ Needed to determine end of name."
 		     (re-search-backward (concat "^\\(?:" outline-regexp "\\)")
 					 nil t)))))
     (save-excursion
-      (outline-hide-sublevels 5)
+      (when (< (count-lines 1 (point-max)) vhdl-tools-max-lines-disable-features)
+	(outline-hide-sublevels 5))
       (outline-back-to-heading nil)
       (outline-show-entry))))
 
