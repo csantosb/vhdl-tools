@@ -566,7 +566,7 @@ When no symbol at point, move point to indentation."
 		 (forward-word))
 	       (forward-char 2)
 	       (vhdl-tools--get-name)))
-	    (helm-rg--current-dir (vc-root-dir))
+	    (helm-rg--current-dir (vc-find-root (buffer-file-name) ".git"))
 	    (helm-rg-default-glob-string "*.vhd"))
 	(vhdl-tools--push-marker)
 	;; Jump by searching using helm-rg
@@ -1124,9 +1124,9 @@ Key bindings:
   (if (and vhdl-tools-mode
 	   vhdl-tools--ggtags-available
 	   (buffer-file-name)
-	   (vc-root-dir)
+	   (vc-find-root (buffer-file-name) ".git")
 	   (file-exists-p
-	    (format "%sGTAGS" (vc-root-dir))))
+	    (format "%sGTAGS" (vc-find-root (buffer-file-name) ".git"))))
       (progn
 	(ggtags-mode 1)
 	;; a bit of feedback
