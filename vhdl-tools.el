@@ -609,7 +609,7 @@ When no symbol at point, move point to indentation."
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
-    (vhdl-tools--imenu-with-initial-minibuffer "^Instance")
+    (vhdl-tools--imenu-with-initial-minibuffer "^instance")
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
 
@@ -623,7 +623,7 @@ When no symbol at point, move point to indentation."
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
-    (vhdl-tools--imenu-with-initial-minibuffer "^Process")
+    (vhdl-tools--imenu-with-initial-minibuffer "^process")
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
 
@@ -637,7 +637,7 @@ When no symbol at point, move point to indentation."
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
-    (vhdl-tools--imenu-with-initial-minibuffer "^Component")
+    (vhdl-tools--imenu-with-initial-minibuffer "^component")
     (vhdl-tools--fold)
     (vhdl-tools--post-jump-function)))
 
