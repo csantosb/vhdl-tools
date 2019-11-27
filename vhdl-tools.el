@@ -595,7 +595,11 @@ When no symbol at point, move point to indentation."
   (interactive)
   (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50)
-	(helm-display-function #'helm-default-display-buffer))
+	(helm-display-function #'helm-default-display-buffer)
+	(helm-split-window-default-side
+	 (if (> (window-width) 105)
+	     'right
+	   'below )))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
@@ -610,7 +614,11 @@ When no symbol at point, move point to indentation."
   (interactive)
   (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50)
-	(helm-display-function #'helm-default-display-buffer))
+	(helm-display-function #'helm-default-display-buffer)
+	(helm-split-window-default-side
+	 (if (> (window-width) 105)
+	     'right
+	   'below )))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
@@ -625,7 +633,11 @@ When no symbol at point, move point to indentation."
   (interactive)
   (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50)
-	(helm-display-function #'helm-default-display-buffer))
+	(helm-display-function #'helm-default-display-buffer)
+	(helm-split-window-default-side
+	 (if (> (window-width) 105)
+	     'right
+	   'below )))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
@@ -640,7 +652,11 @@ When no symbol at point, move point to indentation."
   (interactive)
   (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50)
-	(helm-display-function #'helm-default-display-buffer))
+	(helm-display-function #'helm-default-display-buffer)
+	(helm-split-window-default-side
+	 (if (> (window-width) 105)
+	     'right
+	   'below )))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
@@ -656,6 +672,10 @@ When no symbol at point, move point to indentation."
   (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50)
 	(helm-display-function #'helm-default-display-buffer)
+	(helm-split-window-default-side
+	 (if (> (window-width) 105)
+	     'right
+	   'below ))
 	(imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1))))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
@@ -672,6 +692,11 @@ Processes, instances and doc headers are shown in order of appearance."
   (interactive)
   (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50)
+	(helm-display-function #'helm-default-display-buffer)
+	(helm-split-window-default-side
+	 (if (> (window-width) 105)
+	     'right
+	   'below ))
 	(imenu-generic-expression
 	 `(;; process
 	   ("" "^\\s-*\\(\\(\\w\\|\\s_\\)+\\)\\s-*:\\(\\s-\\|\n\\)*\\(\\(postponed\\s-+\\|\\)process\\)" 1)
