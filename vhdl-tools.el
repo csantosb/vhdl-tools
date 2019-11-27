@@ -587,11 +587,15 @@ When no symbol at point, move point to indentation."
 
 ;;;; Standard Imenu
 
+;; TODO: remove helm customizations, move them to user custom configuration by
+;; using around advices
+
 (defun vhdl-tools-imenu()
   "Call native imenu, setting generic expression first."
   (interactive)
   (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
+	(helm-candidate-number-limit 50)
+	(helm-display-function #'helm-default-display-buffer))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
@@ -605,7 +609,8 @@ When no symbol at point, move point to indentation."
   "Call imenu for instances, setting generic expression first."
   (interactive)
   (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
+	(helm-candidate-number-limit 50)
+	(helm-display-function #'helm-default-display-buffer))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
@@ -619,7 +624,8 @@ When no symbol at point, move point to indentation."
   "Call imenu for processes, setting generic expression first."
   (interactive)
   (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
+	(helm-candidate-number-limit 50)
+	(helm-display-function #'helm-default-display-buffer))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
@@ -633,7 +639,8 @@ When no symbol at point, move point to indentation."
   "Call imenu for components, setting generic expression first."
   (interactive)
   (let ((helm-autoresize-max-height 100)
-	(helm-candidate-number-limit 50))
+	(helm-candidate-number-limit 50)
+	(helm-display-function #'helm-default-display-buffer))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
       (save-buffer))
@@ -648,6 +655,7 @@ When no symbol at point, move point to indentation."
   (interactive)
   (let ((helm-autoresize-max-height 100)
 	(helm-candidate-number-limit 50)
+	(helm-display-function #'helm-default-display-buffer)
 	(imenu-generic-expression `(("" ,vhdl-tools-imenu-regexp 1))))
     (when vhdl-tools-save-before-imenu
       (set-buffer-modified-p t)
