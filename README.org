@@ -6,10 +6,8 @@ sources.
 [[http://melpa.org/#/vhdl-tools][file:http://melpa.org/packages/vhdl-tools-badge.svg]]
 
 [[https://csantosb.pw/blog/posts/vhdl-tools/index.html][VHDL-tools]] provides an extra layer in the form of a minor mode intended to be
-used along with emacs [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]]. It adds specific functionality on top of
-[[https://github.com/leoliu/ggtags][ggtags]], [[https://emacs-helm.github.io/helm/][helm]], [[https://github.com/BurntSushi/ripgrep][ripgrep]], [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html][imenu]] and [[https://github.com/alphapapa/outshine][outshine]] to ease navigating vhdl source code.
-
-It expects a working setup of =ggtags=, completing it with
+used along with emacs [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]]. It relies on well-known packages, easing
+navigation of vhdl source code, and providing
 
   - Jumping into instances
   - Jump to upper level
