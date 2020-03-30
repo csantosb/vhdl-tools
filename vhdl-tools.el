@@ -1,18 +1,14 @@
 ;;; vhdl-tools.el --- Utilities for navigating vhdl sources. -*- lexical-binding: t; -*-
 
-;; Based on `vhdl-goto-def' at `http://www.emacswiki.org/emacs/vhdl-goto-def.el'
+;; Copyright (C) 2015-2020 Cayetano Santos
 
-;; Copyright (C) 2003 Free Software Foundation, Inc.
-;; Copyright (C) 2015-2019 Cayetano Santos
-
-;; Original author:  wandad guscheh <wandad.guscheh@fh-hagenberg.at>
-;; Author:           Cayetano Santos
-;; Keywords: languages, convenience
+;; Author: Cayetano Santos
+;; Keywords: vhdl
 ;; Filename: vhdl-tools.el
 ;; Description: Utilities for navigating vhdl sources.
-;; URL: https://github.com/csantosb/vhdl-tools/wiki
-;; Compatibility: GNU Emacs >= 26.2
-;; Version: 6.2
+;; Homepage: https://gitlab.com/csantosb/vhdl-tools/-/wikis/home
+;; Compatibility: GNU Emacs >= 26.3
+;; Version: 6.3.pre
 ;; Package-Requires: (ggtags (emacs "26.3") helm-rg outshine)
 
 ;;; License:
@@ -34,38 +30,22 @@
 
 ;;; Commentary:
 ;;
-;; `vhdl-tools' provide a minor mode based intended to complete the great `vhdl-mode'.
+;; `vhdl-tools' provides a minor mode intended to complete the great `vhdl-mode'.
 ;; It adds an extra layer of functionality on top of the later, extensively
-;; using `ggtags' to manage a vhdl project. `vhdl-tools' relies on `helm',
-;; `imenu' and `outshine' features to ease navigating vhdl
-;; sources.  Additionally, it provides `vOrg' mode too, which benefits of all
-;; `Org' features.
+;; using `ggtags' to manage a vhdl project. `vhdl-tools' relies on `helm-rg',
+;; `imenu' and `outshine' features to ease navigating vhdl sources.
 
 ;;; Install:
 ;;
-;; To install, proceed as usual: add to path and require after loading `vhdl-mode'
-;;
-;; (with-eval-after-load 'vhdl-mode
-;;   (add-to-list 'load-path "...")
-;;   (require 'vhdl-tools))
-;;
-;; or install from Melpa
-;;
-;;   M-x package-install RET vhdl-tools
-;;
-;; Then, activate the minor mode by completing the `vhdl-mode' hook.
-;;
-;; (add-hook 'vhdl-mode-hook
-;;	  (lambda ()
-;;	    (vhdl-tools-mode 1)))
+;; https://gitlab.com/csantosb/vhdl-tools/-/wikis/Install
 
 ;;; Use:
 ;;
 ;; Have a look at customization possibilities with \M-x customize-group `vhdl-tools'.
 ;;
-;; For details, refer to  https://github.com/csantosb/vhdl-tools/wiki
+;; For details, refer to https://gitlab.com/csantosb/vhdl-tools/-/wikis/Use
 ;;
-;; An example configuration file may be found at https://github.com/csantosb/vhdl-tools/wiki/Setup#example-configuration-file
+;; An example configuration file may be found at https://gitlab.com/csantosb/vhdl-tools/-/wikis/Setup#example-configuration-file
 
 ;;; Todo:
 
