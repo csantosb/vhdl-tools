@@ -739,8 +739,9 @@ Processes, instances and doc headers are shown in order of appearance."
 
 ;;;; Link Follow
 
-(defun vhdl-tools-follow-links(arg)
-  "Follow links in the form of Tag:ToSearch'."
+(defun vhdl-tools-follow-links(&optional arg)
+  "Follow links in the form of Tag:ToSearch'.
+With a prefix `ARG' ignore tosearch."
   (interactive "P")
   ;; get item in the form of tag@tosearch
   (save-excursion
