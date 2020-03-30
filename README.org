@@ -7,7 +7,7 @@ sources.
 
 [[https://csantosb.pw/blog/posts/vhdl-tools/index.html][VHDL-tools]] provides an extra layer in the form of a minor mode intended to be
 used along with emacs [[https://guest.iis.ee.ethz.ch/~zimmi/emacs/vhdl-mode.html][vhdl-mode]]. It relies on well-known packages, easing
-navigation of vhdl source code, and providing
+navigation of vhdl source code and providing
 
   - Jumping into instances
   - Jump to upper level
