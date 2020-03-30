@@ -64,40 +64,9 @@
 (defgroup vhdl-tools nil "Some customizations of vhdl-tools package"
   :group 'local)
 
-(defgroup vhdl-tools-vorg nil "Some customizations of vhdl-tools vorg package"
-  :group 'local)
-
 ;;; Variables
 
 ;;;; User Variables
-
-;;;;; vOrg
-
-(defcustom vhdl-tools-vorg-src-vhdl-dir nil
-  "Stores the relative placement of vhdl code with respect to vorg sources.
-When nil, both share same directory."
-  :type 'string :group 'vhdl-tools-vorg)
-
-(defcustom vhdl-tools-vorg-src-vorg-dir nil
-  "Stores the relative placement of vorg sources with respect to vhdl code.
-When nil, both share same directory."
-  :type 'string :group 'vhdl-tools-vorg)
-
-(defcustom vhdl-tools-vorg-tangle-comment-format-beg "@@@"
-  "Variable to assign to `org-babel-tangle-comment-format-beg' during `vorg' tangling."
-  :type 'string :group 'vhdl-tools-vorg)
-
-(defcustom vhdl-tools-vorg-tangle-comment-format-end "@@@"
-  "Variable to assign to `org-babel-tangle-comment-format-end' during `vorg' tangling."
-  :type 'string :group 'vhdl-tools-vorg)
-
-(defcustom vhdl-tools-vorg-tangle-comments-link nil
-  "Flag to force set the comments:link header in vhdl src blocks."
-  :type 'boolean :group 'vhdl-tools-vorg)
-
-(defcustom vhdl-tools-vorg-tangle-header-argument-var nil
-  "Variable used to filter code blocks to be tangled."
-  :type 'boolean :group 'vhdl-tools-vorg)
 
 ;;;;; tools
 
@@ -140,20 +109,6 @@ Needed to determine end of name."
 
 ;;;; Internal Variables
 
-(defconst vhdl-tools-vorg-vhdl-align-alist
-  (reverse
-   (let ((orig-alist (copy-alist vhdl-align-alist))
-	 (new-vhdl-align-alist nil))
-     ;;(message (format "\n\n" ))
-     (while orig-alist
-       (let* ((element (nth 0 orig-alist))
-	      (element-content (cons 'vhdl-tools-mode
-				     (cdr element))))
-	 (setq new-vhdl-align-alist
-	       (push element-content new-vhdl-align-alist))
-	 (setq orig-alist (cdr orig-alist))))
-     new-vhdl-align-alist)))
-
 (defvar vhdl-tools--jump-into-module-name nil)
 
 (defvar vhdl-tools--store-link-link nil)
@@ -182,23 +137,6 @@ Needed to determine end of name."
 ;;; Helper
 
 ;; Ancillary, internal functions
-
-(defun vhdl-tools--cleanup-tangled ()
-  "Make invisible reference comments after tangling."
-  (interactive)
-  (save-excursion
-    (when vhdl-tools-use-outshine
-      (outline-show-all)
-      (goto-char (point-min)))
-    (while (re-search-forward (format "^-- %s.*$" vhdl-tools-vorg-tangle-comment-format-beg) nil t nil)
-      (let ((endp (point))
-	    (begp (progn (beginning-of-line) (point))))
-	(overlay-put (make-overlay begp endp)
-		     'invisible
-		     (intern "vhdl-tangled")))
-      (forward-line))
-    (add-to-invisibility-spec 'vhdl-tangled)
-    (vhdl-tools--fold)))
 
 (defun vhdl-tools--fold ()
   "Fold to current heading level."
@@ -250,28 +188,6 @@ Needed to determine end of name."
   (when vhdl-tools-manage-folding
     (recenter-top-bottom vhdl-tools-recenter-nb-lines))
   (back-to-indentation))
-
-(defun vhdl-tools-vorg--post-jump-function ()
-  "To be called after jumping to recenter, indent, etc."
-  (when vhdl-tools-manage-folding
-    (recenter-top-bottom vhdl-tools-recenter-nb-lines))
-  (back-to-indentation))
-
-(defun vhdl-tools-vorg--get-vhdl-file (orgfile)
-  "Return the sibling vhdl code of `ORGFILE'.
-`ORGFILE' is the filename without extension."
-  (if (and vhdl-tools-vorg-src-vhdl-dir
-	   (file-exists-p vhdl-tools-vorg-src-vhdl-dir))
-      (format "%s/%s.vhd" vhdl-tools-vorg-src-vhdl-dir orgfile)
-    (format "%s.vhd" orgfile)))
-
-(defun vhdl-tools--get-vorg-file (vhdlfile)
-  "Return the sibling vorg source file of `VHDLFILE'.
-`VHDLFILE' is the filename without extension."
-  (if (and vhdl-tools-vorg-src-vorg-dir
-	   (file-exists-p vhdl-tools-vorg-src-vorg-dir))
-      (format "%s/%s.org" vhdl-tools-vorg-src-vorg-dir vhdlfile)
-    (format "%s.vhd" (file-name-base vhdlfile))))
 
 ;;; Feature: misc
 
@@ -844,9 +760,6 @@ Key bindings:
   ;; Enable mode global features
   (if vhdl-tools-mode
       (progn
-	;; puts the reference comments around in the source file out of sight
-	(when vhdl-tools-vorg-tangle-comments-link
-	  (vhdl-tools--cleanup-tangled))
 	;; a bit of feedback
 	(when vhdl-tools-verbose
 	  (message "[VHDL Tools] enabled.")))
