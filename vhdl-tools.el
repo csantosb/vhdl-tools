@@ -6,7 +6,7 @@
 ;; Keywords:  convenience, languages, vhdl
 ;; Filename: vhdl-tools.el
 ;; Description: Utilities for navigating vhdl sources.
-;; Homepage: https://gitlab.com/csantosb/vhdl-tools/-/wikis/home
+;; Homepage: https://gitlab.com/emacs-elisp/vhdl-tools/-/wikis/home
 ;; Compatibility: GNU Emacs >= 26.3
 ;; Version: 6.3.pre
 ;; Package-Requires: ((ggtags "0.9.0") (emacs "26.2") (helm-rg "0.1") (outshine "3.1-pre"))
@@ -37,15 +37,15 @@
 
 ;;; Install:
 ;;
-;; https://gitlab.com/csantosb/vhdl-tools/-/wikis/Install
+;; https://gitlab.com/emacs-elisp/vhdl-tools/-/wikis/Install
 
 ;;; Use:
 ;;
 ;; Have a look at customization possibilities with \M-x customize-group `vhdl-tools'.
 ;;
-;; For details, refer to https://gitlab.com/csantosb/vhdl-tools/-/wikis/Use
+;; For details, refer to https://gitlab.com/emacs-elisp/vhdl-tools/-/wikis/Use
 ;;
-;; An example configuration file may be found at https://gitlab.com/csantosb/vhdl-tools/-/wikis/Setup#example-configuration-file
+;; An example configuration file may be found at https://gitlab.com/emacs-elisp/vhdl-tools/-/wikis/Setup#example-configuration-file
 
 ;;; Todo:
 
