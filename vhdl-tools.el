@@ -1,15 +1,15 @@
-;;; vhdl-tools.el --- Utilities for navigating vhdl sources. -*- lexical-binding: t; -*-
+;;; vhdl-tools.el --- Utilities for navigating vhdl sources -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2015-2020 Cayetano Santos
 
 ;; Author: Cayetano Santos
-;; Keywords: vhdl
+;; Keywords:  convenience, languages, vhdl
 ;; Filename: vhdl-tools.el
 ;; Description: Utilities for navigating vhdl sources.
 ;; Homepage: https://gitlab.com/csantosb/vhdl-tools/-/wikis/home
 ;; Compatibility: GNU Emacs >= 26.3
 ;; Version: 6.3.pre
-;; Package-Requires: (ggtags (emacs "26.3") helm-rg outshine)
+;; Package-Requires: ((ggtags "0.9.0") (emacs "26.2") (helm-rg "0.1") (outshine "3.1-pre"))
 
 ;;; License:
 ;;
