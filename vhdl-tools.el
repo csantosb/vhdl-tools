@@ -51,6 +51,8 @@
 
 ;;; Code:
 
+;;;; Requirements
+
 (eval-when-compile
   (require 'ggtags)
   (require 'helm-rg)
@@ -67,8 +69,6 @@
 ;;; Variables
 
 ;;;; User Variables
-
-;;;;; tools
 
 (defcustom vhdl-tools-max-lines-disable-features 1500
   "Disable slower `vhdl-tools' features in buffers beyond this number of lines."
